@@ -1,0 +1,81 @@
+# Build 01 synthetic-data assumptions.
+#
+# Every number here is a *provisional synthetic-design assumption* for a
+# fictional company. None of it is real organisational policy or data.
+# Change values here, not in the Python code, then re-run the generator.
+
+[run]
+seed = 20261115            # same seed + same as_of_date => identical output files
+as_of_date = "2026-11-02"  # "today" for the data: nothing after this date exists yet
+
+[programme]
+weeks = 8                  # core curriculum length (Build 01 assumption)
+sessions_per_week = 5      # one session per weekday, Monday-Friday
+rubric_version = "R1"      # all Build 01 assessments use the same rubric
+
+# One row per cohort. start_date must be a Monday.
+# enrolments  = people offered a place (includes pre-start cancellations)
+# total_gain  = typical score points gained from Week 1 to Week 8
+#               (cohort 2 is deliberately the fast improver)
+[[cohorts]]
+cohort_id = "COH-2026-01"
+cohort_name = "2026 Cohort 1"
+start_date = "2026-05-04"
+delivery_mode = "In person"
+enrolments = 72
+total_gain = 20.0
+
+[[cohorts]]
+cohort_id = "COH-2026-02"
+cohort_name = "2026 Cohort 2"
+start_date = "2026-07-06"
+delivery_mode = "Virtual"
+enrolments = 70
+total_gain = 29.0
+
+[[cohorts]]
+cohort_id = "COH-2026-03"
+cohort_name = "2026 Cohort 3"
+start_date = "2026-09-21"
+delivery_mode = "In person"
+enrolments = 66
+total_gain = 23.0
+
+[enrolment]
+pre_start_cancellation_rate = 0.04   # offered a place but never started
+# Employees who withdrew from an earlier cohort and re-enrol in a later one.
+# They get a NEW enrolment_id but keep their employee_id.
+repeat_enrolments = [
+  { from_cohort = "COH-2026-01", to_cohort = "COH-2026-03", count = 2 },
+]
+
+[attendance]
+base_present_probability = 0.94
+# A few trainees per cohort disengage: their attendance falls week by week.
+declining_trainees_per_cohort = 5
+declining_start_week = 3
+declining_weekly_drop = 0.09         # attendance probability lost per week
+declining_floor = 0.35
+# Missing registers: "we don't know", which is NOT the same as "absent".
+whole_session_unrecorded_probability = 0.03   # the trainer never submitted the register
+single_record_unrecorded_probability = 0.01   # one trainee's mark is missing
+
+[withdrawal]
+# Weekly chance that an enrolment withdraws during the programme.
+baseline_weekly_probability = 0.006
+declining_weekly_probability = 0.12  # much higher once a trainee is disengaging
+
+[assessment]
+competencies = [
+  { competency_id = "COMP-01", competency_name = "Communication",                  baseline_offset = 4.0 },
+  { competency_id = "COMP-02", competency_name = "Problem Solving",                baseline_offset = 0.0 },
+  { competency_id = "COMP-03", competency_name = "Transaction Investigation",      baseline_offset = -5.0 },
+  { competency_id = "COMP-04", competency_name = "Operational Controls",           baseline_offset = -7.0 },
+  { competency_id = "COMP-05", competency_name = "Accuracy & Attention to Detail", baseline_offset = 1.0 },
+]
+baseline_mean = 54.0       # typical Week 1 score
+person_sd = 6.0            # how much trainees differ from each other overall
+competency_sd = 4.0        # extra person-by-competency variation
+weekly_noise_sd = 3.0      # week-to-week wobble in a score
+learning_curve = 0.75      # < 1 means fast early gains that level off
+declining_gain_factor = 0.45   # disengaged trainees gain less after they start declining
