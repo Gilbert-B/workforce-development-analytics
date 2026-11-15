@@ -25,7 +25,7 @@ All data is **synthetic**. The CSV files in `data/synthetic/` load 1:1 into the 
 |---|---|---|
 | employee_id | varchar(20) | **PK**, e.g. `EMP-00001` |
 | first_name, last_name | nvarchar(50) | Randomly combined from fictional name lists |
-| hire_date | date | 1–3 weeks before their first cohort starts |
+| hire_date | date | 0–9 days before their first enrolment. Never after it (validation check `enrolled_before_hire_date`) |
 
 There's deliberately **no cohort column**: one person can enrol more than once.
 

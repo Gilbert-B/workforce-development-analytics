@@ -95,15 +95,15 @@ The rule says "attended / eligible scheduled sessions", while the measure list s
 
 | Definition | Cohort 1 | Cohort 2 | Cohort 3 |
 |---|---|---|---|
-| Present ÷ recorded (Present + Absent) | 93.0% | 93.5% | 92.4% |
-| Present ÷ all eligible (Unrecorded included in the denominator) | 84.6% | 83.4% | 91.5% |
+| Present ÷ recorded (Present + Absent) | 91.0% | 93.0% | 92.2% |
+| Present ÷ all eligible (Unrecorded included in the denominator) | 83.0% | 82.9% | 91.5% |
 
 The gap is large because whole registers are missing for some sessions. Seven of the 111 sessions held so far are fully unrecorded, against roughly three to four expected from the 3% setting: ordinary random variation.
 
 **Recommendation for ChatGPT:** decide which definition the headline KPI uses, and whether to lower `whole_session_unrecorded_probability` in the config.
 
 ### D11 — No assessment when the trainee was absent on assessment day
-**Decision:** assessments happen on the Friday of each week, and only for trainees marked Present that day. That's why a cohort's assessed count (for example 66 in Week 1) is below its starters (70).
+**Decision:** assessments happen on the Friday of each week, and only for trainees marked Present that day. That's why a cohort's assessed count (for example 61 in Cohort 1, Week 1) is below its starters (68).
 **Why:** it produces realistic "not available" scores that are never zero, which tests the rule "don't treat unobserved as zero". Retakes and make-up assessments are out of scope (`attempt_number` is always 1).
 
 ### D12 — Week-over-week change: SQL gives a per-person helper; the cohort KPI is for DAX  · Review: ChatGPT
@@ -113,7 +113,7 @@ The gap is large because whole registers are missing for some sessions. Seven of
 
 ### D13 — Employee name is copied into `dim_enrolment`  · Review: ChatGPT
 **Decision:** the reporting layer offers `dim_enrolment`, with employee ID and name copied in, as the main dimension for individual trainees. `dim_employee` is still available for counting distinct people.
-**Why:** a person can have more than one enrolment (2 synthetic employees re-enrolled), so cohort belongs on the enrolment, not on the person. Copying the name in avoids a chained, two-hop dimension in the first model.
+**Why:** a person can have more than one enrolment (2 synthetic employees, `EMP-00025` and `EMP-00034`, re-enrolled), so cohort belongs on the enrolment, not on the person. Copying the name in avoids a chained, two-hop dimension in the first model.
 
 The fact views carry `cohort_id`, `enrolment_id` and `employee_id`. ChatGPT should confirm which relationships to use, so Power BI doesn't end up with ambiguous filter paths.
 

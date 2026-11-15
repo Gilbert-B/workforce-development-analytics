@@ -139,7 +139,8 @@ def simulate(config: dict, seed: int) -> dict:
     cohort_lookup = {}
     employee_counter = 0
 
-    def new_employee(hire_date: date) -> str:
+    def new_employee() -> str:
+        """Create a person. Their hire_date is set once we know when they enrol."""
         nonlocal employee_counter
         employee_counter += 1
         emp_id = f"EMP-{employee_counter:05d}"
@@ -147,7 +148,7 @@ def simulate(config: dict, seed: int) -> dict:
             "employee_id": emp_id,
             "first_name": pick(rng, FIRST_NAMES),
             "last_name": pick(rng, LAST_NAMES),
-            "hire_date": hire_date,
+            "hire_date": None,
         })
         return emp_id
 
@@ -185,8 +186,7 @@ def simulate(config: dict, seed: int) -> dict:
 
         people = list(returning)
         while len(people) < c_cfg["enrolments"]:
-            hire = start - timedelta(days=7 + int(rng.random() * 14))
-            people.append(new_employee(hire))
+            people.append(new_employee())
 
         declining_slots = set()
         while len(declining_slots) < att_cfg["declining_trainees_per_cohort"]:
@@ -202,6 +202,11 @@ def simulate(config: dict, seed: int) -> dict:
                 enrolled_date=start - timedelta(days=5 + int(rng.random() * 20)),
                 declining=i in declining_slots,
             )
+            # A new hire is hired 0-9 days BEFORE enrolling (never after).
+            # Returning employees keep the hire date from their first cohort.
+            employee = employees[int(emp_id.split("-")[1]) - 1]
+            if employee["hire_date"] is None:
+                employee["hire_date"] = e.enrolled_date - timedelta(days=int(rng.random() * 10))
             # Returning employees cannot cancel; they already chose to re-enrol.
             if emp_id not in returning and chance(rng, config["enrolment"]["pre_start_cancellation_rate"]):
                 e.cancelled_date = e.enrolled_date + timedelta(days=1 + int(rng.random() * 3))

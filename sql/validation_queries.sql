@@ -109,6 +109,11 @@ checks AS (
             LEFT JOIN event_dates AS d ON d.enrolment_id = e.enrolment_id
             WHERE d.enrolled_on IS NULL)
     UNION ALL
+    SELECT 'enrolled_before_hire_date', 'error',   -- found by tracing one enrolment
+           (SELECT COUNT(*) FROM core.enrolment AS e
+            JOIN core.employee AS emp ON emp.employee_id = e.employee_id
+            WHERE e.enrolled_date < emp.hire_date)
+    UNION ALL
     SELECT 'end_event_without_started_event', 'error',
            (SELECT COUNT(*) FROM event_dates
             WHERE (withdrawn_on IS NOT NULL OR completed_on IS NOT NULL) AND started_on IS NULL)

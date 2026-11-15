@@ -170,6 +170,14 @@ def test_status_events_are_in_a_valid_order(dataset):
                 assert "started" in ev and ev[end] >= ev["started"], enrolment_id
 
 
+def test_nobody_enrols_before_they_are_hired(dataset):
+    """Bug found by tracing EMP-00006: hire and enrolment dates used to be
+    drawn independently, so some people enrolled before being hired."""
+    hired = {emp["employee_id"]: emp["hire_date"] for emp in dataset["employee"]}
+    for e in dataset["enrolment"]:
+        assert hired[e["employee_id"]] <= e["enrolled_date"], e["enrolment_id"]
+
+
 def test_recorded_timestamp_never_before_effective_date(dataset):
     for ev in dataset["enrolment_status_event"]:
         assert ev["recorded_at"][:10] >= ev["effective_date"]
