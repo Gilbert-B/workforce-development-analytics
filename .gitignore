@@ -35,7 +35,8 @@ original/
 CLAUDE_CODE_*.md
 PHASE_*.md
 ORIGINAL_*.md
-*_SCOPE_V*.md
+# Versioned working drafts, e.g. *_SCOPE_V0_2.md, *_KPIS_V0_1.md
+*_V[0-9]*_[0-9]*.md
 
 # Secrets and local configuration. Commit a .env.example instead.
 .env
