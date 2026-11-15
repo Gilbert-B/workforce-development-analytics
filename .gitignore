@@ -1,0 +1,55 @@
+# ---------------------------------------------------------------------------
+# PRIVACY FIRST
+# This repository is public and must only ever contain synthetic data.
+# The rules below exist to stop original (confidential) files being
+# committed by accident. Do not remove them without a privacy review.
+# ---------------------------------------------------------------------------
+
+# Local-only folder for anything original/confidential (e.g. the original
+# PBIX or source exports used as a reference). Never committed.
+private/
+original/
+
+# Power BI files can embed a full cached copy of the data they were last
+# refreshed against. Blocked by default. The synthetic portfolio PBIX may be
+# published later as a deliberate, reviewed exception (git add -f).
+*.pbix
+*.pbit
+
+# Secrets and local configuration. Commit a .env.example instead.
+.env
+.env.*
+!.env.example
+
+# Database files and backups (SQL Server / SQLite / Mongo dumps)
+*.mdf
+*.ldf
+*.bak
+*.db
+*.sqlite
+*.sqlite3
+dump/
+*.bson
+
+# Pipeline logs can echo row-level data or connection details
+logs/
+*.log
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
