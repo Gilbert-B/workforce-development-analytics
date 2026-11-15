@@ -1,0 +1,44 @@
+{
+  "generator_version": "build01-1.0",
+  "seed": 20261115,
+  "as_of_date": "2026-11-02",
+  "config_sha256": "628bc4198598499f432651b71bc9ea887edccec876908144f178e9f5f7ee9127",
+  "files": {
+    "cohort.csv": {
+      "rows": 3,
+      "sha256": "e0cb3ede03997f0c39d85383d894b1669f77792cd25957cbbf29121581bcea89"
+    },
+    "employee.csv": {
+      "rows": 206,
+      "sha256": "8924d0411f411cccd000dafdca232895afc82d83df2443b9ab888e84379618e0"
+    },
+    "competency.csv": {
+      "rows": 5,
+      "sha256": "ee4c0920ab7e9480d88d39869a2523d0468efba585b31bea0386d0bb4b859ecc"
+    },
+    "enrolment.csv": {
+      "rows": 208,
+      "sha256": "0cdd47fb67888c1d08b2d38236012b9b5f1136358f6886a177adf36f33eb0c78"
+    },
+    "enrolment_status_event.csv": {
+      "rows": 556,
+      "sha256": "ac4659013addaee436942fe3ad914c25d277ea8a034fc3f00ed7699bd18a2227"
+    },
+    "scheduled_session.csv": {
+      "rows": 120,
+      "sha256": "cb9278e1e1c4f8a7dd2d201a969d18cc589e4392f686fe151960eae879e7d6fe"
+    },
+    "attendance.csv": {
+      "rows": 6706,
+      "sha256": "e11d1b320c1b7f9c6fbaf19801efe70fe891965e633e3df4b800bca6d2d240d1"
+    },
+    "assessment.csv": {
+      "rows": 6680,
+      "sha256": "e008b76f842f5bb81b471ce5637a5c89697021f93d16df303d5097ecfe2d75aa"
+    },
+    "data_snapshot.csv": {
+      "rows": 1,
+      "sha256": "33b58d233a16c1ad7d47e342da6392b06f24589362d0ab377d51bd959656a02a"
+    }
+  }
+}
