@@ -15,6 +15,27 @@ original/
 # published later as a deliberate, reviewed exception (git add -f).
 *.pbix
 *.pbit
+# PBIP projects are folders of plain-text model/report metadata, and the
+# .pbi/ subfolder holds a local data cache (cache.abf). Same rule: blocked
+# by default; the synthetic PBIP can be force-added after a privacy review.
+*.pbip
+*.SemanticModel/
+*.Report/
+.pbi/
+*.abf
+# Zipped exports/archives of models or source material
+*.zip
+
+# Private coordination documents (BI audit notes, handoffs, scope drafts).
+# These may reference the original project and are not public-safe.
+# A document is published only after review, by moving its cleared content
+# into docs/ under a normal name.
+*_PRIVATE.*
+*HANDOFF*.md
+CLAUDE_CODE_*.md
+PHASE_*.md
+ORIGINAL_*.md
+*_SCOPE_V*.md
 
 # Secrets and local configuration. Commit a .env.example instead.
 .env
