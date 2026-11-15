@@ -7,6 +7,7 @@
    Run against WorkforceDevAnalytics, e.g.:
        sqlcmd -S .\SQLEXPRESS -E -C -d WorkforceDevAnalytics -i sql\analysis_examples.sql
 --------------------------------------------------------------------------- */
+USE WorkforceDevAnalytics;   -- so SSMS runs this in the right database
 SET NOCOUNT ON;
 
 -- 1. Starting Cohort Headcount: enrolments with a 'started' event.

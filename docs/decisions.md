@@ -126,3 +126,14 @@ The fact views carry `cohort_id`, `enrolment_id` and `employee_id`. ChatGPT shou
 
 ### D16 — No extra indexes yet
 **Decision:** only the indexes created by primary keys and unique constraints. The largest table has about 7k rows, so more indexes wouldn't be justified. Revisit when the payment-case data arrives.
+
+### D17 — Two load routes: SSMS (`BULK INSERT`) and Python
+**Decision:** the database can be built entirely in SSMS with `sql/003_load_synthetic_data.sql`, or from the command line with `python/load_to_sql.py`. Both load the same committed CSVs into the same tables and pass the same validation.
+**Why:** the owner works in SSMS. `BULK INSERT` is the standard T-SQL way to load files and needs no extra tools. The Python route is still the one that regenerates data and runs the tests.
+
+**Trade-offs:**
+- `BULK INSERT` is executed by the SQL Server service account, so the files must sit in a folder that account can read (`C:\WorkforceData`).
+- The file name can't be a variable, so the script builds each statement as text (dynamic SQL).
+- There's no `CODEPAGE` option, because it isn't supported on SQL Server for Linux, where the script was tested. The files are plain ASCII, which a test enforces.
+
+**At scale:** you'd load from a staging area with a scheduled job, or with an ETL tool rather than a hand-run script.

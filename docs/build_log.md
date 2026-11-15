@@ -12,18 +12,20 @@
 | Generator | `python/generate_synthetic_data.py` → `data/synthetic/*.csv` + `generation_manifest.json` |
 | Database | `sql/000_create_database.sql`, `sql/001_create_schema.sql`, `sql/002_reporting_views.sql` |
 | Loader | `python/load_to_sql.py` (database, tables, load, views and validation in one command) |
+| SSMS loader | `sql/003_load_synthetic_data.sql` (`BULK INSERT`; the whole build runs in SSMS without Python) |
 | Validation | `sql/validation_queries.sql` (24 error checks + 2 informational) |
 | Reference answers | `sql/analysis_examples.sql` (numbers to check DAX against) |
 | Trace one person | `sql/trace_one_enrolment.sql` (one employee through every layer) |
 | Owner walkthrough | `docs/walkthrough.md` (commands, expected output, troubleshooting, exercise) |
-| Tests | `tests/test_generator.py` (41, no database needed), `tests/test_sql_integration.py` (16, needs SQL Server) |
+| Tests | `tests/test_generator.py` (42, no database needed), `tests/test_sql_integration.py` (16, needs SQL Server) |
 
 ### Test evidence (run in the Claude Code cloud container — not yet on the owner's machine)
 - Python 3.13, with SQL Server 2025 Developer Edition on Linux. The owner's target is SQL Server Express or Developer on Windows; everything used here works on SQL Server 2017 and later.
-- `python -m pytest`: **41 passed**, 16 skipped (SQL tests skipped when no server is configured).
-- With a server configured: **57 passed**.
+- `python -m pytest`: **42 passed**, 16 skipped (SQL tests skipped when no server is configured).
+- With a server configured: **58 passed**.
 - `python python/load_to_sql.py`: all 9 tables loaded, **26 of 26 checks OK** (24 PASS + 2 INFO).
 - Fresh clone with a new virtual environment: regenerating produced byte-identical files, and all tests passed.
+- **SSMS route** (`000` → `001` → `002` → `003` → validation, run with `sqlcmd` against an empty server): same row counts, 24 PASS + 2 INFO. Re-running `003` works. A wrong folder path fails with error 4860 and leaves the data unchanged.
 
 Compare your own run with [`docs/walkthrough.md`](walkthrough.md), which has the expected output for every step.
 

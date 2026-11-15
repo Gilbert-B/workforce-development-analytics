@@ -34,4 +34,5 @@ Teach at the point of use. No long theory.
 - `python python/generate_synthetic_data.py`: committed CSVs must match (`git status` shows no change)
 - `python -m pytest`: generator tests
 - With SQL Server: `python python/load_to_sql.py --server ...` → all checks OK, then `python -m pytest tests/test_sql_integration.py`
+- If the SQL changed: check the SSMS route too (`000` → `001` → `002` → `003_load_synthetic_data.sql` → `validation_queries.sql`)
 - Update `docs/build_log.md` reference numbers if the data changed
