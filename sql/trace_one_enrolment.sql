@@ -9,6 +9,7 @@
 
        sqlcmd -S .\SQLEXPRESS -E -C -d WorkforceDevAnalytics -i sql\trace_one_enrolment.sql
 --------------------------------------------------------------------------- */
+USE WorkforceDevAnalytics;   -- so SSMS runs this in the right database
 SET NOCOUNT ON;
 DECLARE @employee_id VARCHAR(20) = 'EMP-00025';
 

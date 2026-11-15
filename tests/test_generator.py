@@ -178,6 +178,13 @@ def test_nobody_enrols_before_they_are_hired(dataset):
         assert hired[e["employee_id"]] <= e["enrolled_date"], e["enrolment_id"]
 
 
+def test_csv_files_are_plain_ascii(generated_dir):
+    """sql/003_load_synthetic_data.sql loads the files without a CODEPAGE
+    setting, which is only safe while they contain no accented characters."""
+    for path in generated_dir.glob("*.csv"):
+        path.read_bytes().decode("ascii")   # raises if any byte is non-ASCII
+
+
 def test_recorded_timestamp_never_before_effective_date(dataset):
     for ev in dataset["enrolment_status_event"]:
         assert ev["recorded_at"][:10] >= ev["effective_date"]

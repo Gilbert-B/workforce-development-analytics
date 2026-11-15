@@ -6,8 +6,9 @@
    Run against the WorkforceDevAnalytics database, e.g.:
        sqlcmd -S .\SQLEXPRESS -E -C -d WorkforceDevAnalytics -i sql\validation_queries.sql
    python/load_to_sql.py runs this automatically after every load.
-   (No GO / USE here, so the loader can send it as a single statement.)
+   (No GO here, so the loader can send it as a single batch.)
 --------------------------------------------------------------------------- */
+USE WorkforceDevAnalytics;   -- so SSMS runs this in the right database
 WITH snapshot AS (
     SELECT as_of_date FROM core.data_snapshot
 ),
