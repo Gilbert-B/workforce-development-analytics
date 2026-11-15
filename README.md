@@ -34,7 +34,7 @@ This Portfolio Edition is a **new, fictional scenario**. Its multi-cohort design
 | Effective-dated status: "who was active on date X?" with no future leakage | `rpt.fn_enrolment_status_as_of`, `rpt.enrolment_status_history` |
 | Unknown ≠ absent: missing attendance kept explicit | `rpt.fact_attendance` |
 | Window functions (`LEAD`, `LAG`) and CTEs | `sql/002_reporting_views.sql` |
-| Automated data validation | `sql/validation_queries.sql` (23 checks) |
+| Automated data validation | `sql/validation_queries.sql` (24 checks) |
 | Tests: reproducibility, integrity, business rules | `tests/` |
 
 ## Architecture (Build 01)
@@ -105,6 +105,8 @@ On macOS or Linux, use `python3 -m venv .venv` and `source .venv/bin/activate`.
 
 **Connect Power BI:** Get Data → SQL Server → server `localhost\SQLEXPRESS`, database `WorkforceDevAnalytics`, **Import** mode. Then select the `rpt.*` views.
 
+**Step-by-step guide with the output you should see, troubleshooting and a practice exercise:** [`docs/walkthrough.md`](docs/walkthrough.md).
+
 **Reference numbers to check measures against:** [`docs/build_log.md`](docs/build_log.md) and `sql/analysis_examples.sql`.
 
 ---
@@ -132,3 +134,4 @@ docs/          data dictionary, decisions log, build log
 - [`docs/decisions.md`](docs/decisions.md): what was decided and why, including the items still under review.
 - [`docs/data_dictionary.md`](docs/data_dictionary.md): every table, view and column.
 - [`docs/build_log.md`](docs/build_log.md): what each build delivered, test evidence and reference numbers.
+- [`docs/walkthrough.md`](docs/walkthrough.md): run it yourself, check your results against the expected output, and trace one person through the pipeline.
