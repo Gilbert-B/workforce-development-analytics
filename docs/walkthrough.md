@@ -140,7 +140,7 @@ python -m pytest                                   # no database needed
 $env:WDA_SQL_SERVER = "localhost\SQLEXPRESS"
 python -m pytest -v tests/test_sql_integration.py  # rebuilds the database, then tests it
 ```
-**You should see:** `42 passed, 16 skipped` for the first command, then `16 passed` for the second.
+**You should see:** `43 passed, 16 skipped` for the first command, then `16 passed` for the second.
 The test names describe the rules, for example `test_status_as_of_has_no_future_leakage`. Reading the failing test's name is the fastest way to find a problem.
 
 ## 5. Look at the data yourself (SSMS)

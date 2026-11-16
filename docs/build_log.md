@@ -17,12 +17,12 @@
 | Reference answers | `sql/analysis_examples.sql` (numbers to check DAX against) |
 | Trace one person | `sql/trace_one_enrolment.sql` (one employee through every layer) |
 | Owner walkthrough | `docs/walkthrough.md` (commands, expected output, troubleshooting, exercise) |
-| Tests | `tests/test_generator.py` (42, no database needed), `tests/test_sql_integration.py` (16, needs SQL Server) |
+| Tests | `tests/test_generator.py` (43, no database needed), `tests/test_sql_integration.py` (16, needs SQL Server) |
 
 ### Test evidence (Claude Code cloud container)
 - Python 3.13, with SQL Server 2025 Developer Edition on Linux. The owner's target is SQL Server Express or Developer on Windows; everything used here works on SQL Server 2017 and later.
-- `python -m pytest`: **42 passed**, 16 skipped (SQL tests skipped when no server is configured).
-- With a server configured: **58 passed**.
+- `python -m pytest`: **43 passed**, 16 skipped (SQL tests skipped when no server is configured).
+- With a server configured: **59 passed**.
 - `python python/load_to_sql.py`: all 9 tables loaded, **26 of 26 checks OK** (24 PASS + 2 INFO).
 - Fresh clone with a new virtual environment: regenerating produced byte-identical files, and all tests passed.
 - **SSMS route** (`000` → `001` → `002` → `003` → validation, run with `sqlcmd` against an empty server): same row counts, 24 PASS + 2 INFO. Re-running `003` works. A wrong folder path fails with error 4860 and leaves the data unchanged.
@@ -33,7 +33,11 @@ Run by the owner on Windows in SSMS, using the SSMS route (walkthrough Route A).
 - `000` → `001` → `002` → `003_load_synthetic_data.sql`: all 9 tables loaded with the expected row counts (1 / 3 / 206 / 5 / 208 / 552 / 120 / 6,698 / 6,655).
 - `validation_queries.sql`: **24 PASS + 2 INFO, no FAIL** (2 repeat employees; 533 unrecorded eligible attendance records).
 - `analysis_examples.sql` and `trace_one_enrolment.sql`: every result matched the reference numbers below.
-- Not yet run on the owner's machine: the Python generator and the automated tests (walkthrough Route B).
+- **Route B (Python), Python 3.13.1 with ODBC Driver 18:**
+  - the generator reproduced all 9 CSVs with identical checksums;
+  - this run found a Windows line-ending bug in the manifest checksum, now fixed (`decisions.md` D18);
+  - `load_to_sql.py --server localhost` (Windows authentication): 26 of 26 checks OK, exit code 0;
+  - `python -m pytest` with `WDA_SQL_SERVER=localhost`: **59 passed**.
 
 Compare your own run with [`docs/walkthrough.md`](walkthrough.md), which has the expected output for every step.
 
