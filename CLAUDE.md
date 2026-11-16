@@ -24,6 +24,14 @@ Teach at the point of use. No long theory.
 ## Update format
 **Built** · **Reason** · **Run it yourself** · **What you should see** · **One concept to understand** · **Decisions needed / next slice** (blockers only)
 
+
+## How code reaches the owner (workflow B)
+- Claude gives every new or changed file in chat: the full contents for a new file, or an exact "find this / replace with this" for a change, plus where it goes and why.
+- The owner creates or edits the files, runs the commands locally, then commits and pushes, using GitHub Desktop and the command line in turn.
+- Claude does not commit or push to this repository unless the owner asks for a specific exception.
+- Claude may test code in its own environment before sharing it, but the owner's local run is the evidence.
+- Nothing is merged into `main` until the owner has run it locally.
+
 ## Scope and privacy
 - Implement only the approved build slice. Later capabilities (MongoDB, payment cases, certification and readiness, 90-day performance, website) need their own approval.
 - **All data is synthetic.** Never add original or client Power BI files, queries, connection details, identifiers or personal data. `.gitignore` blocks Power BI files and private working documents by default.
