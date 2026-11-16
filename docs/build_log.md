@@ -19,7 +19,7 @@
 | Owner walkthrough | `docs/walkthrough.md` (commands, expected output, troubleshooting, exercise) |
 | Tests | `tests/test_generator.py` (42, no database needed), `tests/test_sql_integration.py` (16, needs SQL Server) |
 
-### ### Test evidence (Claude Code cloud container)
+### Test evidence (Claude Code cloud container)
 - Python 3.13, with SQL Server 2025 Developer Edition on Linux. The owner's target is SQL Server Express or Developer on Windows; everything used here works on SQL Server 2017 and later.
 - `python -m pytest`: **42 passed**, 16 skipped (SQL tests skipped when no server is configured).
 - With a server configured: **58 passed**.
