@@ -145,3 +145,20 @@ The fact views carry `cohort_id`, `enrolment_id` and `employee_id`. ChatGPT shou
 **Cause:** Git for Windows (`core.autocrlf = true`) checks text files out with CRLF line endings, so the config file's checksum differed. Separately, Python's `write_text()` writes CRLF on Windows unless told otherwise.
 **Fix:** the config checksum ignores line endings (`sha256_ignoring_line_endings`), and the manifest is always written with LF. The CSVs already were. `test_manifest_is_the_same_with_windows_line_endings` guards it.
 **Lesson:** code tested on only one operating system can hide platform bugs, so the owner's local run is the real test.
+
+
+
+---
+
+## ChatGPT review outcomes (2026-11-16)
+Reviewed after the owner's local run (Routes A and B). Entries above marked `Review: ChatGPT` are resolved as follows.
+
+| # | Outcome |
+|---|---|
+| D1 | **Approved.** SQL Server: a natural bridge from the original Azure SQL, with native Power BI connectivity. |
+| D5 | **Approved.** Date-level `effective_date`, with a separate `recorded_at` timestamp. |
+| D6 | **Approved.** Historical status is *corrected history as known at the snapshot*. Never describe it as "what was known on that past date"; reconstructing that is a possible future enhancement. |
+| D7 | **Approved, option (a).** Completion takes effect on the last programme day, and Active Trainees is defined as **end-of-day** headcount. A final-day attendance mark doesn't contradict an end-of-day status of Completed. Reports must label the measure this way. |
+| D10 | **Approved.** Headline = **Recorded Attendance Rate** = Present ÷ (Present + Absent). Also shown: **Attendance Data Completeness** = (Present + Absent) ÷ eligible, and **Confirmed Attendance Coverage** = Present ÷ eligible. Unrecorded ≠ Absent. The missing-register rate is **not** to be tuned just to make results look better. |
+| D12 | **Approved.** Paired consecutive-week change (`week_over_week_change`) is the individual development measure. It's separate from the difference in cohort averages, whose assessed populations vary. For "average person's improvement", average per enrolment first, so trainees aren't weighted by how many competency rows they have. |
+| D13 | **Approved.** Employee name copied into `dim_enrolment` for Build 01. Keep employee IDs to tell 206 people from 208 enrolments. Avoid duplicate filter routes from cohort to the facts. |

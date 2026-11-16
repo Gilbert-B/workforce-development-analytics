@@ -133,11 +133,29 @@ A **missing row means "not recorded"**, not absent. See `rpt.fact_attendance`.
 | Withdrawn | withdrawal effective on or before the date |
 | Completed | completion effective on or before the date |
 
-### Suggested first Power BI model (for ChatGPT to confirm; see `decisions.md` D13)
+
+### Approved first Power BI model (ChatGPT review, 2026-11-16)
+Import 7 views from `localhost` / `WorkforceDevAnalytics` in **Import** mode: `rpt.dim_cohort`, `rpt.dim_enrolment`, `rpt.dim_programme_week`, `rpt.dim_competency`, `rpt.dim_date`, `rpt.fact_attendance` and `rpt.fact_assessment`.
+
+**Turn off relationship autodetect first** (File → Options → Current File → Data Load). Both facts carry `cohort_id`, and autodetect would add direct cohort → fact links.
+
+All 8 relationships are one-to-many, **single direction**, and active:
 ```
-dim_cohort ─────────┐
-dim_enrolment ──────┼──< fact_attendance >── dim_date (session_date)
-dim_programme_week ─┤
-                    └──< fact_assessment >── dim_competency
+dim_cohort[cohort_id] ──> dim_enrolment[cohort_id]
+dim_enrolment[enrolment_id] ──> fact_attendance[enrolment_id]
+dim_enrolment[enrolment_id] ──> fact_assessment[enrolment_id]
+dim_programme_week[programme_week] ──> fact_attendance[programme_week]
+dim_programme_week[programme_week] ──> fact_assessment[programme_week]
+dim_competency[competency_id] ──> fact_assessment[competency_id]
+dim_date[date] ──> fact_attendance[session_date]
+dim_date[date] ──> fact_assessment[assessment_date]
 ```
-All relationships are one-to-many with single-direction filters, from the dimension to the fact.
+- Cohort reaches the facts **only through `dim_enrolment`**, a deliberate small snowflake. Don't relate `dim_cohort` to the facts directly. Don't relate `dim_enrolment` to `dim_date` or `dim_programme_week`.
+- The facts' `cohort_id` and `employee_id` columns are there for SQL checks and drill-through labels. They're not relationship keys in this model.
+
+**Column types relevant to DAX** (checked against the views):
+- `dim_enrolment[has_started]` is an integer (1/0), so filter with `= 1`, not `TRUE()`.
+- `fact_attendance[is_present]`, `[is_absent]` and `[is_unrecorded]` are integer flags (1/0).
+- `fact_assessment[score]` is a whole number from 0 to 100.
+- `fact_assessment[week_over_week_change]` is blank when the previous week is missing.
+- `dim_enrolment[status_as_of_snapshot]` is text. It reflects the **snapshot date (2026-11-02) only**. A date slicer doesn't change it; as-of headcount by date needs status-history logic in a later build.
