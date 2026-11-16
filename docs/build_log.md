@@ -19,7 +19,7 @@
 | Owner walkthrough | `docs/walkthrough.md` (commands, expected output, troubleshooting, exercise) |
 | Tests | `tests/test_generator.py` (42, no database needed), `tests/test_sql_integration.py` (16, needs SQL Server) |
 
-### Test evidence (run in the Claude Code cloud container — not yet on the owner's machine)
+### ### Test evidence (Claude Code cloud container)
 - Python 3.13, with SQL Server 2025 Developer Edition on Linux. The owner's target is SQL Server Express or Developer on Windows; everything used here works on SQL Server 2017 and later.
 - `python -m pytest`: **42 passed**, 16 skipped (SQL tests skipped when no server is configured).
 - With a server configured: **58 passed**.
@@ -29,7 +29,7 @@
 
 ### Test evidence (owner's machine, 2026-11-16)
 Run by the owner on Windows in SSMS, using the SSMS route (walkthrough Route A).
-- SQL Server:Microsoft SQL Server 2022 (RTM-GDR) (KB5132747) - 16.0.1220.3 (X64)   Oct 21 2026 13:09:02   Copyright (C) 2022 Microsoft Corporation  Developer Edition (64-bit) on Windows
+- SQL Server: Microsoft SQL Server 2022 (RTM-GDR) (KB5132747) - 16.0.1220.3 (X64), Developer Edition (64-bit), on Windows
 - `000` → `001` → `002` → `003_load_synthetic_data.sql`: all 9 tables loaded with the expected row counts (1 / 3 / 206 / 5 / 208 / 552 / 120 / 6,698 / 6,655).
 - `validation_queries.sql`: **24 PASS + 2 INFO, no FAIL** (2 repeat employees; 533 unrecorded eligible attendance records).
 - `analysis_examples.sql` and `trace_one_enrolment.sql`: every result matched the reference numbers below.
