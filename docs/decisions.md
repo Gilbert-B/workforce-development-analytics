@@ -137,3 +137,11 @@ The fact views carry `cohort_id`, `enrolment_id` and `employee_id`. ChatGPT shou
 - There's no `CODEPAGE` option, because it isn't supported on SQL Server for Linux, where the script was tested. The files are plain ASCII, which a test enforces.
 
 **At scale:** you'd load from a staging area with a scheduled job, or with an ETL tool rather than a hand-run script.
+
+
+
+### D18 — Line endings must not change checksums
+**Found by:** the owner's first Python run on Windows. Regenerating the data left `generation_manifest.json` modified, although every CSV was identical.
+**Cause:** Git for Windows (`core.autocrlf = true`) checks text files out with CRLF line endings, so the config file's checksum differed. Separately, Python's `write_text()` writes CRLF on Windows unless told otherwise.
+**Fix:** the config checksum ignores line endings (`sha256_ignoring_line_endings`), and the manifest is always written with LF. The CSVs already were. `test_manifest_is_the_same_with_windows_line_endings` guards it.
+**Lesson:** code tested on only one operating system can hide platform bugs, so the owner's local run is the real test.

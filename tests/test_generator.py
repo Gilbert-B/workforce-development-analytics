@@ -323,3 +323,14 @@ def test_pre_start_cancellations_are_not_starters(dataset):
     events = events_by_enrolment(dataset)
     cancelled = [ev for ev in events.values() if "cancelled" in ev]
     assert cancelled and all("started" not in ev for ev in cancelled)
+
+
+def test_manifest_is_the_same_with_windows_line_endings(tmp_path):
+    """On Windows, Git can check files out with CRLF line endings. The
+    config checksum and the manifest must not change because of that."""
+    crlf_config = tmp_path / "config_crlf.toml"
+    crlf_config.write_bytes(CONFIG.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+    lf = gen.generate(CONFIG, tmp_path / "lf")
+    crlf = gen.generate(crlf_config, tmp_path / "crlf")
+    assert lf["config_sha256"] == crlf["config_sha256"]
+    assert b"\r\n" not in (tmp_path / "crlf" / "generation_manifest.json").read_bytes()

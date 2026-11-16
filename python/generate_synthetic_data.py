@@ -425,6 +425,11 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def sha256_ignoring_line_endings(path: Path) -> str:
+    """Checksum of a text file that is the same on Windows (CRLF line
+    endings) and Linux/macOS (LF), so the manifest matches everywhere."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
 
 def generate(config_path: Path, output_dir: Path, seed: int | None = None,
              as_of: date | None = None) -> dict:
@@ -446,7 +451,7 @@ def generate(config_path: Path, output_dir: Path, seed: int | None = None,
         "generator_version": GENERATOR_VERSION,
         "seed": seed,
         "as_of_date": as_of.isoformat(),
-        "config_sha256": sha256(config_path),
+        "config_sha256": sha256_ignoring_line_endings(config_path),
         "files": {},
     }
     for name, rows in tables.items():
@@ -455,7 +460,8 @@ def generate(config_path: Path, output_dir: Path, seed: int | None = None,
         manifest["files"][path.name] = {"rows": len(rows), "sha256": sha256(path)}
 
     (output_dir / "generation_manifest.json").write_text(
-        json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8",
+        newline="\n")   # write LF on Windows too (Python would otherwise write CRLF)
     return manifest
 
 
