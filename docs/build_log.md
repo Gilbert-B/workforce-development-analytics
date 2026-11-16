@@ -27,6 +27,14 @@
 - Fresh clone with a new virtual environment: regenerating produced byte-identical files, and all tests passed.
 - **SSMS route** (`000` → `001` → `002` → `003` → validation, run with `sqlcmd` against an empty server): same row counts, 24 PASS + 2 INFO. Re-running `003` works. A wrong folder path fails with error 4860 and leaves the data unchanged.
 
+### Test evidence (owner's machine, 2026-11-16)
+Run by the owner on Windows in SSMS, using the SSMS route (walkthrough Route A).
+- SQL Server:Microsoft SQL Server 2022 (RTM-GDR) (KB5132747) - 16.0.1220.3 (X64)   Oct 21 2026 13:09:02   Copyright (C) 2022 Microsoft Corporation  Developer Edition (64-bit) on Windows
+- `000` → `001` → `002` → `003_load_synthetic_data.sql`: all 9 tables loaded with the expected row counts (1 / 3 / 206 / 5 / 208 / 552 / 120 / 6,698 / 6,655).
+- `validation_queries.sql`: **24 PASS + 2 INFO, no FAIL** (2 repeat employees; 533 unrecorded eligible attendance records).
+- `analysis_examples.sql` and `trace_one_enrolment.sql`: every result matched the reference numbers below.
+- Not yet run on the owner's machine: the Python generator and the automated tests (walkthrough Route B).
+
 Compare your own run with [`docs/walkthrough.md`](walkthrough.md), which has the expected output for every step.
 
 ### Reference numbers for checking DAX (seed 20261115, as of 2026-11-02)
