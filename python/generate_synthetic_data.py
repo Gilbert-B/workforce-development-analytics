@@ -139,7 +139,8 @@ def simulate(config: dict, seed: int) -> dict:
     cohort_lookup = {}
     employee_counter = 0
 
-    def new_employee(hire_date: date) -> str:
+    def new_employee() -> str:
+        """Create a person. Their hire_date is set once we know when they enrol."""
         nonlocal employee_counter
         employee_counter += 1
         emp_id = f"EMP-{employee_counter:05d}"
@@ -147,7 +148,7 @@ def simulate(config: dict, seed: int) -> dict:
             "employee_id": emp_id,
             "first_name": pick(rng, FIRST_NAMES),
             "last_name": pick(rng, LAST_NAMES),
-            "hire_date": hire_date,
+            "hire_date": None,
         })
         return emp_id
 
@@ -185,8 +186,7 @@ def simulate(config: dict, seed: int) -> dict:
 
         people = list(returning)
         while len(people) < c_cfg["enrolments"]:
-            hire = start - timedelta(days=7 + int(rng.random() * 14))
-            people.append(new_employee(hire))
+            people.append(new_employee())
 
         declining_slots = set()
         while len(declining_slots) < att_cfg["declining_trainees_per_cohort"]:
@@ -202,6 +202,11 @@ def simulate(config: dict, seed: int) -> dict:
                 enrolled_date=start - timedelta(days=5 + int(rng.random() * 20)),
                 declining=i in declining_slots,
             )
+            # A new hire is hired 0-9 days BEFORE enrolling (never after).
+            # Returning employees keep the hire date from their first cohort.
+            employee = employees[int(emp_id.split("-")[1]) - 1]
+            if employee["hire_date"] is None:
+                employee["hire_date"] = e.enrolled_date - timedelta(days=int(rng.random() * 10))
             # Returning employees cannot cancel; they already chose to re-enrol.
             if emp_id not in returning and chance(rng, config["enrolment"]["pre_start_cancellation_rate"]):
                 e.cancelled_date = e.enrolled_date + timedelta(days=1 + int(rng.random() * 3))
@@ -420,6 +425,11 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def sha256_ignoring_line_endings(path: Path) -> str:
+    """Checksum of a text file that is the same on Windows (CRLF line
+    endings) and Linux/macOS (LF), so the manifest matches everywhere."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
 
 def generate(config_path: Path, output_dir: Path, seed: int | None = None,
              as_of: date | None = None) -> dict:
@@ -441,7 +451,7 @@ def generate(config_path: Path, output_dir: Path, seed: int | None = None,
         "generator_version": GENERATOR_VERSION,
         "seed": seed,
         "as_of_date": as_of.isoformat(),
-        "config_sha256": sha256(config_path),
+        "config_sha256": sha256_ignoring_line_endings(config_path),
         "files": {},
     }
     for name, rows in tables.items():
@@ -450,7 +460,8 @@ def generate(config_path: Path, output_dir: Path, seed: int | None = None,
         manifest["files"][path.name] = {"rows": len(rows), "sha256": sha256(path)}
 
     (output_dir / "generation_manifest.json").write_text(
-        json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8",
+        newline="\n")   # write LF on Windows too (Python would otherwise write CRLF)
     return manifest
 
 

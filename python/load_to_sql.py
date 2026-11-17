@@ -107,7 +107,10 @@ def load_csvs(conn: pyodbc.Connection, data_dir: Path) -> None:
 
 def run_validation(conn: pyodbc.Connection) -> bool:
     sql = (SQL_DIR / "validation_queries.sql").read_text(encoding="utf-8")
-    rows = conn.cursor().execute(sql).fetchall()
+    cur = conn.cursor().execute(sql)
+    while cur.description is None:   # skip the 'USE ...' message to reach the results
+        cur.nextset()
+    rows = cur.fetchall()
     print(f"\n  {'check':<46} {'rows':>6}  result")
     for r in rows:
         print(f"  {r.check_name:<46} {r.failing_rows:>6}  {r.result}")

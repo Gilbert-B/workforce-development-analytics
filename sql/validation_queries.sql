@@ -6,8 +6,9 @@
    Run against the WorkforceDevAnalytics database, e.g.:
        sqlcmd -S .\SQLEXPRESS -E -C -d WorkforceDevAnalytics -i sql\validation_queries.sql
    python/load_to_sql.py runs this automatically after every load.
-   (No GO / USE here, so the loader can send it as a single statement.)
+   (No GO here, so the loader can send it as a single batch.)
 --------------------------------------------------------------------------- */
+USE WorkforceDevAnalytics;   -- so SSMS runs this in the right database
 WITH snapshot AS (
     SELECT as_of_date FROM core.data_snapshot
 ),
@@ -108,6 +109,11 @@ checks AS (
            (SELECT COUNT(*) FROM core.enrolment AS e
             LEFT JOIN event_dates AS d ON d.enrolment_id = e.enrolment_id
             WHERE d.enrolled_on IS NULL)
+    UNION ALL
+    SELECT 'enrolled_before_hire_date', 'error',   -- found by tracing one enrolment
+           (SELECT COUNT(*) FROM core.enrolment AS e
+            JOIN core.employee AS emp ON emp.employee_id = e.employee_id
+            WHERE e.enrolled_date < emp.hire_date)
     UNION ALL
     SELECT 'end_event_without_started_event', 'error',
            (SELECT COUNT(*) FROM event_dates

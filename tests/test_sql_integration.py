@@ -51,7 +51,10 @@ def test_row_counts_match_csv_files(conn, committed):
 
 def test_every_validation_check_passes(conn):
     sql = (REPO_ROOT / "sql" / "validation_queries.sql").read_text(encoding="utf-8")
-    rows = conn.cursor().execute(sql).fetchall()
+    cur = conn.cursor().execute(sql)
+    while cur.description is None:   # skip the 'USE ...' message
+        cur.nextset()
+    rows = cur.fetchall()
     failures = [(r.check_name, r.failing_rows) for r in rows if r.result == "FAIL"]
     assert not failures
     assert len(rows) >= 20

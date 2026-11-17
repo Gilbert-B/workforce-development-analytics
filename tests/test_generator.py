@@ -170,6 +170,21 @@ def test_status_events_are_in_a_valid_order(dataset):
                 assert "started" in ev and ev[end] >= ev["started"], enrolment_id
 
 
+def test_nobody_enrols_before_they_are_hired(dataset):
+    """Bug found by tracing EMP-00006: hire and enrolment dates used to be
+    drawn independently, so some people enrolled before being hired."""
+    hired = {emp["employee_id"]: emp["hire_date"] for emp in dataset["employee"]}
+    for e in dataset["enrolment"]:
+        assert hired[e["employee_id"]] <= e["enrolled_date"], e["enrolment_id"]
+
+
+def test_csv_files_are_plain_ascii(generated_dir):
+    """sql/003_load_synthetic_data.sql loads the files without a CODEPAGE
+    setting, which is only safe while they contain no accented characters."""
+    for path in generated_dir.glob("*.csv"):
+        path.read_bytes().decode("ascii")   # raises if any byte is non-ASCII
+
+
 def test_recorded_timestamp_never_before_effective_date(dataset):
     for ev in dataset["enrolment_status_event"]:
         assert ev["recorded_at"][:10] >= ev["effective_date"]
@@ -308,3 +323,14 @@ def test_pre_start_cancellations_are_not_starters(dataset):
     events = events_by_enrolment(dataset)
     cancelled = [ev for ev in events.values() if "cancelled" in ev]
     assert cancelled and all("started" not in ev for ev in cancelled)
+
+
+def test_manifest_is_the_same_with_windows_line_endings(tmp_path):
+    """On Windows, Git can check files out with CRLF line endings. The
+    config checksum and the manifest must not change because of that."""
+    crlf_config = tmp_path / "config_crlf.toml"
+    crlf_config.write_bytes(CONFIG.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+    lf = gen.generate(CONFIG, tmp_path / "lf")
+    crlf = gen.generate(crlf_config, tmp_path / "crlf")
+    assert lf["config_sha256"] == crlf["config_sha256"]
+    assert b"\r\n" not in (tmp_path / "crlf" / "generation_manifest.json").read_bytes()

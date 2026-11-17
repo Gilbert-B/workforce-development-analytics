@@ -31,10 +31,11 @@ This Portfolio Edition is a **new, fictional scenario**. Its multi-cohort design
 |---|---|
 | Reproducible synthetic data (fixed seed + as-of date, verified by checksums) | `python/generate_synthetic_data.py` |
 | Relational design: grains, keys and constraints | `sql/001_create_schema.sql` |
+| Bulk loading with dynamic SQL in a transaction | `sql/003_load_synthetic_data.sql` |
 | Effective-dated status: "who was active on date X?" with no future leakage | `rpt.fn_enrolment_status_as_of`, `rpt.enrolment_status_history` |
 | Unknown ≠ absent: missing attendance kept explicit | `rpt.fact_attendance` |
 | Window functions (`LEAD`, `LAG`) and CTEs | `sql/002_reporting_views.sql` |
-| Automated data validation | `sql/validation_queries.sql` (23 checks) |
+| Automated data validation | `sql/validation_queries.sql` (24 checks) |
 | Tests: reproducibility, integrity, business rules | `tests/` |
 
 ## Architecture (Build 01)
@@ -71,7 +72,9 @@ Full details are in [`docs/data_dictionary.md`](docs/data_dictionary.md).
 
 ## How to run it
 
-**You need:**
+**Only want SSMS?** Copy `data/synthetic/*.csv` to `C:\WorkforceData\`, then run `sql/000` → `001` → `002` → `003_load_synthetic_data.sql` → `validation_queries.sql` in SSMS. No Python is needed. Step-by-step instructions are in [`docs/walkthrough.md`](docs/walkthrough.md) (Route A).
+
+**Command-line route, which also runs the tests. You need:**
 - Python **3.11+**;
 - SQL Server **2017+** (the free Express or Developer edition);
 - Microsoft **ODBC Driver 17 or 18 for SQL Server**, which is usually installed with SQL Server or SSMS.
@@ -105,6 +108,8 @@ On macOS or Linux, use `python3 -m venv .venv` and `source .venv/bin/activate`.
 
 **Connect Power BI:** Get Data → SQL Server → server `localhost\SQLEXPRESS`, database `WorkforceDevAnalytics`, **Import** mode. Then select the `rpt.*` views.
 
+**Step-by-step guide with the output you should see, troubleshooting and a practice exercise:** [`docs/walkthrough.md`](docs/walkthrough.md).
+
 **Reference numbers to check measures against:** [`docs/build_log.md`](docs/build_log.md) and `sql/analysis_examples.sql`.
 
 ---
@@ -132,3 +137,4 @@ docs/          data dictionary, decisions log, build log
 - [`docs/decisions.md`](docs/decisions.md): what was decided and why, including the items still under review.
 - [`docs/data_dictionary.md`](docs/data_dictionary.md): every table, view and column.
 - [`docs/build_log.md`](docs/build_log.md): what each build delivered, test evidence and reference numbers.
+- [`docs/walkthrough.md`](docs/walkthrough.md): run it yourself, check your results against the expected output, and trace one person through the pipeline.

@@ -10,7 +10,7 @@
     },
     "employee.csv": {
       "rows": 206,
-      "sha256": "8924d0411f411cccd000dafdca232895afc82d83df2443b9ab888e84379618e0"
+      "sha256": "e88e2e930e2f62e40d643b806195e0cb1d9dab7af7bb8108ae130c55302c0b07"
     },
     "competency.csv": {
       "rows": 5,
@@ -18,23 +18,23 @@
     },
     "enrolment.csv": {
       "rows": 208,
-      "sha256": "0cdd47fb67888c1d08b2d38236012b9b5f1136358f6886a177adf36f33eb0c78"
+      "sha256": "17120a30aba44d1dc2848bc52807d1dc185e515b1ebff318b10b999ef837d741"
     },
     "enrolment_status_event.csv": {
-      "rows": 556,
-      "sha256": "ac4659013addaee436942fe3ad914c25d277ea8a034fc3f00ed7699bd18a2227"
+      "rows": 552,
+      "sha256": "a810e7ade15db5b1a51fb90f2a0ec74ceb2837ca1dfe5dad0e448430f1fa90d0"
     },
     "scheduled_session.csv": {
       "rows": 120,
       "sha256": "cb9278e1e1c4f8a7dd2d201a969d18cc589e4392f686fe151960eae879e7d6fe"
     },
     "attendance.csv": {
-      "rows": 6706,
-      "sha256": "e11d1b320c1b7f9c6fbaf19801efe70fe891965e633e3df4b800bca6d2d240d1"
+      "rows": 6698,
+      "sha256": "518c31e4ad019813c2a4f9500cc437281e63bcf9b52b6cd4e72e49ce6faa3421"
     },
     "assessment.csv": {
-      "rows": 6680,
-      "sha256": "e008b76f842f5bb81b471ce5637a5c89697021f93d16df303d5097ecfe2d75aa"
+      "rows": 6655,
+      "sha256": "08a6d68bda9dba7e01a5a0f47b0764821f9b1336a87c1161aa738f3138f27191"
     },
     "data_snapshot.csv": {
       "rows": 1,
