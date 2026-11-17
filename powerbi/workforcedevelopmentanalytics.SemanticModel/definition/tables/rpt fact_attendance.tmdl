@@ -36,9 +36,8 @@ table 'rpt fact_attendance'
 			)
 			
 			```
+		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: bcc6c278-3a92-42e0-a1af-11b3766183a4
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Attendance Recording Rate' = ```
 			
@@ -48,9 +47,8 @@ table 'rpt fact_attendance'
 			)
 			
 			```
+		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 06c0e13f-6a82-40ac-9ff8-b076adea8da6
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column enrolment_id
 		dataType: string
