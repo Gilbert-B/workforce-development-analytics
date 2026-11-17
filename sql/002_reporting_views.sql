@@ -8,7 +8,7 @@
 
    Contents
      dim_cohort, dim_enrolment, dim_employee, dim_competency,
-     dim_programme_week, dim_date
+     dim_programme_week, dim_date, dim_snapshot
      fact_attendance            every ELIGIBLE enrolment x session, with
                                 gaps made explicit as 'Unrecorded'
      fact_assessment            one row per competency score
@@ -152,6 +152,16 @@ GO
 CREATE OR ALTER VIEW rpt.dim_competency AS
 SELECT competency_id, competency_name, display_order
 FROM core.competency;
+GO
+
+/* ===== dim_snapshot ====================================================== */
+-- One row: the as-of date of the loaded synthetic dataset. Power BI imports
+-- it as a DISCONNECTED table (no relationships) so the report can show
+-- "data as of ..." from the data itself, and the label updates whenever the
+-- data is regenerated, reloaded and the report refreshed.
+CREATE OR ALTER VIEW rpt.dim_snapshot AS
+SELECT as_of_date
+FROM core.data_snapshot;
 GO
 
 /* ===== dim_programme_week ================================================ */
