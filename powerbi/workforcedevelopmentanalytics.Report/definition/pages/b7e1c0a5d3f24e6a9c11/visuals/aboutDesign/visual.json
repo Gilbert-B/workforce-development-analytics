@@ -4,10 +4,10 @@
   "position": {
     "x": 1044,
     "y": 614,
-    "z": 1003,
+    "z": 1004,
     "width": 812,
     "height": 410,
-    "tabOrder": 1003
+    "tabOrder": 1004
   },
   "visual": {
     "visualType": "textbox",
@@ -22,7 +22,7 @@
                     "value": "Design techniques on display",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "15pt",
+                      "fontSize": "18pt",
                       "color": "#F6F0E4"
                     }
                   }
@@ -34,7 +34,7 @@
                     "value": "•  Designed background canvas (SVG → PNG) with transparent visuals on top",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "13pt",
                       "color": "#C4CDD8"
                     }
                   }
@@ -46,7 +46,7 @@
                     "value": "•  Icon navigation rail with page-navigation buttons",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "13pt",
                       "color": "#C4CDD8"
                     }
                   }
@@ -58,7 +58,7 @@
                     "value": "•  Bookmark toggles: Status ↔ Attendance quality, By cohort ↔ Competency heatmap",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "13pt",
                       "color": "#C4CDD8"
                     }
                   }
@@ -70,7 +70,7 @@
                     "value": "•  Definitions drawer opened and closed by bookmarks",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "13pt",
                       "color": "#C4CDD8"
                     }
                   }
@@ -82,7 +82,7 @@
                     "value": "•  Conditional-format heatmap and a custom dark theme",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "13pt",
                       "color": "#C4CDD8"
                     }
                   }
@@ -94,7 +94,7 @@
                     "value": "•  Interactions tuned so chart clicks never change the headline KPIs",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "13pt",
                       "color": "#C4CDD8"
                     }
                   }

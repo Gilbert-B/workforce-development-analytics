@@ -65,14 +65,89 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "overview-background1680870119162421.png",
-          "path": "overview-background1680870119162421.png",
-          "type": "Image"
-        },
-        {
           "name": "WorkforceIntelligenceDark.json",
           "path": "WorkforceIntelligenceDark.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "overview-background.png",
+          "path": "overview-background.png",
+          "type": "Image"
+        },
+        {
+          "name": "about-background.png",
+          "path": "about-background.png",
+          "type": "Image"
+        },
+        {
+          "name": "icon-about-6f7d90.svg",
+          "path": "icon-about-6f7d90.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-about-e3a640.svg",
+          "path": "icon-about-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-attendance-3e4a5c.svg",
+          "path": "icon-attendance-3e4a5c.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-cap-3fc1b0.svg",
+          "path": "icon-cap-3fc1b0.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-check-3fc1b0.svg",
+          "path": "icon-check-3fc1b0.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-cohorts-3e4a5c.svg",
+          "path": "icon-cohorts-3e4a5c.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-doc-e3a640.svg",
+          "path": "icon-doc-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-overview-6f7d90.svg",
+          "path": "icon-overview-6f7d90.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-overview-e3a640.svg",
+          "path": "icon-overview-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-play-e3a640.svg",
+          "path": "icon-play-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-skills-3e4a5c.svg",
+          "path": "icon-skills-3e4a5c.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-star-e3a640.svg",
+          "path": "icon-star-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-trainee-3e4a5c.svg",
+          "path": "icon-trainee-3e4a5c.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-users-3fc1b0.svg",
+          "path": "icon-users-3fc1b0.svg",
+          "type": "Image"
         }
       ]
     }

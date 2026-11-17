@@ -143,43 +143,29 @@ def svg_base(active: str) -> list[str]:
            # navigation rail
            f'<rect width="{RAIL}" height="{H}" fill="#030912" fill-opacity=".65"/>',
            f'<line x1="{RAIL}" y1="0" x2="{RAIL}" y2="{H}" stroke="#FFFFFF" stroke-opacity=".09"/>',
-           '<rect x="22" y="28" width="52" height="52" rx="14" fill="url(#logo)"/>',
-           svg_text(48, 61, "WI", 19, "#1A1205", 800, "middle")]
+           '<rect x="22" y="28" width="52" height="52" rx="14" fill="url(#logo)"/>']
     for key, label, cy, page in NAV:
         on = key == active
-        colour = GOLD if on else ("#6F7D90" if page else "#3E4A5C")
         if on:
             out.append(f'<rect x="18" y="{cy-30}" width="60" height="60" rx="14" fill="{GOLD}" fill-opacity=".13"/>')
             out.append(f'<rect x="0" y="{cy-16}" width="4" height="32" rx="2" fill="{GOLD}"/>')
-        out.append(svg_icon(key, 35, cy - 13, 26, colour))
-        out.append(svg_text(48, cy + 40, label, 10, colour, 600 if on else 400, "middle"))
-        if page is None:
-            out.append(svg_text(48, cy + 50, "soon", 8, "#3E4A5C", 400, "middle", 1))
     return out
 
 
 def overview_svg() -> str:
     out = svg_base("overview")
-    # header: eyebrow, pills and button frames (button text/icons are drawn here,
-    # transparent buttons sit on top for the click action)
-    out.append(svg_text(X0, 52, "PAYMENTS OPERATIONS · ONBOARDING INTELLIGENCE", 13, GOLD, 600, spacing=2.3))
+    # header: snapshot pill and button frames (text and icons are Power BI visuals)
     out.append(f'<rect x="1346" y="40" width="284" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
     out.append(f'<circle cx="1368" cy="60" r="4" fill="{TEAL}"/><circle cx="1368" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
-    for x, w, icon, text in ((1644, 128, "info", "Definitions"), (1786, 94, "reset", "Reset")):
+    for x, w in ((1644, 128), (1786, 94)):
         out.append(f'<rect x="{x}" y="40" width="{w}" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>')
-        out.append(svg_icon(icon, x + 14, 52, 16, "#C9D2DE", 2.2))
-        out.append(svg_text(x + 38, 65, text, 14, "#C9D2DE"))
     # cohort selector track + note
     out.append(f'<rect x="{X0}" y="120" width="540" height="52" rx="26" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>')
-    out.append(svg_text(692, 151, "Cohorts compared by programme week, not calendar date", 13, "#7F8EA2"))
-    # KPI frames: icon tile, label, context line
+    # KPI frames + coloured icon tile (icon, label and context line are visuals)
     for i, (_, _, _, label, context, icon, accent) in enumerate(KPIS):
         x = X0 + i * (KPI_W + KPI_GAP)
         out.append(svg_frame(x, KPI_Y, KPI_W, KPI_H))
         out.append(f'<rect x="{x+24}" y="{KPI_Y+22}" width="40" height="40" rx="12" fill="{accent}" fill-opacity=".14"/>')
-        out.append(svg_icon(icon, x + 33, KPI_Y + 31, 22, accent))
-        out.append(svg_text(x + 76, KPI_Y + 48, label, 12, MUTED, 600, spacing=1.4))
-        out.append(svg_text(x + 24, KPI_Y + 150, context, 13, "#8FA0B4"))
     # panels + chip tracks
     for (x, y, w, h), chip_w in ((LEFT, 230), (RIGHT, 226)):
         out.append(svg_frame(x, y, w, h))
@@ -190,7 +176,6 @@ def overview_svg() -> str:
 
 def about_svg() -> str:
     out = svg_base("about")
-    out.append(svg_text(X0, 52, "ABOUT THIS REPORT", 13, GOLD, 600, spacing=2.3))
     out.append(svg_frame(X0, 130, 860, 910))
     out.append(svg_frame(1020, 130, 860, 440))
     out.append(svg_frame(1020, 590, 860, 450))
@@ -249,9 +234,44 @@ def container(name, x, y, w, h, z, visual, hidden=False) -> dict:
     return v
 
 
-def textbox(runs_by_line: list[list[tuple[str, dict]]]) -> dict:
-    return {"visualType": "textbox", "objects": {"general": [{"properties": {"paragraphs": [
-        {"textRuns": [{"value": t, "textStyle": s} for t, s in runs]} for runs in runs_by_line]}}]}}
+def textbox(runs_by_line: list[list[tuple[str, dict]]], align: str | None = None) -> dict:
+    def para(runs):
+        p = {"textRuns": [{"value": t, "textStyle": s} for t, s in runs]}
+        if align:
+            p["horizontalTextAlignment"] = align
+        return p
+    return {"visualType": "textbox", "objects": {"general": [{"properties": {
+        "paragraphs": [para(r) for r in runs_by_line]}}]}}
+
+
+# ---- icons: one small SVG file per icon + colour, shown in an image visual --
+ICON_FILES: set[str] = set()
+
+
+def icon_file(name: str, hex_code: str) -> str:
+    """Register an icon SVG (written in main()) and return its resource name."""
+    fname = f"icon-{name}-{hex_code.lstrip('#').lower()}.svg"
+    ICON_FILES.add(fname)
+    return fname
+
+
+def icon_svg(fname: str) -> str:
+    _, name, hex_code = fname.removesuffix(".svg").split("-", 2)
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" '
+            f'stroke="#{hex_code}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</svg>')
+
+
+def image(fname: str) -> dict:
+    return {"visualType": "image", "objects": {
+        "general": props(imageUrl={"expr": {"ResourcePackageItem": {
+            "PackageName": "RegisteredResources", "PackageType": 1, "ItemName": fname}}}),
+        "imageScaling": props(imageScalingType="Fit")}}
+
+
+# Power BI expects a full font STACK in visual formatting (learned from Desktop)
+FONT = {"regular": "'Segoe UI', wf_segoe-ui_normal, helvetica, arial, sans-serif",
+        "semibold": "'Segoe UI Semibold', wf_segoe-ui_semibold, helvetica, arial, sans-serif",
+        "bold": "'Segoe UI Bold', wf_segoe-ui_bold, helvetica, arial, sans-serif"}
 
 
 def style(size=13, colour_=CREAM, weight="Segoe UI") -> dict:
@@ -262,8 +282,9 @@ def button(text: str, *, link: dict | None, fg=MUTED, fill: str | None = None, f
            hover_fill="#FFFFFF", hover_alpha=92, size=10, tooltip: str | None = None) -> dict:
     """Action button. fill_alpha / hover_alpha are TRANSPARENCY percentages (100 = invisible)."""
     objects = {
+        # two entries: per-state text settings, plus the master "show text" switch
         "text": props({"id": "default"}, show=bool(text), text=text, fontColor=colour(fg),
-                      fontSize=size, fontFamily="Segoe UI Semibold"),
+                      fontSize=size, fontFamily=FONT["semibold"]) + props(show=bool(text)),
         "fill": props({"id": "default"}, show=True, fillColor=colour(fill or "#000000"),
                       transparency=100 - fill_alpha if fill else 100),
         "outline": props({"id": "default"}, show=False),
@@ -291,6 +312,23 @@ def page_link(page: str) -> dict:
 # =========================================================================
 # 3. OVERVIEW PAGE VISUALS
 # =========================================================================
+def nav_decor(current_key: str, z: int) -> list[dict]:
+    """Logo text, nav icons and labels as editable visuals (frames are in the background)."""
+    out = [container("logoText", 22, 36, 52, 36, z, textbox([[("WI", {"fontFamily": "Segoe UI Bold",
+                                                                     "fontSize": "14pt", "color": "#1A1205"})]], "center"))]
+    z += 1
+    for key, label, cy, page in NAV:
+        on = key == current_key
+        tone = GOLD if on else ("#6F7D90" if page else "#3E4A5C")
+        out.append(container(f"navIcon_{key}", 35, cy - 13, 26, 26, z, image(icon_file(key, tone)))); z += 1
+        lines = [[(label, {"fontFamily": "Segoe UI Semibold" if on else "Segoe UI", "fontSize": "7pt", "color": tone})]]
+        if page is None:
+            lines.append([("soon", {"fontFamily": "Segoe UI", "fontSize": "6pt", "color": "#3E4A5C"})])
+        out.append(container(f"navLabel_{key}", 4, cy + 22, 88, 34 if page is None else 24, z,
+                             textbox(lines, "center"))); z += 1
+    return out
+
+
 def nav_buttons(current: str, z: int) -> list[dict]:
     out = []
     for key, label, cy, page in NAV:
@@ -309,18 +347,23 @@ def overview_visuals() -> list[dict]:
         nonlocal z
         v.append(container(name, x, y, w, h, z, visual, **kw)); z += 1
 
-    # Header
+    # Rail decoration + header text (all editable in Desktop)
+    v.extend(nav_decor("overview", 100)); z = 1000
+    add("headerEyebrow", X0 - 6, 34, 900, 30, textbox([[("PAYMENTS OPERATIONS · ONBOARDING INTELLIGENCE",
+        {"fontFamily": "Segoe UI Semibold", "fontSize": "10pt", "color": GOLD})]]))
     add("headerTitle", X0 - 6, 58, 1000, 64, textbox([[("Workforce Intelligence Overview",
         {"fontFamily": "Segoe UI Bold", "fontSize": "30pt", "color": CREAM})]]))
     add("snapshotLabel", 1380, 42, 246, 36, {
         "visualType": "card",
         "query": {"queryState": {"Values": {"projections": [proj("Measure", SNAP, "Snapshot Label")]}}},
-        "objects": {"labels": props(fontSize=10, color=colour("#C9D2DE"), fontFamily="Segoe UI"),
+        "objects": {"labels": props(fontSize=10, color=colour("#C9D2DE"), fontFamily=FONT["regular"]),
                     "categoryLabels": props(show=False)}})
-    add("btnDefinitions", 1644, 40, 128, 40, button("", link=bookmark_link("bmDrawerOpen"), hover_alpha=90,
-                                                    tooltip="Show definitions"))
-    add("btnReset", 1786, 40, 94, 40, button("", link=bookmark_link("bmReset"), hover_alpha=90,
-                                             tooltip="Reset filters and views"))
+    add("btnDefinitions", 1644, 40, 128, 40, button("ⓘ  Definitions", link=bookmark_link("bmDrawerOpen"),
+                                                    fg="#C9D2DE", hover_alpha=90, size=11, tooltip="Show definitions"))
+    add("btnReset", 1786, 40, 94, 40, button("↺  Reset", link=bookmark_link("bmReset"),
+                                             fg="#C9D2DE", hover_alpha=90, size=11, tooltip="Reset filters and views"))
+    add("cohortNote", 686, 132, 520, 30, textbox([[("Cohorts compared by programme week, not calendar date",
+        {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": "#7F8EA2"})]]))
 
     # Cohort selector: horizontal tiles inside the drawn track
     add("cohortSlicer", X0 + 8, 124, 524, 44, {
@@ -335,12 +378,19 @@ def overview_visuals() -> list[dict]:
                            outlineStyle=0, textSize=11),
         }})
 
-    # KPI numbers (frames, icons, labels and context lines are in the background)
-    for i, (vid, table, name, *_rest) in enumerate(KPIS):
+    # KPI cards: icon + label + number + context line (frame is in the background)
+    for i, (vid, table, name, label, context, icon, accent) in enumerate(KPIS):
         x = X0 + i * (KPI_W + KPI_GAP)
-        add(vid, x + 14, KPI_Y + 66, KPI_W - 28, 66, {
+        add(f"{vid}Icon", x + 33, KPI_Y + 31, 22, 22, image(icon_file(icon, accent)))
+        add(f"{vid}Label", x + 70, KPI_Y + 28, KPI_W - 80, 30, textbox([[(label,
+            {"fontFamily": "Segoe UI Semibold", "fontSize": "9pt", "color": MUTED})]]))
+        add(f"{vid}Context", x + 18, KPI_Y + 130, KPI_W - 30, 30, textbox([[(context,
+            {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": "#8FA0B4"})]]))
+        add(vid, x + 14, KPI_Y + 70, KPI_W - 28, 62, {
             "visualType": "card",
-            "query": {"queryState": {"Values": {"projections": [proj("Measure", table, name)]}}}})
+            "query": {"queryState": {"Values": {"projections": [proj("Measure", table, name)]}}},
+            "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=32, color=colour(CREAM)),
+                        "categoryLabels": props(show=False)}})
 
     # ---- left panel: Status  <->  Attendance quality
     lx, ly, lw, _ = LEFT
@@ -486,12 +536,15 @@ def overview_visuals() -> list[dict]:
 # =========================================================================
 def about_visuals() -> list[dict]:
     v, z = [], 1000
-    h, p, b = style(15, CREAM, "Segoe UI Semibold"), style(11, "#C4CDD8"), style(11, CREAM, "Segoe UI Semibold")
+    h, p, b = style(18, CREAM, "Segoe UI Semibold"), style(13, "#C4CDD8"), style(13, CREAM, "Segoe UI Semibold")
 
     def add(name, x, y, w, h, visual, **kw):
         nonlocal z
         v.append(container(name, x, y, w, h, z, visual, **kw)); z += 1
 
+    v.extend(nav_decor("about", 100)); z = 1000
+    add("aboutEyebrow", X0 - 6, 34, 900, 30, textbox([[("ABOUT THIS REPORT",
+        {"fontFamily": "Segoe UI Semibold", "fontSize": "10pt", "color": GOLD})]]))
     add("aboutTitle", X0 - 6, 58, 1100, 64, textbox([[("Workforce Development & Performance Intelligence",
         {"fontFamily": "Segoe UI Bold", "fontSize": "26pt", "color": CREAM})]]))
     add("aboutStory", X0 + 24, 154, 812, 860, textbox([
@@ -530,11 +583,13 @@ def about_visuals() -> list[dict]:
 # 5. PAGES, INTERACTIONS AND BOOKMARKS
 # =========================================================================
 def page_json(page_id: str, display: str, background: str, interactions=None) -> dict:
-    img = {"image": {
+    # NB: the property "image" contains an object that is ALSO called "image"
+    # (this nesting is how Power BI Desktop writes it).
+    img = {"image": {"image": {
         "name": literal(background),
         "url": {"expr": {"ResourcePackageItem": {"PackageName": "RegisteredResources", "PackageType": 1,
                                                  "ItemName": background}}},
-        "scaling": literal("Fit")}}
+        "scaling": literal("Fit")}}}
     page = {"$schema": S_PAGE, "name": page_id, "displayName": display, "displayOption": "FitToPage",
             "height": H, "width": W,
             "objects": {"background": [{"properties": {**img, "transparency": literal(0)}}],
@@ -607,7 +662,15 @@ def register_resources() -> None:
         "name": "RegisteredResources", "type": "RegisteredResources",
         "items": [{"name": THEME.name, "path": THEME.name, "type": "CustomTheme"},
                   {"name": BG_OVERVIEW, "path": BG_OVERVIEW, "type": "Image"},
-                  {"name": BG_ABOUT, "path": BG_ABOUT, "type": "Image"}]})
+                  {"name": BG_ABOUT, "path": BG_ABOUT, "type": "Image"}]
+                 + [{"name": f, "path": f, "type": "Image"} for f in sorted(ICON_FILES)]})
+    for f in sorted(ICON_FILES):
+        (RESOURCES / f).write_text(icon_svg(f), encoding="utf-8", newline="\n")
+    # drop icons / images no longer used (e.g. Desktop's renamed copies)
+    keep = {THEME.name, BG_OVERVIEW, BG_ABOUT, *ICON_FILES}
+    for f in RESOURCES.iterdir():
+        if f.name not in keep and f.suffix in {".png", ".svg"}:
+            f.unlink()
     write_json(path, report)
     # remove the UX-01 light theme from the resources if present
     old = RESOURCES / "WorkforceIntelligence.json"
