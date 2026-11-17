@@ -115,5 +115,19 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
 - Model: Microsoft's TMDL parser (`Microsoft.AnalysisServices` 19.84.1) loads the model. It has 8 tables, 13 measures and the 8 approved M:1 single-direction relationships. Auto date/time is off, and `rpt dim_date` is the date table, keyed on `date`. No existing measure lines changed.
 - Report: all 17 PBIR JSON files validate against Microsoft's schemas (report 3.3.0, page 2.1.0, visualContainer 2.13.0). Three deliberately broken copies were all rejected, which proves the check works. All 17 field references used by visuals exist in the model.
 
-**Not yet checked:** opening, refreshing and viewing the page in Power BI Desktop on the owner's machine.
+**Owner's Power BI Desktop validation (2026-11-17, Windows, SQL Server 2022 Developer):**
+- Opened the PBIP and refreshed it. The page renders as designed, and the snapshot label reads `Data as of 2 Nov 2026 | Synthetic data`.
+- KPI cards match the reference numbers: 199 · 63 · 127 · 66.6 · 92.1% · 92.6%.
+- Status bars: Cohort 1 65 completed / 3 withdrawn; Cohort 2 62 / 5; Cohort 3 63 active / 1 withdrawn.
+- Competency lines: Cohort 2 is highest (80.4 at Week 8); Cohort 3 stops at Week 6.
+- **Practice tasks done by the owner:** percentage format on both rate measures (`formatString: 0.0%`), and the card label renamed to "Avg competency score".
+- **What Power BI changed on save (reviewed, all harmless):**
+  - it upgraded visuals to schema 2.14.0;
+  - it re-wrote the theme and the Snapshot Label formula in its own style, with no value changes;
+  - it saved the Filters pane as collapsed;
+  - it added auto-generated Q&A language data in `cultures/en-GB.tmdl`.
+- **Final checks (Claude):**
+  - the model loads in Microsoft's TMDL parser, with the 8 approved relationships and Auto date/time off;
+  - no cache or `.pbix` files are tracked, and the privacy scan is clean;
+  - PBIR schema check not possible after the save: Desktop now writes visualContainer 2.14.0, which Microsoft hasn't yet published.
 
