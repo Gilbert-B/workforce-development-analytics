@@ -1,0 +1,113 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 524.03007518796994,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 989,
+            "y": 286
+          },
+          "nodeIndex": "rpt dim_cohort",
+          "nodeLineageTag": "1e7ff593-9c6e-488b-8f6d-6a06ab482add",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 629.574759815958,
+            "y": 0
+          },
+          "nodeIndex": "rpt dim_competency",
+          "nodeLineageTag": "a8315087-bcc6-4503-8a27-899810db34d5",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 414.89420849934231,
+            "y": 283
+          },
+          "nodeIndex": "rpt dim_date",
+          "nodeLineageTag": "9ae42667-4a64-4dc0-a5fa-b26b223c6d81",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 674,
+            "y": 274
+          },
+          "nodeIndex": "rpt dim_enrolment",
+          "nodeLineageTag": "fc262d84-559f-4222-85eb-dbcd6365fcd2",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 13.369752799366779,
+            "y": 440.56831605285788
+          },
+          "nodeIndex": "rpt dim_programme_week",
+          "nodeLineageTag": "879b7cc6-e501-4469-bd1e-3bd5633554f5",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 53.894208499342312,
+            "y": 12.246285152280279
+          },
+          "nodeIndex": "rpt fact_assessment",
+          "nodeLineageTag": "9b7739e2-01e0-4b21-9c41-54e1aed3087c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 729.161096027605
+          },
+          "nodeIndex": "rpt fact_attendance",
+          "nodeLineageTag": "3854ae56-a5be-446f-9492-81e01469cf43",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 69.270833333333343,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}
