@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "kpiAvgCompetency",
   "position": {
     "x": 1140,
     "y": 128,
     "z": 9000,
-    "width": 236,
     "height": 150,
+    "width": 236,
     "tabOrder": 9000
   },
   "visual": {
@@ -27,8 +27,8 @@
                 }
               },
               "queryRef": "rpt dim_competency.Average Competency Score",
-              "nativeQueryRef": "Average Competency Score",
-              "displayName": "Average competency score (0-100)"
+              "nativeQueryRef": "Avg competency score",
+              "displayName": "Avg competency score"
             }
           ]
         }
