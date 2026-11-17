@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "headerTitle",
   "position": {
     "x": 130,
     "y": 58,
-    "z": 1000,
-    "width": 1000,
+    "z": 0,
     "height": 64,
-    "tabOrder": 1000
+    "width": 1000,
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "textbox",
@@ -21,9 +21,9 @@
                   {
                     "value": "Workforce Intelligence Overview",
                     "textStyle": {
-                      "fontFamily": "Segoe UI Bold",
+                      "fontFamily": "Segoe (Bold)",
                       "fontSize": "30pt",
-                      "color": "#F6F0E4"
+                      "color": "#f6f0e4"
                     }
                   }
                 ]

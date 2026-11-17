@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "rightTitleCohort",
   "position": {
     "x": 1138,
     "y": 402,
-    "z": 1019,
-    "width": 460,
+    "z": 19000,
     "height": 64,
-    "tabOrder": 1019
+    "width": 460,
+    "tabOrder": 19000
   },
   "visual": {
     "visualType": "textbox",

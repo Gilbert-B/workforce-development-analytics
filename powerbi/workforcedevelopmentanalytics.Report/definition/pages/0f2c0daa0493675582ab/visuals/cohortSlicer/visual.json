@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "cohortSlicer",
   "position": {
     "x": 144,
     "y": 124,
-    "z": 1004,
-    "width": 524,
+    "z": 4000,
     "height": 44,
-    "tabOrder": 1004
+    "width": 524,
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "slicer",
@@ -28,6 +28,7 @@
               },
               "queryRef": "rpt dim_cohort.cohort_name",
               "nativeQueryRef": "cohort_name",
+              "active": true,
               "displayName": "Cohort"
             }
           ]
@@ -56,6 +57,61 @@
                 "Literal": {
                   "Value": "1D"
                 }
+              }
+            },
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "r",
+                    "Entity": "rpt dim_cohort",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "r"
+                                }
+                              },
+                              "Property": "cohort_name"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'2026 Cohort 2'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'2026 Cohort 3'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'2026 Cohort 1'"
+                              }
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                ]
               }
             }
           }

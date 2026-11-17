@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "btnReset",
   "position": {
     "x": 1786,
     "y": 40,
-    "z": 1003,
-    "width": 94,
+    "z": 3000,
     "height": 40,
-    "tabOrder": 1003
+    "width": 94,
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "actionButton",

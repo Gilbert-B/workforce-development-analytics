@@ -9,35 +9,37 @@
     "background": [
       {
         "properties": {
-          "image": {
-            "name": {
-              "expr": {
-                "Literal": {
-                  "Value": "'overview-background.png'"
-                }
-              }
-            },
-            "url": {
-              "expr": {
-                "ResourcePackageItem": {
-                  "PackageName": "RegisteredResources",
-                  "PackageType": 1,
-                  "ItemName": "overview-background.png"
-                }
-              }
-            },
-            "scaling": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Fit'"
-                }
-              }
-            }
-          },
           "transparency": {
             "expr": {
               "Literal": {
                 "Value": "0D"
+              }
+            }
+          },
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'overview-background.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "overview-background1680870119162421.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
               }
             }
           }

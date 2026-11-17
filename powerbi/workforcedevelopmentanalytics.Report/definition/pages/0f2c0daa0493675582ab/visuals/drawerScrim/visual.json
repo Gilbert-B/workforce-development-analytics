@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "drawerScrim",
   "position": {
     "x": 0,
     "y": 0,
-    "z": 1027,
-    "width": 1920,
+    "z": 27000,
     "height": 1080,
-    "tabOrder": 1027
+    "width": 1920,
+    "tabOrder": 27000
   },
   "visual": {
     "visualType": "shape",
