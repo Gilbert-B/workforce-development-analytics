@@ -95,15 +95,15 @@ The rule says "attended / eligible scheduled sessions", while the measure list s
 
 | Definition | Cohort 1 | Cohort 2 | Cohort 3 |
 |---|---|---|---|
-| Present ÷ recorded (Present + Absent) | 93.0% | 93.5% | 92.4% |
-| Present ÷ all eligible (Unrecorded included in the denominator) | 84.6% | 83.4% | 91.5% |
+| Present ÷ recorded (Present + Absent) | 91.0% | 93.0% | 92.2% |
+| Present ÷ all eligible (Unrecorded included in the denominator) | 83.0% | 82.9% | 91.5% |
 
 The gap is large because whole registers are missing for some sessions. Seven of the 111 sessions held so far are fully unrecorded, against roughly three to four expected from the 3% setting: ordinary random variation.
 
 **Recommendation for ChatGPT:** decide which definition the headline KPI uses, and whether to lower `whole_session_unrecorded_probability` in the config.
 
 ### D11 — No assessment when the trainee was absent on assessment day
-**Decision:** assessments happen on the Friday of each week, and only for trainees marked Present that day. That's why a cohort's assessed count (for example 66 in Week 1) is below its starters (70).
+**Decision:** assessments happen on the Friday of each week, and only for trainees marked Present that day. That's why a cohort's assessed count (for example 61 in Cohort 1, Week 1) is below its starters (68).
 **Why:** it produces realistic "not available" scores that are never zero, which tests the rule "don't treat unobserved as zero". Retakes and make-up assessments are out of scope (`attempt_number` is always 1).
 
 ### D12 — Week-over-week change: SQL gives a per-person helper; the cohort KPI is for DAX  · Review: ChatGPT
@@ -113,7 +113,7 @@ The gap is large because whole registers are missing for some sessions. Seven of
 
 ### D13 — Employee name is copied into `dim_enrolment`  · Review: ChatGPT
 **Decision:** the reporting layer offers `dim_enrolment`, with employee ID and name copied in, as the main dimension for individual trainees. `dim_employee` is still available for counting distinct people.
-**Why:** a person can have more than one enrolment (2 synthetic employees re-enrolled), so cohort belongs on the enrolment, not on the person. Copying the name in avoids a chained, two-hop dimension in the first model.
+**Why:** a person can have more than one enrolment (2 synthetic employees, `EMP-00025` and `EMP-00034`, re-enrolled), so cohort belongs on the enrolment, not on the person. Copying the name in avoids a chained, two-hop dimension in the first model.
 
 The fact views carry `cohort_id`, `enrolment_id` and `employee_id`. ChatGPT should confirm which relationships to use, so Power BI doesn't end up with ambiguous filter paths.
 
@@ -126,3 +126,39 @@ The fact views carry `cohort_id`, `enrolment_id` and `employee_id`. ChatGPT shou
 
 ### D16 — No extra indexes yet
 **Decision:** only the indexes created by primary keys and unique constraints. The largest table has about 7k rows, so more indexes wouldn't be justified. Revisit when the payment-case data arrives.
+
+### D17 — Two load routes: SSMS (`BULK INSERT`) and Python
+**Decision:** the database can be built entirely in SSMS with `sql/003_load_synthetic_data.sql`, or from the command line with `python/load_to_sql.py`. Both load the same committed CSVs into the same tables and pass the same validation.
+**Why:** the owner works in SSMS. `BULK INSERT` is the standard T-SQL way to load files and needs no extra tools. The Python route is still the one that regenerates data and runs the tests.
+
+**Trade-offs:**
+- `BULK INSERT` is executed by the SQL Server service account, so the files must sit in a folder that account can read (`C:\WorkforceData`).
+- The file name can't be a variable, so the script builds each statement as text (dynamic SQL).
+- There's no `CODEPAGE` option, because it isn't supported on SQL Server for Linux, where the script was tested. The files are plain ASCII, which a test enforces.
+
+**At scale:** you'd load from a staging area with a scheduled job, or with an ETL tool rather than a hand-run script.
+
+
+
+### D18 — Line endings must not change checksums
+**Found by:** the owner's first Python run on Windows. Regenerating the data left `generation_manifest.json` modified, although every CSV was identical.
+**Cause:** Git for Windows (`core.autocrlf = true`) checks text files out with CRLF line endings, so the config file's checksum differed. Separately, Python's `write_text()` writes CRLF on Windows unless told otherwise.
+**Fix:** the config checksum ignores line endings (`sha256_ignoring_line_endings`), and the manifest is always written with LF. The CSVs already were. `test_manifest_is_the_same_with_windows_line_endings` guards it.
+**Lesson:** code tested on only one operating system can hide platform bugs, so the owner's local run is the real test.
+
+
+
+---
+
+## ChatGPT review outcomes (2026-11-16)
+Reviewed after the owner's local run (Routes A and B). Entries above marked `Review: ChatGPT` are resolved as follows.
+
+| # | Outcome |
+|---|---|
+| D1 | **Approved.** SQL Server: a natural bridge from the original Azure SQL, with native Power BI connectivity. |
+| D5 | **Approved.** Date-level `effective_date`, with a separate `recorded_at` timestamp. |
+| D6 | **Approved.** Historical status is *corrected history as known at the snapshot*. Never describe it as "what was known on that past date"; reconstructing that is a possible future enhancement. |
+| D7 | **Approved, option (a).** Completion takes effect on the last programme day, and Active Trainees is defined as **end-of-day** headcount. A final-day attendance mark doesn't contradict an end-of-day status of Completed. Reports must label the measure this way. |
+| D10 | **Approved.** Headline = **Recorded Attendance Rate** = Present ÷ (Present + Absent). Also shown: **Attendance Data Completeness** = (Present + Absent) ÷ eligible, and **Confirmed Attendance Coverage** = Present ÷ eligible. Unrecorded ≠ Absent. The missing-register rate is **not** to be tuned just to make results look better. |
+| D12 | **Approved.** Paired consecutive-week change (`week_over_week_change`) is the individual development measure. It's separate from the difference in cohort averages, whose assessed populations vary. For "average person's improvement", average per enrolment first, so trainees aren't weighted by how many competency rows they have. |
+| D13 | **Approved.** Employee name copied into `dim_enrolment` for Build 01. Keep employee IDs to tell 206 people from 208 enrolments. Avoid duplicate filter routes from cohort to the facts. |
