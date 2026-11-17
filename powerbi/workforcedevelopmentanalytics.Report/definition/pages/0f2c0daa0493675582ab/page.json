@@ -1,68 +1,192 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "0f2c0daa0493675582ab",
-  "displayName": "Workforce Intelligence Overview",
+  "displayName": "Overview",
   "displayOption": "FitToPage",
   "height": 1080,
   "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'overview-background.png'"
+                }
+              }
+            },
+            "url": {
+              "expr": {
+                "ResourcePackageItem": {
+                  "PackageName": "RegisteredResources",
+                  "PackageType": 1,
+                  "ItemName": "overview-background.png"
+                }
+              }
+            },
+            "scaling": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Fit'"
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#050C17'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
   "visualInteractions": [
     {
-      "source": "statusByCohort",
+      "source": "chartStatus",
       "target": "kpiStartingHeadcount",
       "type": "NoFilter"
     },
     {
-      "source": "statusByCohort",
+      "source": "chartStatus",
       "target": "kpiActiveTrainees",
       "type": "NoFilter"
     },
     {
-      "source": "statusByCohort",
+      "source": "chartStatus",
       "target": "kpiCompletedTrainees",
       "type": "NoFilter"
     },
     {
-      "source": "statusByCohort",
+      "source": "chartStatus",
       "target": "kpiAvgCompetency",
       "type": "NoFilter"
     },
     {
-      "source": "statusByCohort",
+      "source": "chartStatus",
       "target": "kpiRecordedAttendance",
       "type": "NoFilter"
     },
     {
-      "source": "statusByCohort",
+      "source": "chartStatus",
       "target": "kpiRecordingRate",
       "type": "NoFilter"
     },
     {
-      "source": "competencyTrend",
+      "source": "chartAttendance",
       "target": "kpiStartingHeadcount",
       "type": "NoFilter"
     },
     {
-      "source": "competencyTrend",
+      "source": "chartAttendance",
       "target": "kpiActiveTrainees",
       "type": "NoFilter"
     },
     {
-      "source": "competencyTrend",
+      "source": "chartAttendance",
       "target": "kpiCompletedTrainees",
       "type": "NoFilter"
     },
     {
-      "source": "competencyTrend",
+      "source": "chartAttendance",
       "target": "kpiAvgCompetency",
       "type": "NoFilter"
     },
     {
-      "source": "competencyTrend",
+      "source": "chartAttendance",
       "target": "kpiRecordedAttendance",
       "type": "NoFilter"
     },
     {
-      "source": "competencyTrend",
+      "source": "chartAttendance",
+      "target": "kpiRecordingRate",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiStartingHeadcount",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiActiveTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiCompletedTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiAvgCompetency",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiRecordedAttendance",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiRecordingRate",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiStartingHeadcount",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiActiveTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiCompletedTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiAvgCompetency",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiRecordedAttendance",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
       "target": "kpiRecordingRate",
       "type": "NoFilter"
     }

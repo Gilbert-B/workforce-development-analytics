@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Definitions · open",
+  "name": "bmDrawerOpen",
+  "options": {
+    "targetVisualNames": [
+      "drawerScrim",
+      "drawerPanel",
+      "drawerText",
+      "drawerClose"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "0f2c0daa0493675582ab",
+    "sections": {
+      "0f2c0daa0493675582ab": {
+        "visualContainers": {
+          "drawerScrim": {
+            "singleVisual": {
+              "visualType": "shape"
+            }
+          },
+          "drawerPanel": {
+            "singleVisual": {
+              "visualType": "shape"
+            }
+          },
+          "drawerText": {
+            "singleVisual": {
+              "visualType": "textbox"
+            }
+          },
+          "drawerClose": {
+            "singleVisual": {
+              "visualType": "actionButton"
+            }
+          }
+        }
+      }
+    }
+  }
+}

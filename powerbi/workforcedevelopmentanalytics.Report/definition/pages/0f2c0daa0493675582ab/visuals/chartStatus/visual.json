@@ -1,0 +1,226 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "chartStatus",
+  "position": {
+    "x": 156,
+    "y": 470,
+    "z": 1017,
+    "width": 924,
+    "height": 550,
+    "tabOrder": 1017
+  },
+  "visual": {
+    "visualType": "barChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "cohort_name"
+                }
+              },
+              "queryRef": "rpt dim_cohort.cohort_name",
+              "nativeQueryRef": "cohort_name",
+              "displayName": "Cohort"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Active Trainees (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Active Trainees (Snapshot)",
+              "nativeQueryRef": "Active Trainees (Snapshot)",
+              "displayName": "Active"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Completed Trainees (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Completed Trainees (Snapshot)",
+              "nativeQueryRef": "Completed Trainees (Snapshot)",
+              "displayName": "Completed"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Withdrawn Trainees (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Withdrawn Trainees (Snapshot)",
+              "nativeQueryRef": "Withdrawn Trainees (Snapshot)",
+              "displayName": "Withdrawn"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt dim_cohort"
+                  }
+                },
+                "Property": "cohort_name"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E3A640'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "rpt dim_enrolment.Active Trainees (Snapshot)"
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#3FC1B0'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "rpt dim_enrolment.Completed Trainees (Snapshot)"
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E0705A'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "rpt dim_enrolment.Withdrawn Trainees (Snapshot)"
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#06111F'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

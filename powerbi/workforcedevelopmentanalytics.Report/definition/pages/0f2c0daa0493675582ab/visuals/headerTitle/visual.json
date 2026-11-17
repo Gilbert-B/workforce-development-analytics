@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "headerTitle",
   "position": {
-    "x": 46.032786885245905,
-    "y": 9.7377049180327884,
+    "x": 130,
+    "y": 58,
     "z": 1000,
-    "height": 68.163934426229517,
-    "width": 1094.1639344262296,
+    "width": 1000,
+    "height": 64,
     "tabOrder": 1000
   },
   "visual": {
@@ -21,9 +21,9 @@
                   {
                     "value": "Workforce Intelligence Overview",
                     "textStyle": {
-                      "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "24pt",
-                      "color": "#0b2545"
+                      "fontFamily": "Segoe UI Bold",
+                      "fontSize": "30pt",
+                      "color": "#F6F0E4"
                     }
                   }
                 ]
@@ -32,7 +32,6 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

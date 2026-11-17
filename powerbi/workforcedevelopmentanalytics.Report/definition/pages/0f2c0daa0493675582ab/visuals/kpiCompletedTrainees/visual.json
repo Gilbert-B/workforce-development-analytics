@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiCompletedTrainees",
   "position": {
-    "x": 888,
-    "y": 128,
-    "z": 8000,
-    "width": 236,
-    "height": 150,
-    "tabOrder": 8000
+    "x": 734,
+    "y": 262,
+    "z": 1007,
+    "width": 252,
+    "height": 66,
+    "tabOrder": 1007
   },
   "visual": {
     "visualType": "card",
@@ -27,28 +27,11 @@
                 }
               },
               "queryRef": "rpt dim_enrolment.Completed Trainees (Snapshot)",
-              "nativeQueryRef": "Completed Trainees (Snapshot)",
-              "displayName": "Completed trainees"
+              "nativeQueryRef": "Completed Trainees (Snapshot)"
             }
           ]
         }
       }
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }
