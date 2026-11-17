@@ -1,0 +1,32 @@
+table 'rpt dim_programme_week'
+	lineageTag: 879b7cc6-e501-4469-bd1e-3bd5633554f5
+
+	column programme_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 146cc336-73d5-4102-8051-12caa5513d22
+		summarizeBy: none
+		sourceColumn: programme_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_label
+		dataType: string
+		lineageTag: 0f1019fa-d6ca-4714-ad03-0dcc0de66a02
+		summarizeBy: none
+		sourceColumn: week_label
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_programme_week' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_programme_week = WorkforceDevAnalytics{[Schema="rpt",Item="dim_programme_week"]}[Data]
+				in
+				    rpt_dim_programme_week
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "workforcedevelopmentanalytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0cecc3c8-e321-42bd-92ba-623617b6aaed"
+  }
+}

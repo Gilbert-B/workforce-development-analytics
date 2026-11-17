@@ -1,0 +1,66 @@
+table 'rpt dim_competency'
+	lineageTag: a8315087-bcc6-4503-8a27-899810db34d5
+
+	measure 'Average Competency Score' = ```
+			
+			AVERAGE('rpt fact_assessment'[score])
+			
+			```
+		formatString: 0.0
+		lineageTag: cb1cf5f7-db4d-4dae-89d2-bc937ed3f184
+
+	measure 'Assessed Trainees' = ```
+			
+			DISTINCTCOUNT(
+			    'rpt fact_assessment'[enrolment_id]
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 655e33ae-8988-4ea7-b0b9-48aab0ef8cea
+
+	measure 'Assessment Records' = ```
+			
+			COUNTROWS('rpt fact_assessment')
+			
+			```
+		formatString: 0
+		lineageTag: 5d356a3f-5c55-4e66-bf7a-d70cebf7826e
+
+	column competency_id
+		dataType: string
+		lineageTag: c7578ef9-adf5-4eff-b41e-b7c6e7a22b1a
+		summarizeBy: none
+		sourceColumn: competency_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column competency_name
+		dataType: string
+		lineageTag: 6a37733b-37ba-4694-941b-313e4dc9ede3
+		summarizeBy: none
+		sourceColumn: competency_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a3937ec-8048-4a3d-979b-0eeb2a52c1a4
+		summarizeBy: none
+		sourceColumn: display_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_competency' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_competency = WorkforceDevAnalytics{[Schema="rpt",Item="dim_competency"]}[Data]
+				in
+				    rpt_dim_competency
+
+	annotation PBI_ResultType = Table
+

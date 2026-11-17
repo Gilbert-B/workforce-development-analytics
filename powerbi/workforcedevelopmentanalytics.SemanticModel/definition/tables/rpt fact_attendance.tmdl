@@ -1,0 +1,155 @@
+table 'rpt fact_attendance'
+	lineageTag: 3854ae56-a5be-446f-9492-81e01469cf43
+
+	measure 'Eligible Attendance Sessions' = ```
+			
+			COUNTROWS('rpt fact_attendance')
+			
+			```
+		formatString: 0
+		lineageTag: 20423ad5-0f8f-4567-86b9-14fad87ff69f
+
+	measure 'Present Sessions' = ```
+			
+			SUM('rpt fact_attendance'[is_present])
+			
+			```
+		formatString: 0
+		lineageTag: 56575dd3-f5fb-4a81-905b-c561a37e79ce
+
+	measure 'Recorded Sessions' = ```
+			
+			SUM('rpt fact_attendance'[is_present])
+			+
+			SUM('rpt fact_attendance'[is_absent])
+			
+			```
+		formatString: 0
+		lineageTag: d1ff5e14-63d9-4cbd-8f36-fd881fec16c1
+
+	measure 'Recorded Attendance Rate' = ```
+			
+			DIVIDE(
+			    [Present Sessions],
+			    [Recorded Sessions],
+			    0
+			)
+			
+			```
+		lineageTag: bcc6c278-3a92-42e0-a1af-11b3766183a4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Attendance Recording Rate' = ```
+			
+			DIVIDE(
+			    [Recorded Sessions],
+			    [Eligible Attendance Sessions]
+			)
+			
+			```
+		lineageTag: 06c0e13f-6a82-40ac-9ff8-b076adea8da6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 67b5bcf7-7b78-4742-ba5f-060e88cc91d1
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: c7b5a875-c6e2-4be2-9126-422e100fb34a
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: b106b457-294f-42f3-a270-672643932924
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_id
+		dataType: string
+		lineageTag: bbbfb86e-236b-4fa2-8504-e01454dfcd32
+		summarizeBy: none
+		sourceColumn: session_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2ee6edf2-ee4f-482d-b9f5-800261bb0e67
+		summarizeBy: none
+		sourceColumn: session_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column programme_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 6266c3aa-af8f-4341-8039-3e3f20655ab0
+		summarizeBy: none
+		sourceColumn: programme_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column attendance_status
+		dataType: string
+		lineageTag: ed399f21-b61a-4142-9d8f-8f0046ffcfef
+		summarizeBy: none
+		sourceColumn: attendance_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_present
+		dataType: int64
+		formatString: 0
+		lineageTag: 020e4237-3ec0-47c1-82c1-40c9076cabb6
+		summarizeBy: sum
+		sourceColumn: is_present
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_absent
+		dataType: int64
+		formatString: 0
+		lineageTag: 86e6d305-18da-4212-abeb-9e3c88fd1501
+		summarizeBy: sum
+		sourceColumn: is_absent
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_unrecorded
+		dataType: int64
+		formatString: 0
+		lineageTag: ca85caf6-44e0-4934-b029-0cd97e5aafa1
+		summarizeBy: sum
+		sourceColumn: is_unrecorded
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_attendance' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_attendance = WorkforceDevAnalytics{[Schema="rpt",Item="fact_attendance"]}[Data]
+				in
+				    rpt_fact_attendance
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

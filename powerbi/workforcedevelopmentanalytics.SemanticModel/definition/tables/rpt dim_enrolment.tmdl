@@ -1,0 +1,165 @@
+table 'rpt dim_enrolment'
+	lineageTag: fc262d84-559f-4222-85eb-dbcd6365fcd2
+
+	measure 'Starting Headcount' = ```
+			
+			CALCULATE(
+			    COUNTROWS('rpt dim_enrolment'),
+			    'rpt dim_enrolment'[has_started] = 1
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 68e42e64-4fa8-44cf-80c2-9853d4d00556
+
+	measure 'Active Trainees (Snapshot)' = ```
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('rpt dim_enrolment'),
+			        'rpt dim_enrolment'[status_as_of_snapshot] = "Active"
+			    ),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 5800e621-a449-4cef-8010-7099cd14a564
+
+	measure 'Completed Trainees (Snapshot)' = ```
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('rpt dim_enrolment'),
+			        'rpt dim_enrolment'[status_as_of_snapshot] = "Completed"
+			    ),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 11a353eb-a4e9-4e81-84b0-2f481262098c
+
+	measure 'Withdrawn Trainees (Snapshot)' = ```
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('rpt dim_enrolment'),
+			        'rpt dim_enrolment'[status_as_of_snapshot] = "Withdrawn"
+			    ),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 56fd5eba-f309-4a95-9dee-11762c1ac3a3
+
+	column enrolment_id
+		dataType: string
+		lineageTag: d026b71d-67a3-4cd4-8f43-42e6a3a47c97
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: 0b883271-8698-4690-a053-df8858d83de3
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_name
+		dataType: string
+		lineageTag: 0933d86a-ad9d-49ca-b6d0-4868298c5d0a
+		summarizeBy: none
+		sourceColumn: employee_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: 4ac05dcd-57ae-48f6-a32e-eb382bac6cb0
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolled_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 46fcf028-c49b-4034-811a-db5c81373000
+		summarizeBy: none
+		sourceColumn: enrolled_date
+
+		variation Variation
+			isDefault
+			relationship: a36957bc-c067-43b7-8e1f-029eb9611d41
+			defaultHierarchy: LocalDateTable_f527b94c-f70c-4763-a97e-f6d2aa83f012.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f0332b50-18dd-408e-a6af-ad1b15984562
+		summarizeBy: none
+		sourceColumn: start_date
+
+		variation Variation
+			isDefault
+			relationship: f67d187e-9fb5-47b6-9a7c-268b554c73dc
+			defaultHierarchy: LocalDateTable_bc2c5a09-e98f-458c-8bf3-ba909965315b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column status_as_of_snapshot
+		dataType: string
+		lineageTag: 576059e6-5c1e-4877-a0a6-a72c9d9132b0
+		summarizeBy: none
+		sourceColumn: status_as_of_snapshot
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_since
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 31c08578-2fab-474b-aac5-a98d3a9aa0c0
+		summarizeBy: none
+		sourceColumn: status_since
+
+		variation Variation
+			isDefault
+			relationship: f3f97ac8-eee7-482e-af8b-e92f0dbbfd88
+			defaultHierarchy: LocalDateTable_c59fee0e-318a-4b64-bbd6-addfca1fe583.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column has_started
+		dataType: int64
+		formatString: 0
+		lineageTag: 6bddb622-7c62-4761-a4f8-8078eae6d0a3
+		summarizeBy: sum
+		sourceColumn: has_started
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_enrolment' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_enrolment = WorkforceDevAnalytics{[Schema="rpt",Item="dim_enrolment"]}[Data]
+				in
+				    rpt_dim_enrolment
+
+	annotation PBI_ResultType = Table
+
