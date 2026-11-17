@@ -1,0 +1,119 @@
+table 'rpt fact_assessment'
+	lineageTag: 9b7739e2-01e0-4b21-9c41-54e1aed3087c
+
+	column assessment_id
+		dataType: string
+		lineageTag: a9adc2b4-a01c-4063-83dc-7024d355883b
+		summarizeBy: none
+		sourceColumn: assessment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 5f59e670-8f3f-4434-85ce-90f712f687f0
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: 402b2371-9012-4c37-935d-4a06b7e53164
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: b0744f77-e39e-4d1d-94ab-5ece16bc7779
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column competency_id
+		dataType: string
+		lineageTag: f9aa26f7-25c2-4972-88bc-c31556c50561
+		summarizeBy: none
+		sourceColumn: competency_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column programme_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 31404d5c-f2cd-43d3-9f43-4f3e2e7407e9
+		summarizeBy: none
+		sourceColumn: programme_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column attempt_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c1f25db-a3b4-4298-810a-c804045ac389
+		summarizeBy: sum
+		sourceColumn: attempt_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column assessment_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 62893f73-e49e-40e5-aabe-20e0a1deacbe
+		summarizeBy: none
+		sourceColumn: assessment_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column score
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a664033-0d69-45f4-b9a0-bf7ba3e4b487
+		summarizeBy: sum
+		sourceColumn: score
+
+		annotation SummarizationSetBy = Automatic
+
+	column rubric_version
+		dataType: string
+		lineageTag: 2fb139a8-98ad-45a0-a576-29bedf23c986
+		summarizeBy: none
+		sourceColumn: rubric_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column previous_week_score
+		dataType: int64
+		formatString: 0
+		lineageTag: c4d91420-24f0-4f1f-a028-c12dd0b3997f
+		summarizeBy: sum
+		sourceColumn: previous_week_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_over_week_change
+		dataType: int64
+		formatString: 0
+		lineageTag: 018f66ff-297c-4062-9d9f-39211d822303
+		summarizeBy: sum
+		sourceColumn: week_over_week_change
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_assessment' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_assessment = WorkforceDevAnalytics{[Schema="rpt",Item="fact_assessment"]}[Data]
+				in
+				    rpt_fact_assessment
+
+	annotation PBI_ResultType = Table
+

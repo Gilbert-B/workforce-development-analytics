@@ -1,0 +1,36 @@
+table 'rpt dim_snapshot'
+	lineageTag: 383bedf1-455b-420e-a761-8b851e7d5c81
+
+	measure 'Snapshot Label' =
+			VAR AsOfDate = MAX ( 'rpt dim_snapshot'[as_of_date] )
+			RETURN
+			    IF (
+			        ISBLANK ( AsOfDate ),
+			        "Snapshot date unavailable - refresh the data",
+			        "Data as of " & FORMAT ( AsOfDate, "d mmm yyyy" ) & "  |  Synthetic data"
+			    )
+		lineageTag: a721f8d1-c07b-4b87-a2c1-efb8d17d163e
+
+	column as_of_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cd05b446-bba6-4159-8b11-0969449a7845
+		summarizeBy: none
+		sourceColumn: as_of_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'rpt dim_snapshot' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_snapshot = WorkforceDevAnalytics{[Schema="rpt",Item="dim_snapshot"]}[Data]
+				in
+				    rpt_dim_snapshot
+
+	annotation PBI_ResultType = Table
+

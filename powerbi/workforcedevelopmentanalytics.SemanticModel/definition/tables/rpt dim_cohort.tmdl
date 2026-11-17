@@ -1,0 +1,87 @@
+table 'rpt dim_cohort'
+	lineageTag: 1e7ff593-9c6e-488b-8f6d-6a06ab482add
+
+	column cohort_id
+		dataType: string
+		lineageTag: e3e359e8-c122-4ecf-bc6b-91c039144ed7
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_name
+		dataType: string
+		lineageTag: d721ae3e-8b67-446b-8a91-5ec963dafbf4
+		summarizeBy: none
+		sourceColumn: cohort_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 282a2d60-f8e6-4e81-ab22-3bc1971f37de
+		summarizeBy: none
+		sourceColumn: start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column planned_end_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fa5557c0-c51b-459c-be5d-3d2c28a0abde
+		summarizeBy: none
+		sourceColumn: planned_end_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column planned_weeks
+		dataType: int64
+		formatString: 0
+		lineageTag: 421474e6-5906-4234-949a-1b2e6250c536
+		summarizeBy: sum
+		sourceColumn: planned_weeks
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_mode
+		dataType: string
+		lineageTag: f7f4b5af-58c3-4162-9c81-88de9f0c21b9
+		summarizeBy: none
+		sourceColumn: delivery_mode
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_status
+		dataType: string
+		lineageTag: 95e41c3d-b1ad-442d-84e3-7dc4d84811e7
+		summarizeBy: none
+		sourceColumn: schedule_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column weeks_started
+		dataType: int64
+		formatString: 0
+		lineageTag: 8275fde4-9cbc-4bdf-91eb-fa693a45f74e
+		summarizeBy: sum
+		sourceColumn: weeks_started
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_cohort' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_cohort = WorkforceDevAnalytics{[Schema="rpt",Item="dim_cohort"]}[Data]
+				in
+				    rpt_dim_cohort
+
+	annotation PBI_ResultType = Table
+

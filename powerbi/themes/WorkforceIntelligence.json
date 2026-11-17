@@ -1,0 +1,185 @@
+{
+  "name": "Workforce Intelligence",
+  "dataColors": [
+    "#1F4E79",
+    "#2A9D8F",
+    "#B08D57",
+    "#6C7A89",
+    "#A8573F",
+    "#4F7CAC",
+    "#7FB8AE",
+    "#D2B98B"
+  ],
+  "foreground": "#1B2430",
+  "foregroundNeutralSecondary": "#5B6573",
+  "foregroundNeutralTertiary": "#8A94A3",
+  "background": "#FFFFFF",
+  "backgroundLight": "#F3F5F8",
+  "backgroundNeutral": "#E3E7ED",
+  "tableAccent": "#1F4E79",
+  "good": "#2A9D8F",
+  "neutral": "#B08D57",
+  "bad": "#A8573F",
+  "maximum": "#1F4E79",
+  "center": "#B08D57",
+  "minimum": "#E3E7ED",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#1B2430"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#1B2430"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#5B6573"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 28,
+      "color": "#0B2545"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#FFFFFF" } },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#E3E7ED" } },
+            "radius": 6
+          }
+        ],
+        "dropShadow": [
+          { "show": false }
+        ],
+        "padding": [
+          { "top": 12, "bottom": 12, "left": 16, "right": 16 }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontColor": { "solid": { "color": "#1B2430" } },
+            "fontSize": 12,
+            "fontFamily": "Segoe UI Semibold",
+            "alignment": "left"
+          }
+        ],
+        "subTitle": [
+          {
+            "fontColor": { "solid": { "color": "#5B6573" } },
+            "fontSize": 10,
+            "fontFamily": "Segoe UI"
+          }
+        ],
+        "visualHeader": [
+          { "show": true }
+        ],
+        "legend": [
+          {
+            "position": "Top",
+            "labelColor": { "solid": { "color": "#5B6573" } },
+            "fontSize": 10
+          }
+        ],
+        "categoryAxis": [
+          {
+            "labelColor": { "solid": { "color": "#5B6573" } },
+            "titleColor": { "solid": { "color": "#5B6573" } },
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "labelColor": { "solid": { "color": "#5B6573" } },
+            "titleColor": { "solid": { "color": "#5B6573" } },
+            "gridlineColor": { "solid": { "color": "#E3E7ED" } },
+            "gridlineStyle": "dotted"
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#F3F5F8" } },
+            "transparency": 0
+          }
+        ],
+        "outspace": [
+          {
+            "color": { "solid": { "color": "#F3F5F8" } },
+            "transparency": 0
+          }
+        ]
+      }
+    },
+    "card": {
+      "*": {
+        "labels": [
+          {
+            "color": { "solid": { "color": "#0B2545" } },
+            "fontSize": 28,
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ],
+        "categoryLabels": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#5B6573" } },
+            "fontSize": 10,
+            "fontFamily": "Segoe UI"
+          }
+        ]
+      }
+    },
+    "textbox": {
+      "*": {
+        "background": [
+          { "show": false }
+        ],
+        "border": [
+          { "show": false }
+        ],
+        "title": [
+          { "show": false }
+        ],
+        "visualHeader": [
+          { "show": false }
+        ]
+      }
+    },
+    "slicer": {
+      "*": {
+        "header": [
+          {
+            "show": true,
+            "fontColor": { "solid": { "color": "#1B2430" } },
+            "fontFamily": "Segoe UI Semibold",
+            "textSize": 12
+          }
+        ],
+        "items": [
+          {
+            "fontColor": { "solid": { "color": "#1B2430" } },
+            "fontFamily": "Segoe UI",
+            "textSize": 11
+          }
+        ]
+      }
+    }
+  }
+}
