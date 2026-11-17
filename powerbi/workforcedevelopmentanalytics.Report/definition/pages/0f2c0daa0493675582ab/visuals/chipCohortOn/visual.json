@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "chipCohortOn",
   "position": {
     "x": 1630,
     "y": 412,
-    "z": 1021,
-    "width": 100,
+    "z": 21000,
     "height": 36,
-    "tabOrder": 1021
+    "width": 100,
+    "tabOrder": 21000
   },
   "visual": {
     "visualType": "actionButton",
@@ -159,7 +159,6 @@
         }
       ]
     },
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }

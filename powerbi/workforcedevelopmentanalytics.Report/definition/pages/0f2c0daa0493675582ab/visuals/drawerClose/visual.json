@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "drawerClose",
   "position": {
     "x": 1440,
     "y": 820,
-    "z": 1030,
-    "width": 120,
+    "z": 30000,
     "height": 44,
-    "tabOrder": 1030
+    "width": 120,
+    "tabOrder": 30000
   },
   "visual": {
     "visualType": "actionButton",

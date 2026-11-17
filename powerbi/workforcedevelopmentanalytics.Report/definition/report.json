@@ -65,19 +65,14 @@
       "type": "RegisteredResources",
       "items": [
         {
+          "name": "overview-background1680870119162421.png",
+          "path": "overview-background1680870119162421.png",
+          "type": "Image"
+        },
+        {
           "name": "WorkforceIntelligenceDark.json",
           "path": "WorkforceIntelligenceDark.json",
           "type": "CustomTheme"
-        },
-        {
-          "name": "overview-background.png",
-          "path": "overview-background.png",
-          "type": "Image"
-        },
-        {
-          "name": "about-background.png",
-          "path": "about-background.png",
-          "type": "Image"
         }
       ]
     }
