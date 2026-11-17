@@ -131,3 +131,20 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
   - no cache or `.pbix` files are tracked, and the privacy scan is clean;
   - PBIR schema check not possible after the save: Desktop now writes visualContainer 2.14.0, which Microsoft hasn't yet published.
 
+---
+
+## UX-02 — Showcase redesign (2026-11-17, branch `ux/overview-redesign`)
+**Built:**
+- dark theme and SVG background canvases (rendered to PNG);
+- Overview page with 32 visuals, 7 bookmarks and 9 buttons;
+- new About page;
+- generator rewritten so one layout grid drives both the SVGs and the visual positions.
+
+**Evidence (Claude Code cloud container):**
+- all 50 PBIR files validate against Microsoft's schemas, including the bookmarks, the heatmap's colour rule and the value selectors;
+- all 14 field references exist in the model;
+- every bookmark target and button link resolves;
+- a visual-outline overlay confirms every visual sits inside its designed frame.
+
+**Not yet checked:** rendering and interaction in Power BI Desktop (owner).
+
