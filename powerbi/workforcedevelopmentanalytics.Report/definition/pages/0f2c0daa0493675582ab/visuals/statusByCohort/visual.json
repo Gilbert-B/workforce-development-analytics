@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "statusByCohort",
   "position": {
     "x": 384,
     "y": 298,
     "z": 12000,
-    "width": 724,
     "height": 742,
+    "width": 724,
     "tabOrder": 12000
   },
   "visual": {
@@ -28,6 +28,7 @@
               },
               "queryRef": "rpt dim_cohort.cohort_name",
               "nativeQueryRef": "cohort_name",
+              "active": true,
               "displayName": "Cohort"
             }
           ]
@@ -97,8 +98,7 @@
             },
             "direction": "Ascending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "objects": {
