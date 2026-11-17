@@ -162,3 +162,28 @@ Reviewed after the owner's local run (Routes A and B). Entries above marked `Rev
 | D10 | **Approved.** Headline = **Recorded Attendance Rate** = Present ÷ (Present + Absent). Also shown: **Attendance Data Completeness** = (Present + Absent) ÷ eligible, and **Confirmed Attendance Coverage** = Present ÷ eligible. Unrecorded ≠ Absent. The missing-register rate is **not** to be tuned just to make results look better. |
 | D12 | **Approved.** Paired consecutive-week change (`week_over_week_change`) is the individual development measure. It's separate from the difference in cohort averages, whose assessed populations vary. For "average person's improvement", average per enrolment first, so trainees aren't weighted by how many competency rows they have. |
 | D13 | **Approved.** Employee name copied into `dim_enrolment` for Build 01. Keep employee IDs to tell 206 people from 208 enrolments. Avoid duplicate filter routes from cohort to the facts. |
+
+---
+
+## Power BI Overview page (UX-01, 2026-11-17, approved by owner + ChatGPT)
+
+### D19 — Dynamic snapshot label from a disconnected table
+**Decision:** a one-row view, `rpt.dim_snapshot` (`as_of_date` from `core.data_snapshot`), is imported as an eighth Power BI table **with no relationships**. `[Snapshot Label]` formats it as "Data as of 2 Nov 2026 | Synthetic data".
+**Why:** the date comes from the data, so it updates after regeneration and a refresh, instead of being typed into a text box. Because the table is disconnected, no slicer or click can filter it.
+**Trade-off:** one extra table for a single value.
+
+### D20 — Auto date/time off; `rpt dim_date` marked as the date table
+**Decision:** removed the 8 hidden auto-generated date tables, their 7 relationships and the 7 column "variations", and marked `rpt dim_date` (key `date`) as the date table.
+**Why:** the model already has a proper date dimension. The hidden tables added size and offered confusing date hierarchies on every date column. The page had no visuals at the time, so nothing depended on them.
+**Effect:** date columns no longer expand into Year / Quarter / Month / Day automatically. Use `rpt dim_date` columns instead.
+
+### D21 — The Power BI report is version-controlled as PBIP
+**Decision:** the synthetic report is committed in `powerbi/` as PBIP: PBIR report JSON plus TMDL model text. `.gitignore` still blocks `.pbi/` (the `cache.abf` data copy and per-machine settings) and any `.pbix`. `.gitattributes` stores these files with LF line endings.
+**Why:** text files can be reviewed, diffed and generated, and binary `.pbix` files can't. The data cache and local settings stay off GitHub.
+
+### D22 — Overview page built by generating PBIR, styled by a theme
+**Decision:** a readable generator (`powerbi/tools/build_overview_page.py`) scaffolded the page's 13 visuals from a layout grid. Colours, fonts and visual defaults live in a custom theme. Chart clicks don't filter the KPI cards; only the cohort slicer does.
+**Why:** a theme plus a grid is faster and more consistent than formatting each visual by hand, and every position and style can be traced to one place. After the owner saves the report in Desktop, **Desktop is the source of truth**. Re-running the generator resets the page.
+**Checked:** all 17 report JSON files against Microsoft's PBIR schemas, and the model with Microsoft's TMDL parser.
+**Not checked here:** rendering. Power BI Desktop is Windows-only, so the owner validates the page visually.
+

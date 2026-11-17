@@ -98,3 +98,22 @@ The overall average across all 6,655 scores is 66.6. Cohort 2 is the designed fa
 
 ### Open items for ChatGPT review
 See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D10, D12 and D13.
+
+---
+
+## UX-01 — Workforce Intelligence Overview page (2026-11-17, branch `ux/overview-page`)
+
+**Commits:**
+1. The untouched PBIP baseline, which is the restore point.
+2. The `rpt.dim_snapshot` view.
+3. Model changes: the snapshot table and label, Auto date/time off, and the date table marked.
+4. The theme and the page.
+5. The docs.
+
+**Evidence (Claude Code cloud container):**
+- SQL: `load_to_sql.py` gives 26 of 26 checks OK; `pytest` gives **60 passed**, including the new `test_dim_snapshot_is_one_row_with_the_data_as_of_date`; `rpt.dim_snapshot` returns `2026-11-02`.
+- Model: Microsoft's TMDL parser (`Microsoft.AnalysisServices` 19.84.1) loads the model. It has 8 tables, 13 measures and the 8 approved M:1 single-direction relationships. Auto date/time is off, and `rpt dim_date` is the date table, keyed on `date`. No existing measure lines changed.
+- Report: all 17 PBIR JSON files validate against Microsoft's schemas (report 3.3.0, page 2.1.0, visualContainer 2.13.0). Three deliberately broken copies were all rejected, which proves the check works. All 17 field references used by visuals exist in the model.
+
+**Not yet checked:** opening, refreshing and viewing the page in Power BI Desktop on the owner's machine.
+
