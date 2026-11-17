@@ -7,27 +7,20 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance"]
+annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance","rpt dim_snapshot"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table 'rpt dim_cohort'
-ref table DateTableTemplate_035c002e-8b66-4ace-8dc7-fbeb15237b67
-ref table LocalDateTable_2dfa58f4-a0f8-43fa-925e-1e41e9654ff8
-ref table LocalDateTable_e87ea363-1af9-4c43-9fb5-ce9ed669a193
 ref table 'rpt dim_competency'
 ref table 'rpt dim_date'
-ref table LocalDateTable_c7aaf1ee-063a-4c24-ab22-f64ac3650c0e
-ref table LocalDateTable_9d59b6fd-a368-4222-a374-fea289c64b1f
 ref table 'rpt dim_enrolment'
-ref table LocalDateTable_f527b94c-f70c-4763-a97e-f6d2aa83f012
-ref table LocalDateTable_bc2c5a09-e98f-458c-8bf3-ba909965315b
-ref table LocalDateTable_c59fee0e-318a-4b64-bbd6-addfca1fe583
 ref table 'rpt dim_programme_week'
 ref table 'rpt fact_assessment'
 ref table 'rpt fact_attendance'
+ref table 'rpt dim_snapshot'
 
 ref cultureInfo en-GB
 

@@ -24,11 +24,6 @@ table 'rpt dim_cohort'
 		summarizeBy: none
 		sourceColumn: start_date
 
-		variation Variation
-			isDefault
-			relationship: b2c507a7-954d-478e-afb9-7d683af88771
-			defaultHierarchy: LocalDateTable_2dfa58f4-a0f8-43fa-925e-1e41e9654ff8.'Date Hierarchy'
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
@@ -39,11 +34,6 @@ table 'rpt dim_cohort'
 		lineageTag: fa5557c0-c51b-459c-be5d-3d2c28a0abde
 		summarizeBy: none
 		sourceColumn: planned_end_date
-
-		variation Variation
-			isDefault
-			relationship: 84fb2a3e-5675-42c6-8155-d24a6b8c20fe
-			defaultHierarchy: LocalDateTable_e87ea363-1af9-4c43-9fb5-ce9ed669a193.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
 
