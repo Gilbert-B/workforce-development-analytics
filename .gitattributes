@@ -1,3 +1,8 @@
 # Generated CSVs use LF line endings on every OS so their SHA-256
 # checksums (data/synthetic/generation_manifest.json) match everywhere.
 data/synthetic/* text eol=lf
+
+# Power BI Project text files (PBIR JSON, TMDL): stored with LF in the
+# repository whatever editor or OS wrote them, so diffs show real changes only.
+# Git for Windows checks them out with CRLF, which Power BI Desktop reads fine.
+powerbi/** text=auto eol=lf

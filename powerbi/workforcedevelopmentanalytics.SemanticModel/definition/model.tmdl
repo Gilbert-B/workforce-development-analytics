@@ -1,0 +1,26 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance","rpt dim_snapshot"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'rpt dim_cohort'
+ref table 'rpt dim_competency'
+ref table 'rpt dim_date'
+ref table 'rpt dim_enrolment'
+ref table 'rpt dim_programme_week'
+ref table 'rpt fact_assessment'
+ref table 'rpt fact_attendance'
+ref table 'rpt dim_snapshot'
+
+ref cultureInfo en-GB
+

@@ -1,0 +1,32 @@
+relationship AutoDetected_e8724649-c566-458d-aae0-8ce2bb7cd8c9
+	fromColumn: 'rpt fact_assessment'.competency_id
+	toColumn: 'rpt dim_competency'.competency_id
+
+relationship AutoDetected_fe221163-1a99-4004-9920-7c23aaf26814
+	fromColumn: 'rpt fact_assessment'.enrolment_id
+	toColumn: 'rpt dim_enrolment'.enrolment_id
+
+relationship AutoDetected_f1c78544-4388-4fba-8cef-69158266f245
+	fromColumn: 'rpt fact_attendance'.enrolment_id
+	toColumn: 'rpt dim_enrolment'.enrolment_id
+
+relationship AutoDetected_92b6be14-44c2-42d9-aaa7-c60481405af4
+	fromColumn: 'rpt fact_assessment'.programme_week
+	toColumn: 'rpt dim_programme_week'.programme_week
+
+relationship AutoDetected_76c873f0-b04f-42ff-9761-224dc49f897b
+	fromColumn: 'rpt fact_attendance'.programme_week
+	toColumn: 'rpt dim_programme_week'.programme_week
+
+relationship f8d426ca-02d7-d7ff-2b05-51164aee9370
+	fromColumn: 'rpt dim_enrolment'.cohort_id
+	toColumn: 'rpt dim_cohort'.cohort_id
+
+relationship 7adb7c15-7bbe-93cc-59ae-49bbfe89fde6
+	fromColumn: 'rpt fact_attendance'.session_date
+	toColumn: 'rpt dim_date'.date
+
+relationship 3590734e-7bd7-cc88-bd65-84002e8b8868
+	fromColumn: 'rpt fact_assessment'.assessment_date
+	toColumn: 'rpt dim_date'.date
+

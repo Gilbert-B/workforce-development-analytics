@@ -79,3 +79,19 @@ Thumbs.db
 # Local scratch output (e.g. generator runs with other seeds/dates)
 tmp/
 data/tmp/
+
+# ---------------------------------------------------------------------------
+# APPROVED EXCEPTION (owner + ChatGPT, 2026-11-17): the fully synthetic
+# portfolio Power BI Project in powerbi/ is version-controlled as PBIP
+# (PBIR report JSON + TMDL model text). These rules come last so they win.
+# ---------------------------------------------------------------------------
+!powerbi/*.pbip
+!powerbi/*.Report/
+!powerbi/*.SemanticModel/
+# ...but NEVER its local caches or per-machine settings:
+#   .pbi/cache.abf          a full copy of the imported data
+#   .pbi/localSettings.json machine-specific security signature
+#   .pbi/editorSettings.json personal editor preferences
+powerbi/**/.pbi/
+powerbi/**/*.abf
+powerbi/*.pbix

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "0f2c0daa0493675582ab",
+  "displayName": "Workforce Intelligence Overview",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "visualInteractions": [
+    {
+      "source": "statusByCohort",
+      "target": "kpiStartingHeadcount",
+      "type": "NoFilter"
+    },
+    {
+      "source": "statusByCohort",
+      "target": "kpiActiveTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "statusByCohort",
+      "target": "kpiCompletedTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "statusByCohort",
+      "target": "kpiAvgCompetency",
+      "type": "NoFilter"
+    },
+    {
+      "source": "statusByCohort",
+      "target": "kpiRecordedAttendance",
+      "type": "NoFilter"
+    },
+    {
+      "source": "statusByCohort",
+      "target": "kpiRecordingRate",
+      "type": "NoFilter"
+    },
+    {
+      "source": "competencyTrend",
+      "target": "kpiStartingHeadcount",
+      "type": "NoFilter"
+    },
+    {
+      "source": "competencyTrend",
+      "target": "kpiActiveTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "competencyTrend",
+      "target": "kpiCompletedTrainees",
+      "type": "NoFilter"
+    },
+    {
+      "source": "competencyTrend",
+      "target": "kpiAvgCompetency",
+      "type": "NoFilter"
+    },
+    {
+      "source": "competencyTrend",
+      "target": "kpiRecordedAttendance",
+      "type": "NoFilter"
+    },
+    {
+      "source": "competencyTrend",
+      "target": "kpiRecordingRate",
+      "type": "NoFilter"
+    }
+  ]
+}

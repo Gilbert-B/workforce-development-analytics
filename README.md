@@ -114,6 +114,10 @@ On macOS or Linux, use `python3 -m venv .venv` and `source .venv/bin/activate`.
 
 ---
 
+## Power BI report
+
+The report is in `powerbi/` as a Power BI Project: open `powerbi/workforcedevelopmentanalytics.pbip` in Power BI Desktop. The **Workforce Intelligence Overview** page is described in [`docs/powerbi_ux.md`](docs/powerbi_ux.md).
+
 ## Repository structure
 
 ```
@@ -122,6 +126,7 @@ data/synthetic generated CSVs + generation_manifest.json (row counts, SHA-256)
 python/        generator and SQL Server loader
 sql/           database, schema, reporting views, validation, example queries
 tests/         pytest suite (generator tests + SQL Server integration tests)
+powerbi/       Power BI Project: report (PBIR JSON), model (TMDL), theme, page generator
 docs/          data dictionary, decisions log, build log
 ```
 

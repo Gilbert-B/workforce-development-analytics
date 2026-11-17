@@ -147,3 +147,11 @@ def test_in_progress_cohort_reported_as_in_progress(conn):
     status = scalar(conn, "SELECT schedule_status FROM rpt.dim_cohort WHERE cohort_id = 'COH-2026-03'")
     assert status == "In progress"
     assert scalar(conn, "SELECT MAX(programme_week) FROM rpt.fact_assessment WHERE cohort_id = 'COH-2026-03'") == 6
+
+
+def test_dim_snapshot_is_one_row_with_the_data_as_of_date(conn, committed):
+    """rpt.dim_snapshot feeds the Power BI snapshot label: exactly one row,
+    equal to the generator's as-of date."""
+    rows = conn.cursor().execute("SELECT as_of_date FROM rpt.dim_snapshot").fetchall()
+    assert len(rows) == 1
+    assert rows[0].as_of_date.isoformat() == committed["data_snapshot"][0]["as_of_date"]

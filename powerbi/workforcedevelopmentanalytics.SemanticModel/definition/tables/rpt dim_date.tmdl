@@ -1,0 +1,82 @@
+table 'rpt dim_date'
+	lineageTag: 9ae42667-4a64-4dc0-a5fa-b26b223c6d81
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 07b8292e-3722-4e69-bd74-5e6e8f29f061
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 4ef8a37c-e0b6-426e-b025-9297673c1f89
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: de600eec-bce3-497f-8db1-60555e37931f
+		summarizeBy: sum
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: e112f6d3-32fa-488a-885a-7b4ec5f29648
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_start_monday
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 681557fd-a632-4459-9010-d38cc6a13053
+		summarizeBy: none
+		sourceColumn: week_start_monday
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column day_name
+		dataType: string
+		lineageTag: 4103f56a-cbfd-4b9a-9c2c-ebd0d0553149
+		summarizeBy: none
+		sourceColumn: day_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekday
+		dataType: int64
+		formatString: 0
+		lineageTag: 4950d0a2-0d83-4236-bbc3-7fb16bd70feb
+		summarizeBy: sum
+		sourceColumn: is_weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_date' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_date = WorkforceDevAnalytics{[Schema="rpt",Item="dim_date"]}[Data]
+				in
+				    rpt_dim_date
+
+	annotation PBI_ResultType = Table
+
