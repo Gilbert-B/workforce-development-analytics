@@ -1,2 +1,230 @@
 cultureInfo en-GB
 
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "rpt_dim_cohort.cohort_name": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_cohort",
+			          "ConceptualProperty": "cohort_name"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Cohort": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_dim_programme_week.programme_week": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_programme_week",
+			          "ConceptualProperty": "programme_week"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Programme week": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_dim_competency.average_competency_score": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_competency",
+			          "ConceptualProperty": "Average Competency Score"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Average score": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Average competency score (0-100)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_dim_enrolment.active_trainees_snapshot": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_enrolment",
+			          "ConceptualProperty": "Active Trainees (Snapshot)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Active trainees (end of day)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Active": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_dim_enrolment.completed_trainees_snapshot": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_enrolment",
+			          "ConceptualProperty": "Completed Trainees (Snapshot)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Completed trainees": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Completed": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_dim_enrolment.starting_headcount": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_enrolment",
+			          "ConceptualProperty": "Starting Headcount"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Starting headcount": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_dim_enrolment.withdrawn_trainees_snapshot": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt dim_enrolment",
+			          "ConceptualProperty": "Withdrawn Trainees (Snapshot)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Withdrawn": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_fact_attendance.recorded_attendance_rate": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt fact_attendance",
+			          "ConceptualProperty": "Recorded Attendance Rate"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Recorded attendance rate": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_fact_attendance.attendance_recording_rate": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt fact_attendance",
+			          "ConceptualProperty": "Attendance Recording Rate"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Attendance recording rate": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

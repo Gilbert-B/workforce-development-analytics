@@ -4,7 +4,7 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 524.03007518796994,
+        "x": 524.03007518796983,
         "y": 0
       },
       "nodes": [
@@ -98,6 +98,19 @@
             "width": 234
           },
           "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1273,
+            "y": 450.58054801380251
+          },
+          "nodeIndex": "rpt dim_snapshot",
+          "nodeLineageTag": "383bedf1-455b-420e-a761-8b851e7d5c81",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",

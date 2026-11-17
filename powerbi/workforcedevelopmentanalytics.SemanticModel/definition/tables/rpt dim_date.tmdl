@@ -1,6 +1,6 @@
 table 'rpt dim_date'
-	dataCategory: Time
 	lineageTag: 9ae42667-4a64-4dc0-a5fa-b26b223c6d81
+	dataCategory: Time
 
 	column date
 		dataType: dateTime

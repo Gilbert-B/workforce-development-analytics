@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "snapshotLabel",
   "position": {
-    "x": 1460,
-    "y": 36,
+    "x": 1459.7704918032789,
+    "y": 22.131147540983608,
     "z": 3000,
-    "width": 420,
-    "height": 56,
+    "height": 55.770491803278695,
+    "width": 420.49180327868856,
     "tabOrder": 3000
   },
   "visual": {
