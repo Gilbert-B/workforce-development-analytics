@@ -4,10 +4,10 @@
   "position": {
     "x": 18,
     "y": 112,
-    "z": 1004,
+    "z": 1005,
     "width": 60,
     "height": 74,
-    "tabOrder": 1004
+    "tabOrder": 1005
   },
   "visual": {
     "visualType": "actionButton",
@@ -50,13 +50,24 @@
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI Semibold'"
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
                 }
               }
             }
           },
           "selector": {
             "id": "default"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ],

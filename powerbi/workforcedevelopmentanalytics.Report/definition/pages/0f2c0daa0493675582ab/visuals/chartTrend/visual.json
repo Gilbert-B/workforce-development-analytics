@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chartTrend",
   "position": {
     "x": 1136,
     "y": 470,
-    "z": 25000,
-    "height": 550,
+    "z": 1045,
     "width": 724,
-    "tabOrder": 25000
+    "height": 550,
+    "tabOrder": 1045
   },
   "visual": {
     "visualType": "lineChart",
@@ -28,27 +28,7 @@
               },
               "queryRef": "rpt dim_programme_week.programme_week",
               "nativeQueryRef": "programme_week",
-              "active": true,
               "displayName": "Programme week"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt dim_cohort"
-                    }
-                  },
-                  "Property": "cohort_name"
-                }
-              },
-              "queryRef": "rpt dim_cohort.cohort_name",
-              "nativeQueryRef": "cohort_name",
-              "displayName": "Cohort"
             }
           ]
         },
@@ -68,6 +48,25 @@
               "queryRef": "rpt dim_competency.Average Competency Score",
               "nativeQueryRef": "Average Competency Score",
               "displayName": "Average score"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "cohort_name"
+                }
+              },
+              "queryRef": "rpt dim_cohort.cohort_name",
+              "nativeQueryRef": "cohort_name",
+              "displayName": "Cohort"
             }
           ]
         }

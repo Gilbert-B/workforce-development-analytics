@@ -166,7 +166,7 @@
               }
             },
             "fontSize": 34,
-            "fontFamily": "Segoe UI Bold"
+            "fontFamily": "'Segoe UI Bold', wf_segoe-ui_bold, helvetica, arial, sans-serif"
           }
         ],
         "categoryLabels": [
@@ -195,7 +195,7 @@
                 "color": "#0B1D33"
               }
             },
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "'Segoe UI Semibold', wf_segoe-ui_semibold, helvetica, arial, sans-serif",
             "textSize": 11
           }
         ]
@@ -215,7 +215,7 @@
                 "color": "#071629"
               }
             },
-            "fontFamily": "Segoe UI Semibold",
+            "fontFamily": "'Segoe UI Semibold', wf_segoe-ui_semibold, helvetica, arial, sans-serif",
             "fontSize": 10
           }
         ],
@@ -231,7 +231,7 @@
                 "color": "#071629"
               }
             },
-            "fontFamily": "Segoe UI",
+            "fontFamily": "'Segoe UI', wf_segoe-ui_normal, helvetica, arial, sans-serif",
             "fontSize": 10
           }
         ],

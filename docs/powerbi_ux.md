@@ -18,15 +18,24 @@ powerbi/
 
 ---
 
-## The core technique: a designed canvas
+## The core technique: a designed canvas, with everything you'd edit kept in Power BI
 
 The page uses **two layers**:
-1. **The background image** carries everything static: the navigation rail, panels, card frames, icons, labels, context lines, chip tracks and button outlines. It's drawn as SVG and exported to PNG.
-2. **The visuals** carry only data and actions. They have transparent backgrounds and sit exactly on the drawn frames: the KPI numbers, slicer, charts, titles and invisible buttons.
+1. **The background image** holds only shapes you'd rarely change: the dark gradient, grid texture, glows, the rail strip, rounded card and panel frames, button outlines and the active-page highlight. It holds **no text and no icons**.
+2. **Power BI visuals** hold everything else, so all of it can be edited in Desktop:
+   - **text boxes** for every label, heading, note and context line;
+   - **image visuals** for every icon, one small SVG file each (`icon-<name>-<colour>.svg`);
+   - **buttons** for Definitions, Reset, the toggle chips and the navigation clicks;
+   - **data visuals**: the cards, slicer and charts.
 
-**Why:** every pixel of the look is controlled in one image, so the report looks designed rather than assembled, and visuals stay simple. The visual positions and the SVG drawing come from the **same layout constants** in the generator, so they can't drift apart.
+**To rename a KPI,** edit its text box, e.g. `kpiActiveTraineesLabel`. **To change an icon,** select the image visual, then **Format → Image → Browse**. The background only needs redrawing if you want different *shapes*.
 
-**Trade-off:** static text drawn in the image, such as KPI labels or the "Definitions" text, is edited in the SVG rather than in Desktop. Everything with data stays in Power BI.
+**Why:** the background gives a designed look, and Power BI objects keep everything editable. The visual positions and the background frames come from the **same layout constants** in the generator, so they line up.
+
+**Formats learned from Power BI Desktop** (they differ from what you might guess):
+- the page background image is nested: `"image": {"image": {...}}`;
+- visual font settings need a full font stack, e.g. `'Segoe UI Bold', wf_segoe-ui_bold, helvetica, arial, sans-serif`;
+- button text needs a per-state entry **and** a master `show` entry with no selector.
 
 ## Interactions on the Overview page
 
@@ -52,7 +61,7 @@ The page uses **two layers**:
 
 ## Changing things
 - **A colour or font everywhere:** edit the theme, copy it into `RegisteredResources/`, then reopen the report.
-- **The background (frames, icons, static labels):** edit `design/*.svg`, export it to PNG at **1920 × 1080**, and replace the PNG in `RegisteredResources/`. Any SVG tool works, for example Inkscape (*Export PNG Image*) or a browser screenshot.
+- **The background shapes (frames, panels, rail):** edit `design/*.svg`, export it to PNG at **1920 × 1080**, and replace the PNG in `RegisteredResources/`. Any SVG tool works, for example Inkscape (*Export PNG Image*) or a browser screenshot.
 - **Layout or bookmarks:** change them in Desktop, as usual. Re-running `tools/build_overview_page.py` rebuilds **both pages and all bookmarks** from scratch and discards Desktop edits, so only re-run it on purpose.
 - Always **close Desktop** before editing files in `powerbi/` outside it, and review `git diff` before committing.
 

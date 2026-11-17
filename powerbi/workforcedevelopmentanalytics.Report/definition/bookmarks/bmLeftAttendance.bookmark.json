@@ -3,7 +3,6 @@
   "displayName": "Left panel · Attendance quality",
   "name": "bmLeftAttendance",
   "options": {
-    "applyOnlyToTargetVisuals": true,
     "targetVisualNames": [
       "leftTitleAttendance",
       "chipStatusOff",
@@ -14,10 +13,11 @@
       "chipAttendanceOff",
       "chartStatus"
     ],
+    "applyOnlyToTargetVisuals": true,
     "suppressData": true
   },
   "explorationState": {
-    "version": "1.0",
+    "version": "1.3",
     "activeSection": "0f2c0daa0493675582ab",
     "sections": {
       "0f2c0daa0493675582ab": {

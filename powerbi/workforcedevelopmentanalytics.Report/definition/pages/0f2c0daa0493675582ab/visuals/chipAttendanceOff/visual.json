@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chipAttendanceOff",
   "position": {
     "x": 924,
     "y": 412,
-    "z": 16000,
-    "height": 36,
+    "z": 1036,
     "width": 144,
-    "tabOrder": 16000
+    "height": 36,
+    "tabOrder": 1036
   },
   "visual": {
     "visualType": "actionButton",
@@ -50,7 +50,7 @@
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI Semibold'"
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
                 }
               }
             }
