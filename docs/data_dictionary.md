@@ -118,6 +118,7 @@ A **missing row means "not recorded"**, not absent. See `rpt.fact_attendance`.
 | `dim_competency` | competency | name and display order |
 | `dim_programme_week` | programme week | 1 … max planned weeks; `week_label` |
 | `dim_date` | calendar day | from the first enrolment date to the later of the last cohort end and the snapshot date; month, Monday week start, weekday flag |
+| `dim_snapshot` | the whole dataset (exactly 1 row) | `as_of_date`, the generator's as-of date. Imported into Power BI as a **disconnected** table (no relationships) for the dynamic snapshot label |
 | `fact_attendance` | **eligible** enrolment × session (up to the snapshot) | `attendance_status` = Present / Absent / **Unrecorded**; 0/1 flags `is_present`, `is_absent`, `is_unrecorded` |
 | `fact_assessment` | enrolment × competency × week × attempt | score, rubric_version, `previous_week_score` and `week_over_week_change` (only filled when the previous week is consecutive) |
 | `fact_enrolment_status_event` | status event | event plus cohort_id and employee_id; `is_end_event` |
