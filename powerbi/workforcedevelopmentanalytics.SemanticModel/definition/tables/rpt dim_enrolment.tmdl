@@ -93,11 +93,6 @@ table 'rpt dim_enrolment'
 		summarizeBy: none
 		sourceColumn: enrolled_date
 
-		variation Variation
-			isDefault
-			relationship: a36957bc-c067-43b7-8e1f-029eb9611d41
-			defaultHierarchy: LocalDateTable_f527b94c-f70c-4763-a97e-f6d2aa83f012.'Date Hierarchy'
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
@@ -108,11 +103,6 @@ table 'rpt dim_enrolment'
 		lineageTag: f0332b50-18dd-408e-a6af-ad1b15984562
 		summarizeBy: none
 		sourceColumn: start_date
-
-		variation Variation
-			isDefault
-			relationship: f67d187e-9fb5-47b6-9a7c-268b554c73dc
-			defaultHierarchy: LocalDateTable_bc2c5a09-e98f-458c-8bf3-ba909965315b.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
 
@@ -132,11 +122,6 @@ table 'rpt dim_enrolment'
 		lineageTag: 31c08578-2fab-474b-aac5-a98d3a9aa0c0
 		summarizeBy: none
 		sourceColumn: status_since
-
-		variation Variation
-			isDefault
-			relationship: f3f97ac8-eee7-482e-af8b-e92f0dbbfd88
-			defaultHierarchy: LocalDateTable_c59fee0e-318a-4b64-bbd6-addfca1fe583.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
 

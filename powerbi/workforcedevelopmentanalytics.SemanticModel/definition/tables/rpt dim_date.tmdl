@@ -1,17 +1,14 @@
 table 'rpt dim_date'
+	dataCategory: Time
 	lineageTag: 9ae42667-4a64-4dc0-a5fa-b26b223c6d81
 
 	column date
 		dataType: dateTime
+		isKey
 		formatString: Long Date
 		lineageTag: 07b8292e-3722-4e69-bd74-5e6e8f29f061
 		summarizeBy: none
 		sourceColumn: date
-
-		variation Variation
-			isDefault
-			relationship: b8570962-3b10-446e-b275-dd2e1cba4585
-			defaultHierarchy: LocalDateTable_c7aaf1ee-063a-4c24-ab22-f64ac3650c0e.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
 
@@ -49,11 +46,6 @@ table 'rpt dim_date'
 		lineageTag: 681557fd-a632-4459-9010-d38cc6a13053
 		summarizeBy: none
 		sourceColumn: week_start_monday
-
-		variation Variation
-			isDefault
-			relationship: 58c7c7cc-05ab-4501-8693-3b4b8dbbb95b
-			defaultHierarchy: LocalDateTable_9d59b6fd-a368-4222-a374-fea289c64b1f.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
 
