@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiRecordedAttendance",
   "position": {
-    "x": 1392,
-    "y": 128,
-    "z": 10000,
-    "width": 236,
-    "height": 150,
-    "tabOrder": 10000
+    "x": 1318,
+    "y": 262,
+    "z": 1009,
+    "width": 252,
+    "height": 66,
+    "tabOrder": 1009
   },
   "visual": {
     "visualType": "card",
@@ -27,28 +27,11 @@
                 }
               },
               "queryRef": "rpt fact_attendance.Recorded Attendance Rate",
-              "nativeQueryRef": "Recorded Attendance Rate",
-              "displayName": "Recorded attendance rate"
+              "nativeQueryRef": "Recorded Attendance Rate"
             }
           ]
         }
       }
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

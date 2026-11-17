@@ -1,16 +1,16 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "statusByCohort",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "chartAttendance",
   "position": {
-    "x": 384,
-    "y": 298,
-    "z": 12000,
-    "height": 742,
-    "width": 724,
-    "tabOrder": 12000
+    "x": 156,
+    "y": 470,
+    "z": 1018,
+    "width": 924,
+    "height": 550,
+    "tabOrder": 1018
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "hundredPercentStackedBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -28,8 +28,26 @@
               },
               "queryRef": "rpt dim_cohort.cohort_name",
               "nativeQueryRef": "cohort_name",
-              "active": true,
               "displayName": "Cohort"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_attendance"
+                    }
+                  },
+                  "Property": "attendance_status"
+                }
+              },
+              "queryRef": "rpt fact_attendance.attendance_status",
+              "nativeQueryRef": "attendance_status",
+              "displayName": "Attendance"
             }
           ]
         },
@@ -40,45 +58,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "rpt dim_enrolment"
+                      "Entity": "rpt fact_attendance"
                     }
                   },
-                  "Property": "Active Trainees (Snapshot)"
+                  "Property": "Eligible Attendance Sessions"
                 }
               },
-              "queryRef": "rpt dim_enrolment.Active Trainees (Snapshot)",
-              "nativeQueryRef": "Active Trainees (Snapshot)",
-              "displayName": "Active"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt dim_enrolment"
-                    }
-                  },
-                  "Property": "Completed Trainees (Snapshot)"
-                }
-              },
-              "queryRef": "rpt dim_enrolment.Completed Trainees (Snapshot)",
-              "nativeQueryRef": "Completed Trainees (Snapshot)",
-              "displayName": "Completed"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt dim_enrolment"
-                    }
-                  },
-                  "Property": "Withdrawn Trainees (Snapshot)"
-                }
-              },
-              "queryRef": "rpt dim_enrolment.Withdrawn Trainees (Snapshot)",
-              "nativeQueryRef": "Withdrawn Trainees (Snapshot)",
-              "displayName": "Withdrawn"
+              "queryRef": "rpt fact_attendance.Eligible Attendance Sessions",
+              "nativeQueryRef": "Eligible Attendance Sessions",
+              "displayName": "Sessions"
             }
           ]
         }
@@ -110,7 +98,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1F4E79'"
+                      "Value": "'#3FC1B0'"
                     }
                   }
                 }
@@ -118,7 +106,30 @@
             }
           },
           "selector": {
-            "metadata": "rpt dim_enrolment.Active Trainees (Snapshot)"
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "rpt fact_attendance"
+                          }
+                        },
+                        "Property": "attendance_status"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Present'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         },
         {
@@ -128,7 +139,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#2A9D8F'"
+                      "Value": "'#E0705A'"
                     }
                   }
                 }
@@ -136,7 +147,30 @@
             }
           },
           "selector": {
-            "metadata": "rpt dim_enrolment.Completed Trainees (Snapshot)"
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "rpt fact_attendance"
+                          }
+                        },
+                        "Property": "attendance_status"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Absent'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         },
         {
@@ -146,7 +180,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#A8573F'"
+                      "Value": "'#5B6B80'"
                     }
                   }
                 }
@@ -154,7 +188,30 @@
             }
           },
           "selector": {
-            "metadata": "rpt dim_enrolment.Withdrawn Trainees (Snapshot)"
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "rpt fact_attendance"
+                          }
+                        },
+                        "Property": "attendance_status"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Unrecorded'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       ],
@@ -173,7 +230,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#06111F'"
                     }
                   }
                 }
@@ -182,27 +239,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Top'"
+                  "Value": "11D"
                 }
               }
             }
@@ -218,6 +255,13 @@
                   "Value": "false"
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             }
           }
         }
@@ -231,60 +275,11 @@
                   "Value": "false"
                 }
               }
-            },
-            "gridlineShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
             }
           }
         }
       ]
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Training status by cohort'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "subTitle": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Starters only: Active + Completed + Withdrawn = starting headcount (snapshot)'"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "drillFilterOtherVisuals": true
-  }
+    }
+  },
+  "isHidden": true
 }

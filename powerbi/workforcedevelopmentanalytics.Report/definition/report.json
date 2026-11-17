@@ -11,7 +11,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "WorkforceIntelligence.json",
+      "name": "WorkforceIntelligenceDark.json",
       "reportVersionAtImport": {
         "visual": "2.14.0",
         "report": "3.4.0",
@@ -65,9 +65,19 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "WorkforceIntelligence.json",
-          "path": "WorkforceIntelligence.json",
+          "name": "WorkforceIntelligenceDark.json",
+          "path": "WorkforceIntelligenceDark.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "overview-background.png",
+          "path": "overview-background.png",
+          "type": "Image"
+        },
+        {
+          "name": "about-background.png",
+          "path": "about-background.png",
+          "type": "Image"
         }
       ]
     }
