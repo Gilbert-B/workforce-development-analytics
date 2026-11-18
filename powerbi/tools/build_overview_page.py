@@ -488,7 +488,7 @@ def overview_visuals() -> list[dict]:
     # ---- right panel: By cohort (lines)  <->  By competency (heatmap)
     rx, ry, rw, _ = RIGHT
     chip_x = rx + rw - 262 - 28
-    add("currentWeekMarker", rx + 14, ry + 78, 320, 40, {
+    add("currentWeekMarker", rx + 14, ry + 72, 320, 48, {
         "visualType": "card",
         "query": {"queryState": {"Values": {"projections": [proj("Measure", COHORT, "Current Training Week Label")]}}},
         "objects": {"labels": props(fontFamily=FONT["semibold"], fontSize=10, color=colour(GOLD)),
