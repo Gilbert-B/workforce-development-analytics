@@ -111,11 +111,11 @@ Re-run after the conditional-approval changes (D34–D37).
 | 4 | Preserve KPI grains; unactioned, unattempted and unreviewed reported separately | 4 population checks + 4 info rows; query 9; `readiness_evidence.csv` (D37) |
 | 5 | Power BI model, DAX and pages unchanged | `git diff main -- powerbi` is empty |
 
-## Owner validation (pending)
-To fill in after the Windows run:
-- generation and `git status`;
-- both loads and their check results;
-- `pytest` count;
-- three verification queries;
-- the ENR-00044 trace;
-- the EMP-00025 repeat trace.
+## Owner validation (Windows, SQL Server 2022 Developer, 2026-11-18)
+- **Earlier version** (`60419c7`, before the conditional-approval changes): `python -m pytest` gave **121 passed**.
+- **Current version** (`f053362`, after D34–D37):
+  - **Regeneration:** the generators reproduce the committed files.
+  - **`full_reset.py --confirm`:** all checks passed (Build 01 26 of 26, Build 02 49 of 49).
+  - **`python -m pytest`:** **133 passed**.
+
+**Status:** owner-validated. Awaiting the owner and ChatGPT sign-off before PR #8 is merged.
