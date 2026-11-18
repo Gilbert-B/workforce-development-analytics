@@ -381,7 +381,7 @@ def overview_visuals() -> list[dict]:
         {"fontFamily": "Segoe UI Semibold", "fontSize": "10pt", "color": GOLD})]]))
     add("headerTitle", X0 - 6, 58, 1000, 64, textbox([[("Workforce Intelligence Overview",
         {"fontFamily": "Segoe UI Bold", "fontSize": "30pt", "color": CREAM})]]))
-    add("snapshotLabel", 1186, 42, 296, 36, {
+    add("snapshotLabel", 1186, 38, 296, 44, {
         "visualType": "card",
         "query": {"queryState": {"Values": {"projections": [proj("Measure", SNAP, "Snapshot Label")]}}},
         "objects": {"labels": props(fontSize=10, color=colour("#C9D2DE"), fontFamily=FONT["regular"]),
@@ -417,7 +417,7 @@ def overview_visuals() -> list[dict]:
             {"fontFamily": "Segoe UI Semibold", "fontSize": "9pt", "color": MUTED})]]))
         if vid in CONTEXT_MEASURE:          # data-driven context line
             ctable, cmeasure = CONTEXT_MEASURE[vid]
-            add(f"{vid}Context", x + 4, KPI_Y + 134, KPI_W - 8, 30, {
+            add(f"{vid}Context", x + 4, KPI_Y + 126, KPI_W - 8, 44, {   # cards need ~40px+ or text is clipped
                 "visualType": "card",
                 "query": {"queryState": {"Values": {"projections": [proj("Measure", ctable, cmeasure)]}}},
                 "objects": {"labels": props(fontFamily=FONT["regular"], fontSize=9, color=colour("#8FA0B4")),
@@ -488,7 +488,7 @@ def overview_visuals() -> list[dict]:
     # ---- right panel: By cohort (lines)  <->  By competency (heatmap)
     rx, ry, rw, _ = RIGHT
     chip_x = rx + rw - 262 - 28
-    add("currentWeekMarker", rx + rw - 250, ry + 82, 226, 30, {
+    add("currentWeekMarker", rx + 14, ry + 78, 320, 40, {
         "visualType": "card",
         "query": {"queryState": {"Values": {"projections": [proj("Measure", COHORT, "Current Training Week Label")]}}},
         "objects": {"labels": props(fontFamily=FONT["semibold"], fontSize=10, color=colour(GOLD)),
@@ -510,7 +510,7 @@ def overview_visuals() -> list[dict]:
             hover_alpha=100 if on else 92), hidden=hidden)
 
     cohort_colours = (("2026 Cohort 1", SKY), ("2026 Cohort 2", TEAL), ("2026 Cohort 3", GOLD))
-    add("chartTrend", rx + 20, ry + 86, rw - 40, PANEL_H - 106, {
+    add("chartTrend", rx + 20, ry + 120, rw - 40, PANEL_H - 140, {
         "visualType": "lineChart",
         "query": {"queryState": {
             "Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
@@ -524,7 +524,7 @@ def overview_visuals() -> list[dict]:
             "valueAxis": props(showAxisTitle=False),
             "lineStyles": props(strokeWidth=4, showMarker=True, markerSize=6),
             "labels": props(show=False)}})
-    add("chartHeatmap", rx + 20, ry + 96, rw - 40, PANEL_H - 116, {
+    add("chartHeatmap", rx + 20, ry + 126, rw - 40, PANEL_H - 146, {
         "visualType": "pivotTable",
         "query": {"queryState": {
             "Rows": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]},

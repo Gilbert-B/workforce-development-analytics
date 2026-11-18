@@ -3,10 +3,10 @@
   "name": "snapshotLabel",
   "position": {
     "x": 1186,
-    "y": 42,
+    "y": 38,
     "z": 1002,
     "width": 296,
-    "height": 36,
+    "height": 44,
     "tabOrder": 1002
   },
   "visual": {

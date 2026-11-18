@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "currentWeekMarker",
   "position": {
-    "x": 1630,
-    "y": 466,
+    "x": 1130,
+    "y": 462,
     "z": 1042,
-    "width": 226,
-    "height": 30,
+    "width": 320,
+    "height": 40,
     "tabOrder": 1042
   },
   "visual": {

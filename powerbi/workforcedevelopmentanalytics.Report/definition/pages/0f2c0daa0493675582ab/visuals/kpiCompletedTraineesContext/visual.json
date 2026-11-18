@@ -3,10 +3,10 @@
   "name": "kpiCompletedTraineesContext",
   "position": {
     "x": 724,
-    "y": 330,
+    "y": 322,
     "z": 1018,
     "width": 272,
-    "height": 30,
+    "height": 44,
     "tabOrder": 1018
   },
   "visual": {
