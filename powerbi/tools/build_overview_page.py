@@ -155,8 +155,8 @@ def svg_base(active: str) -> list[str]:
 def overview_svg() -> str:
     out = svg_base("overview")
     # header: snapshot pill and button frames (text and icons are Power BI visuals)
-    out.append(f'<rect x="1346" y="40" width="284" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
-    out.append(f'<circle cx="1368" cy="60" r="4" fill="{TEAL}"/><circle cx="1368" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
+    out.append(f'<rect x="1296" y="40" width="334" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
+    out.append(f'<circle cx="1318" cy="60" r="4" fill="{TEAL}"/><circle cx="1318" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
     for x, w in ((1644, 128), (1786, 94)):
         out.append(f'<rect x="{x}" y="40" width="{w}" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>')
     # cohort selector track + note
@@ -167,7 +167,7 @@ def overview_svg() -> str:
         out.append(svg_frame(x, KPI_Y, KPI_W, KPI_H))
         out.append(f'<rect x="{x+24}" y="{KPI_Y+22}" width="40" height="40" rx="12" fill="{accent}" fill-opacity=".14"/>')
     # panels + chip tracks
-    for (x, y, w, h), chip_w in ((LEFT, 230), (RIGHT, 226)):
+    for (x, y, w, h), chip_w in ((LEFT, 230), (RIGHT, 262)):
         out.append(svg_frame(x, y, w, h))
         out.append(f'<rect x="{x+w-chip_w-28}" y="{y+24}" width="{chip_w}" height="44" rx="12" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>')
     out.append('</svg>')
@@ -301,6 +301,19 @@ def button(text: str, *, link: dict | None, fg=MUTED, fill: str | None = None, f
             "drillFilterOtherVisuals": True}
 
 
+def shape(fill: str, transparency: int, outline: str | None = None, outline_transparency: int = 0) -> dict:
+    """Rectangle shape. Like buttons, shapes keep formatting PER STATE: the
+    values live under selector {"id": "default"}, plus a master 'show' entry."""
+    d = {"id": "default"}
+    objects = {
+        "shape": props(tileShape="rectangle"),
+        "fill": props(d, show=True, fillColor=colour(fill), transparency=transparency) + props(show=True),
+        "outline": (props(d, show=True, lineColor=colour(outline), weight=1, transparency=outline_transparency)
+                    + props(show=True)) if outline else (props(d, show=False) + props(show=False)),
+    }
+    return {"visualType": "shape", "objects": objects}
+
+
 def bookmark_link(name: str) -> dict:
     return {"type": "Bookmark", "bookmark": name}
 
@@ -353,7 +366,7 @@ def overview_visuals() -> list[dict]:
         {"fontFamily": "Segoe UI Semibold", "fontSize": "10pt", "color": GOLD})]]))
     add("headerTitle", X0 - 6, 58, 1000, 64, textbox([[("Workforce Intelligence Overview",
         {"fontFamily": "Segoe UI Bold", "fontSize": "30pt", "color": CREAM})]]))
-    add("snapshotLabel", 1380, 42, 246, 36, {
+    add("snapshotLabel", 1330, 42, 296, 36, {
         "visualType": "card",
         "query": {"queryState": {"Values": {"projections": [proj("Measure", SNAP, "Snapshot Label")]}}},
         "objects": {"labels": props(fontSize=10, color=colour("#C9D2DE"), fontFamily=FONT["regular"]),
@@ -437,13 +450,13 @@ def overview_visuals() -> list[dict]:
         "objects": {
             "dataPoint": [{"properties": {"fill": colour(c)}, "selector": value_selector(ATTEND, "attendance_status", s)}
                           for s, c in (("Present", TEAL), ("Absent", CORAL), ("Unrecorded", SLATE))],
-            "labels": props(show=True, color=colour("#06111F"), fontSize=11),
+            "labels": props(show=True, color=colour("#06111F"), fontSize=11, labelPrecision=1),
             "categoryAxis": props(showAxisTitle=False, fontSize=11),
             "valueAxis": props(showAxisTitle=False)}}, hidden=True)
 
     # ---- right panel: By cohort (lines)  <->  By competency (heatmap)
     rx, ry, rw, _ = RIGHT
-    chip_x = rx + rw - 226 - 28
+    chip_x = rx + rw - 262 - 28
     add("rightTitleCohort", rx + 22, ry + 18, 460, 64, textbox([
         [("Weekly competency progression", style(14, CREAM, "Segoe UI Semibold"))],
         [("Average core score (0-100) by programme week", style(10, "#8FA0B4"))]]))
@@ -453,8 +466,8 @@ def overview_visuals() -> list[dict]:
     for name, x, w, text, on, target, hidden in (
             ("chipCohortOn", chip_x + 4, 100, "By cohort", True, None, False),
             ("chipCohortOff", chip_x + 4, 100, "By cohort", False, "bmRightCohort", True),
-            ("chipCompetencyOn", chip_x + 106, 116, "By competency", True, None, True),
-            ("chipCompetencyOff", chip_x + 106, 116, "By competency", False, "bmRightCompetency", False)):
+            ("chipCompetencyOn", chip_x + 106, 152, "By competency", True, None, True),
+            ("chipCompetencyOff", chip_x + 106, 152, "By competency", False, "bmRightCompetency", False)):
         add(name, x, ry + 28, w, 36, button(
             text, link=bookmark_link(target) if target else None,
             fg=TEAL if on else MUTED, fill=TEAL if on else None, fill_alpha=16 if on else 0,
@@ -498,16 +511,8 @@ def overview_visuals() -> list[dict]:
                           rowPadding=10)}}, hidden=True)
 
     # ---- definitions drawer (hidden until the Definitions button is clicked)
-    add("drawerScrim", 0, 0, W, H, {
-        "visualType": "shape",
-        "objects": {"shape": props(tileShape="rectangle"),
-                    "fill": props(show=True, fillColor=colour("#030810"), transparency=40),
-                    "outline": props(show=False)}}, hidden=True)
-    add("drawerPanel", W - 520, 0, 520, H, {
-        "visualType": "shape",
-        "objects": {"shape": props(tileShape="rectangle"),
-                    "fill": props(show=True, fillColor=colour("#0B1D33"), transparency=0),
-                    "outline": props(show=True, lineColor=colour(GOLD), weight=1, transparency=60)}}, hidden=True)
+    add("drawerScrim", 0, 0, W, H, shape("#030810", 40), hidden=True)
+    add("drawerPanel", W - 520, 0, 520, H, shape("#0B1D33", 0, outline=GOLD, outline_transparency=60), hidden=True)
     h3, p = style(11, GOLD, "Segoe UI Semibold"), style(11, "#C4CDD8")
     add("drawerText", W - 480, 36, 440, 760, textbox([
         [("DEFINITIONS", style(10, GOLD, "Segoe UI Semibold"))],

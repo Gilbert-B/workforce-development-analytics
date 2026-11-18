@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chipCohortOn",
   "position": {
-    "x": 1630,
+    "x": 1594,
     "y": 412,
     "z": 1041,
     "width": 100,
