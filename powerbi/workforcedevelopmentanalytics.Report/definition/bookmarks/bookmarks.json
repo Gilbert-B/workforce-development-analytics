@@ -1,0 +1,26 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "bmLeftStatus"
+    },
+    {
+      "name": "bmLeftAttendance"
+    },
+    {
+      "name": "bmRightCohort"
+    },
+    {
+      "name": "bmRightCompetency"
+    },
+    {
+      "name": "bmDrawerOpen"
+    },
+    {
+      "name": "bmDrawerClose"
+    },
+    {
+      "name": "bmReset"
+    }
+  ]
+}

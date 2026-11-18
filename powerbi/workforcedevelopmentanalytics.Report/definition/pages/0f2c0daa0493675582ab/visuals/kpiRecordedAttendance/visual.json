@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiRecordedAttendance",
   "position": {
-    "x": 1392,
-    "y": 128,
-    "z": 10000,
-    "width": 236,
-    "height": 150,
-    "tabOrder": 10000
+    "x": 1318,
+    "y": 266,
+    "z": 1026,
+    "width": 252,
+    "height": 62,
+    "tabOrder": 1026
   },
   "visual": {
     "visualType": "card",
@@ -27,15 +27,45 @@
                 }
               },
               "queryRef": "rpt fact_attendance.Recorded Attendance Rate",
-              "nativeQueryRef": "Recorded Attendance Rate",
-              "displayName": "Recorded attendance rate"
+              "nativeQueryRef": "Recorded Attendance Rate"
             }
           ]
         }
       }
     },
-    "visualContainerObjects": {
-      "title": [
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Bold'', wf_segoe-ui_bold, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "32D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F6F0E4'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
         {
           "properties": {
             "show": {
@@ -48,7 +78,6 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

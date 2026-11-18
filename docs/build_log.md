@@ -131,3 +131,29 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
   - no cache or `.pbix` files are tracked, and the privacy scan is clean;
   - PBIR schema check not possible after the save: Desktop now writes visualContainer 2.14.0, which Microsoft hasn't yet published.
 
+---
+
+## UX-02 — Showcase redesign (2026-11-17, branch `ux/overview-redesign`)
+**Built:**
+- dark theme and SVG background canvases (rendered to PNG);
+- Overview page with 32 visuals, 7 bookmarks and 9 buttons;
+- new About page;
+- generator rewritten so one layout grid drives both the SVGs and the visual positions.
+
+**Evidence (Claude Code cloud container):**
+- all 50 PBIR files validate against Microsoft's schemas, including the bookmarks, the heatmap's colour rule and the value selectors;
+- all 14 field references exist in the model;
+- every bookmark target and button link resolves;
+- a visual-outline overlay confirms every visual sits inside its designed frame.
+
+**Owner's Power BI Desktop validation (2026-11-18):**
+- Fixes made along the way: the background image format, font stacks, the button-text switch, state-scoped shape fills, the heatmap colour rule's field scope, and sizing. All were learned from the owner's Desktop saves.
+- The background, icons, fonts and KPI cards render as designed.
+- All five interaction checks passed:
+  1. the definitions drawer opens and closes;
+  2. the By competency heatmap shows colour-scaled cells with all 8 weeks visible;
+  3. Attendance quality, then Reset, returns both default views;
+  4. a cohort selection is cleared by Reset;
+  5. About ↔ Overview page navigation works.
+- **Habit learned:** after test-only clicking, close Desktop with *Don't save*. Otherwise Desktop rewrites every file and blocks the next `git pull`.
+

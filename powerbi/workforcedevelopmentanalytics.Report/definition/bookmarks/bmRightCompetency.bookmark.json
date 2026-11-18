@@ -1,0 +1,81 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Right panel · By competency",
+  "name": "bmRightCompetency",
+  "options": {
+    "targetVisualNames": [
+      "rightTitleCompetency",
+      "chipCohortOff",
+      "chipCompetencyOn",
+      "chartHeatmap",
+      "rightTitleCohort",
+      "chipCohortOn",
+      "chipCompetencyOff",
+      "chartTrend"
+    ],
+    "applyOnlyToTargetVisuals": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "0f2c0daa0493675582ab",
+    "sections": {
+      "0f2c0daa0493675582ab": {
+        "visualContainers": {
+          "rightTitleCompetency": {
+            "singleVisual": {
+              "visualType": "textbox"
+            }
+          },
+          "chipCohortOff": {
+            "singleVisual": {
+              "visualType": "actionButton"
+            }
+          },
+          "chipCompetencyOn": {
+            "singleVisual": {
+              "visualType": "actionButton"
+            }
+          },
+          "chartHeatmap": {
+            "singleVisual": {
+              "visualType": "pivotTable"
+            }
+          },
+          "rightTitleCohort": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "chipCohortOn": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "chipCompetencyOff": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "chartTrend": {
+            "singleVisual": {
+              "visualType": "lineChart",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
