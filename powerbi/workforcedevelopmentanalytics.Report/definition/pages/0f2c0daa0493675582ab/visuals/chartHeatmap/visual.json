@@ -152,7 +152,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "15D"
+                  "Value": "11D"
                 }
               }
             }
@@ -195,7 +195,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "10D"
                 }
               }
             },
@@ -219,7 +219,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "11D"
                 }
               }
             },
