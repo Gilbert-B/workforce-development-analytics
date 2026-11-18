@@ -4,10 +4,10 @@
   "position": {
     "x": 156,
     "y": 470,
-    "z": 1038,
+    "z": 1041,
     "width": 924,
     "height": 550,
-    "tabOrder": 1038
+    "tabOrder": 1041
   },
   "visual": {
     "visualType": "hundredPercentStackedBarChart",
@@ -66,7 +66,26 @@
               },
               "queryRef": "rpt fact_attendance.Eligible Attendance Sessions",
               "nativeQueryRef": "Eligible Attendance Sessions",
-              "displayName": "Sessions"
+              "displayName": "Share of eligible sessions"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_attendance"
+                    }
+                  },
+                  "Property": "Eligible Attendance Sessions"
+                }
+              },
+              "queryRef": "rpt fact_attendance.Eligible Attendance Sessions",
+              "nativeQueryRef": "Eligible Attendance Sessions",
+              "displayName": "Sessions (count)"
             }
           ]
         }

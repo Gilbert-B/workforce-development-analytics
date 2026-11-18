@@ -200,3 +200,22 @@ Reviewed after the owner's local run (Routes A and B). Entries above marked `Rev
 **Constraint kept:** no new measures, model or SQL changes. Ideas that need new DAX (data-driven context lines, SVG progress bars, a current-week marker, the further pages) are proposed to ChatGPT separately.
 **Trade-off:** static labels drawn in the background image are edited in SVG rather than in Desktop. Each toggle needs 4 visuals and 2 bookmarks.
 
+### D24 — UX-02 completion: approved display measures, split reset, planned pages (ChatGPT review 2026-11-18)
+**Added measures** (additions only, no existing DAX changed):
+- `Completion Share of Starters`, `Total Enrolments` and `Cancelled Before Start`, exactly as approved.
+- Two text measures for the cards:
+  - `Starting Headcount Context` reads "208 enrolments · 9 cancelled before start". It says "enrolments", not "employees", because repeat enrolments exist.
+  - `Completion Context` reads "63.8% of starters completed to date". It's an **as-of-snapshot share**, not a final completion rate.
+- Two **SVG progress-bar measures**, drawn from the existing rate measures. They're clamped to 0–100%, blank-safe, use the accent colour on a neutral track, and have no thresholds. Each is shown in an image visual, with the numeric rate shown separately.
+- `Current Training Week Label`.
+
+**One deviation for ChatGPT to confirm:** `Current Training Week Label` returns `""` instead of `BLANK()` when the marker shouldn't show. A card displays the literal text "(Blank)" for BLANK, and the empty text keeps the panel clean. Behaviour is otherwise as specified: it only shows when exactly one in-progress cohort is selected. It reads "Currently in Week 7" and doesn't claim Week 7 assessments exist.
+
+**Reset split:**
+- **Reset view** is a display-only bookmark that keeps the cohort selection.
+- **Clear filters** is a data-only bookmark that clears the cohort slicer and keeps the current panels.
+- All toggle bookmarks are display-only, so they never change the selection.
+
+**Navigation:** unbuilt pages appear as "planned" rail items with **no click action**. Next iteration: Cohort Intelligence, Competency & Skills Development, Attendance & Engagement, and a Trainee 360 drill-through (by `enrolment_id`).
+**Attendance quality:** shows % data labels and adds the session **count** to the tooltip.
+

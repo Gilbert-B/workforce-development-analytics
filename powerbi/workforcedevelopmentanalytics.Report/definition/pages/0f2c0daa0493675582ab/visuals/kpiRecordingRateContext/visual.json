@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiRecordingRateContext",
   "position": {
-    "x": 1614,
-    "y": 326,
-    "z": 1029,
-    "width": 250,
+    "x": 1606,
+    "y": 330,
+    "z": 1031,
+    "width": 260,
     "height": 30,
-    "tabOrder": 1029
+    "tabOrder": 1031
   },
   "visual": {
     "visualType": "textbox",
@@ -26,7 +26,8 @@
                       "color": "#8FA0B4"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "center"
               }
             ]
           }

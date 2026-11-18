@@ -46,7 +46,8 @@ The page uses **two layers**:
 | By cohort / By competency | Swaps the line chart for a competency × week heatmap | Two more bookmarks, same pattern |
 | Definitions | Slides the definitions drawer over the page | Bookmark that **shows** 4 hidden visuals: dark scrim, panel, text, Close button |
 | ✕ Close | Hides the drawer | Bookmark that hides the same 4 visuals |
-| Reset | Clears the cohort selection, restores both default views and closes the drawer | Bookmark that also applies data state to the slicer |
+| Reset view | Restores both default panels and closes the drawer; **keeps** your cohort selection | Display-only bookmark |
+| Clear filters | Clears the cohort selection; **keeps** the current panels | Data-only bookmark targeting the slicer |
 | About (in the rail) | Opens the About page | Button with a **Page navigation** action |
 | Clicking inside a chart | Highlights the other charts, but never changes the KPI numbers | `page.json → visualInteractions` set to `NoFilter` |
 
@@ -65,5 +66,8 @@ The page uses **two layers**:
 - **Layout or bookmarks:** change them in Desktop, as usual. Re-running `tools/build_overview_page.py` rebuilds **both pages and all bookmarks** from scratch and discards Desktop edits, so only re-run it on purpose.
 - Always **close Desktop** before editing files in `powerbi/` outside it, and review `git diff` before committing.
 
-## Waiting for new measures (proposed to ChatGPT)
-Data-driven KPI context lines, SVG progress bars, the "current week" marker for in-progress cohorts, and the Cohorts / Skills / Attendance / Trainee 360 pages. The rail already shows those pages as "soon".
+## Data-driven extras (ChatGPT-approved measures, D24)
+- **Card context lines:** two cards show text **measures**, e.g. "208 enrolments · 9 cancelled before start", so the line changes with the cohort selection. The other cards keep static descriptions.
+- **Progress bars:** an image visual whose picture is an **SVG measure**, i.e. DAX that returns `data:image/svg+xml;utf8,<svg …>`. The bar width is the rate, clamped to 0–100%.
+- **Current-week marker:** a small gold card in the competency panel. It appears only when exactly one in-progress cohort is selected, e.g. "Currently in Week 7".
+- **Planned pages:** Cohorts, Skills, Attendance and Trainee 360 show as "planned" in the rail, with no click action until they're built.

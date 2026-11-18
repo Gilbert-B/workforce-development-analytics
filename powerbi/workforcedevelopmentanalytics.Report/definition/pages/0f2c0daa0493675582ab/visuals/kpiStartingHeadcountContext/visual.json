@@ -2,33 +2,79 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiStartingHeadcountContext",
   "position": {
-    "x": 154,
-    "y": 326,
-    "z": 1009,
-    "width": 250,
+    "x": 140,
+    "y": 330,
+    "z": 1010,
+    "width": 272,
     "height": 30,
-    "tabOrder": 1009
+    "tabOrder": 1010
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Starting Headcount Context"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Starting Headcount Context",
+              "nativeQueryRef": "Starting Headcount Context"
+            }
+          ]
+        }
+      }
+    },
     "objects": {
-      "general": [
+      "labels": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Enrolments with a start event",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "10pt",
-                      "color": "#8FA0B4"
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI'', wf_segoe-ui_normal, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#8FA0B4'"
                     }
                   }
-                ]
+                }
               }
-            ]
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]

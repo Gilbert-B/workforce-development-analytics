@@ -103,6 +103,26 @@
       "type": "NoFilter"
     },
     {
+      "source": "chartStatus",
+      "target": "kpiStartingHeadcountContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartStatus",
+      "target": "kpiCompletedTraineesContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartStatus",
+      "target": "kpiRecordedAttendanceBar",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartStatus",
+      "target": "kpiRecordingRateBar",
+      "type": "NoFilter"
+    },
+    {
       "source": "chartAttendance",
       "target": "kpiStartingHeadcount",
       "type": "NoFilter"
@@ -133,6 +153,26 @@
       "type": "NoFilter"
     },
     {
+      "source": "chartAttendance",
+      "target": "kpiStartingHeadcountContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartAttendance",
+      "target": "kpiCompletedTraineesContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartAttendance",
+      "target": "kpiRecordedAttendanceBar",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartAttendance",
+      "target": "kpiRecordingRateBar",
+      "type": "NoFilter"
+    },
+    {
       "source": "chartTrend",
       "target": "kpiStartingHeadcount",
       "type": "NoFilter"
@@ -163,6 +203,26 @@
       "type": "NoFilter"
     },
     {
+      "source": "chartTrend",
+      "target": "kpiStartingHeadcountContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiCompletedTraineesContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiRecordedAttendanceBar",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartTrend",
+      "target": "kpiRecordingRateBar",
+      "type": "NoFilter"
+    },
+    {
       "source": "chartHeatmap",
       "target": "kpiStartingHeadcount",
       "type": "NoFilter"
@@ -190,6 +250,26 @@
     {
       "source": "chartHeatmap",
       "target": "kpiRecordingRate",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiStartingHeadcountContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiCompletedTraineesContext",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiRecordedAttendanceBar",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chartHeatmap",
+      "target": "kpiRecordingRateBar",
       "type": "NoFilter"
     }
   ]

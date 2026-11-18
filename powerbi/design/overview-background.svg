@@ -15,10 +15,11 @@
 <rect x="22" y="28" width="52" height="52" rx="14" fill="url(#logo)"/>
 <rect x="18" y="112" width="60" height="60" rx="14" fill="#E3A640" fill-opacity=".13"/>
 <rect x="0" y="126" width="4" height="32" rx="2" fill="#E3A640"/>
-<rect x="1296" y="40" width="334" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>
-<circle cx="1318" cy="60" r="4" fill="#3FC1B0"/><circle cx="1318" cy="60" r="8" fill="#3FC1B0" fill-opacity=".25"/>
-<rect x="1644" y="40" width="128" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
-<rect x="1786" y="40" width="94" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
+<rect x="1152" y="40" width="336" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>
+<circle cx="1174" cy="60" r="4" fill="#3FC1B0"/><circle cx="1174" cy="60" r="8" fill="#3FC1B0" fill-opacity=".25"/>
+<rect x="1500" y="40" width="124" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
+<rect x="1636" y="40" width="116" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
+<rect x="1764" y="40" width="116" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="136" y="120" width="540" height="52" rx="26" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="136" y="196" width="280" height="170" rx="16" fill="#FFFFFF" fill-opacity=".035" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="160" y="218" width="40" height="40" rx="12" fill="#3FC1B0" fill-opacity=".14"/>
