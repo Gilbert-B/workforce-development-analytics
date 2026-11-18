@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chipAttendanceOn",
   "position": {
     "x": 924,
     "y": 412,
     "z": 1038,
-    "height": 36,
     "width": 144,
+    "height": 36,
     "tabOrder": 1038
   },
   "visual": {
@@ -170,6 +170,7 @@
         }
       ]
     },
+    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   },
   "isHidden": true

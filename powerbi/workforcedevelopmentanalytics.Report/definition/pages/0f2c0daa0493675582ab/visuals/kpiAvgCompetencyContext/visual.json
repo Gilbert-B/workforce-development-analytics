@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiAvgCompetencyContext",
   "position": {
     "x": 1022,
     "y": 330,
     "z": 1022,
-    "height": 30,
     "width": 260,
+    "height": 30,
     "tabOrder": 1022
   },
   "visual": {
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#8fa0b4"
+                      "color": "#8FA0B4"
                     }
                   }
                 ],

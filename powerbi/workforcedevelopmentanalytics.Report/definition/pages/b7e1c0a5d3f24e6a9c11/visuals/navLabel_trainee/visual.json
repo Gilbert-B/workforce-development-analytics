@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "7pt",
-                      "color": "#3E4A5C"
+                      "color": "#6F7D90"
                     }
                   }
                 ],
@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "planned",
+                    "value": "drill-through",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "6pt",

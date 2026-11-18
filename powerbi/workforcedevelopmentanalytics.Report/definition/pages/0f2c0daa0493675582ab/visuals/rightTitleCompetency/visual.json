@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "rightTitleCompetency",
   "position": {
     "x": 1138,
     "y": 402,
     "z": 1044,
-    "height": 64,
     "width": 460,
+    "height": 64,
     "tabOrder": 1044
   },
   "visual": {
@@ -45,5 +45,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }
