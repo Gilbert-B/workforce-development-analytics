@@ -236,7 +236,7 @@ Reviewed after the owner's local run (Routes A and B). Entries above marked `Rev
 - **Navigation:** the rail links only to working pages. Trainee 360 is labelled "drill-through" and has no link.
 - **Only approved new DAX:** `Withdrawal Rate (Snapshot)`.
 
-**Pending ChatGPT review (drafted, NOT deployed):**
+**Drafts sent for ChatGPT review (superseded by D26; kept for the record, not deployed):**
 
 1. *Paired person-level week-over-week change*: same enrolment, same competency, consecutive weeks.
 ```dax
@@ -270,4 +270,53 @@ RETURN
 Both need review of semantics, filter context and naming before they're added to the model.
 
 **Owner addition (UX-03):** display-only measure `Selected Weeks Label` (in `rpt dim_programme_week`, folder *UX display*). It labels the Skills comparison panel "Showing Week 6", "Showing Week 4, Week 5 (combined)", or "Showing all weeks · mixed programme stages". It's text only and changes no calculation.
+
+### D26 — D25 review: paired change and cohort benchmark measures (2026-11-18, branch `ux/d25-measures`)
+**Why:**
+- A cohort mean that moves between weeks partly reflects *which* trainees were assessed. The paired change compares each trainee only with their own previous week, so that effect disappears.
+- A trainee's score means little on its own; the same-week cohort average gives it context.
+- **Trade-off:** both measures are averages of averages *by design*: one value per trainee first, so a trainee with more rows doesn't count more.
+- **At scale:** the per-enrolment loop in `AVERAGEX` is cheap at 208 enrolments. With 100k+ enrolments, pre-compute the per-enrolment change in SQL.
+
+**Final DAX** (ChatGPT's reference, plus the owner-approved changes; the measures live in `rpt dim_competency`, folder *Competency · D25*):
+```dax
+Paired WoW Competency Change =                      -- format +0.0;-0.0;0.0
+AVERAGEX (
+    VALUES ( 'rpt dim_enrolment'[enrolment_id] ),
+    CALCULATE ( AVERAGE ( 'rpt fact_assessment'[week_over_week_change] ) )
+)
+
+Cohort Same-Week Average =                          -- format 0.0
+VAR CurrentCohort = SELECTEDVALUE ( 'rpt dim_enrolment'[cohort_id] )
+RETURN
+    IF (
+        NOT ISBLANK ( CurrentCohort )
+            && HASONEVALUE ( 'rpt dim_enrolment'[enrolment_id] ),
+        CALCULATE (
+            [Average Competency Score],
+            REMOVEFILTERS ( 'rpt dim_enrolment' ),
+            REMOVEFILTERS ( 'rpt fact_assessment'[enrolment_id] ),
+            TREATAS ( { CurrentCohort }, 'rpt dim_cohort'[cohort_id] )
+        )
+    )
+```
+
+**Differences from the D25 drafts, and why:**
+
+| Measure | Change from the draft | Reason |
+|---|---|---|
+| Paired WoW Competency Change | The single-week `HASONEVALUE` gate is dropped, so several weeks are allowed | Per ChatGPT's rules: the result is the average of each trainee's own changes across the selected weeks. |
+| Paired WoW Competency Change | Iterates `dim_enrolment[enrolment_id]` instead of `FILTER`/`ADDCOLUMNS` | Same result, simpler code: `AVERAGEX` already skips blanks. |
+| Paired WoW Competency Change | Signed format | Owner-approved, so a fall reads as −1.2. |
+| Cohort Same-Week Average | `SELECTEDVALUE` replaces `VALUES` | The draft could average several cohorts together into one misleading benchmark. |
+| Cohort Same-Week Average | `TREATAS` filters `dim_cohort` | The dimension is the right place to apply the cohort filter. |
+| Cohort Same-Week Average | `HASONEVALUE(enrolment_id)` gate added | Owner-approved, so it meets ChatGPT's test "several enrolments selected → blank". |
+| Cohort Same-Week Average | Renamed from "Cohort Avg Competency (Same Week)" | ChatGPT's name. |
+
+**Where they're shown:**
+- **Skills page:** a header strip next to the week selector. It follows the cohort tiles and the week selector.
+- **Trainee 360:** the competency panel is split. The top half is unchanged: one line per competency. The new bottom half plots *This trainee* against *Cohort, same week*.
+
+**Unchanged:** SQL, source data, relationships and every existing measure.
+
 
