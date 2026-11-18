@@ -66,26 +66,7 @@
               },
               "queryRef": "rpt fact_attendance.Eligible Attendance Sessions",
               "nativeQueryRef": "Eligible Attendance Sessions",
-              "displayName": "Share of eligible sessions"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt fact_attendance"
-                    }
-                  },
-                  "Property": "Eligible Attendance Sessions"
-                }
-              },
-              "queryRef": "rpt fact_attendance.Eligible Attendance Sessions",
-              "nativeQueryRef": "Eligible Attendance Sessions",
-              "displayName": "Sessions (count)"
+              "displayName": "Sessions"
             }
           ]
         }
