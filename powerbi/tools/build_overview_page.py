@@ -474,8 +474,9 @@ def overview_visuals() -> list[dict]:
         "query": {"queryState": {
             "Category": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
             "Series": {"projections": [proj("Column", ATTEND, "attendance_status", "Attendance")]},
-            "Y": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Share of eligible sessions")]},
-            "Tooltips": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Sessions (count)")]}},
+            # one projection only: a field may appear once per visual with one display name.
+            # Data labels show the % share; the default tooltip shows the session count.
+            "Y": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Sessions")]}},
             "sortDefinition": {"sort": [{"field": field("Column", COHORT, "cohort_name"), "direction": "Ascending"}]}},
         "objects": {
             "dataPoint": [{"properties": {"fill": colour(c)}, "selector": value_selector(ATTEND, "attendance_status", s)}
