@@ -42,6 +42,11 @@ THEME = PBI / "themes" / "WorkforceIntelligenceDark.json"
 
 OVERVIEW = "0f2c0daa0493675582ab"          # existing page id (kept)
 ABOUT = "b7e1c0a5d3f24e6a9c11"             # new page id
+COHORTS_P = "c3a1e7b2d9f04c6e8a21"         # UX-03 pages
+SKILLS_P = "d4b2f8c3e0a15d7f9b32"
+ATTEND_P = "e5c3a9d4f1b26e8a0c43"
+TRAINEE_P = "f6d4b0e5a2c37f9b1d54"         # drill-through (hidden in view mode)
+BACKGROUNDS: list[str] = []                # filled as page backgrounds are written
 BG_OVERVIEW = "overview-background.png"
 BG_ABOUT = "about-background.png"
 
@@ -68,10 +73,10 @@ LEFT = (X0, PANEL_Y, 964, PANEL_H)                 # x, y, w, h
 RIGHT = (1116, PANEL_Y, 764, PANEL_H)
 NAV = [  # key, label, centre y, page it opens (None = coming later)
     ("overview", "Overview", 142, OVERVIEW),
-    ("cohorts", "Cohorts", 216, None),
-    ("skills", "Skills", 290, None),
-    ("attendance", "Attendance", 364, None),
-    ("trainee", "Trainee 360", 438, None),
+    ("cohorts", "Cohorts", 216, COHORTS_P),
+    ("skills", "Skills", 290, SKILLS_P),
+    ("attendance", "Attendance", 364, ATTEND_P),
+    ("trainee", "Trainee 360", 438, None),   # reached by drill-through only, never a nav link
     ("about", "About", 1016, ABOUT),
 ]
 
@@ -347,11 +352,12 @@ def nav_decor(current_key: str, z: int) -> list[dict]:
     z += 1
     for key, label, cy, page in NAV:
         on = key == current_key
-        tone = GOLD if on else ("#6F7D90" if page else "#3E4A5C")
+        tone = GOLD if on else ("#6F7D90" if page or key == "trainee" else "#3E4A5C")
         out.append(container(f"navIcon_{key}", 35, cy - 13, 26, 26, z, image(icon_file(key, tone)))); z += 1
         lines = [[(label, {"fontFamily": "Segoe UI Semibold" if on else "Segoe UI", "fontSize": "7pt", "color": tone})]]
         if page is None:
-            lines.append([("planned", {"fontFamily": "Segoe UI", "fontSize": "6pt", "color": "#3E4A5C"})])
+            sub = "drill-through" if key == "trainee" else "planned"
+            lines.append([(sub, {"fontFamily": "Segoe UI", "fontSize": "6pt", "color": "#3E4A5C"})])
         out.append(container(f"navLabel_{key}", 4, cy + 22, 88, 34 if page is None else 24, z,
                              textbox(lines, "center"))); z += 1
     return out
@@ -407,7 +413,9 @@ def overview_visuals() -> list[dict]:
             "header": props(show=False),
             "items": props(fontColor=colour("#D8DEE6"), background=colour("#0B1D33"),
                            outlineStyle=0, textSize=11),
-        }})
+        },
+        # same sync group on every page: the cohort selection follows you between pages
+        "syncGroup": {"groupName": "CohortSelection", "fieldChanges": True, "filterChanges": True}})
 
     # KPI cards: icon + label + number + context line (frame is in the background)
     for i, (vid, table, name, label, context, icon, accent) in enumerate(KPIS):
@@ -630,7 +638,7 @@ def about_visuals() -> list[dict]:
 # =========================================================================
 # 5. PAGES, INTERACTIONS AND BOOKMARKS
 # =========================================================================
-def page_json(page_id: str, display: str, background: str, interactions=None) -> dict:
+def page_json(page_id: str, display: str, background: str, interactions=None, *, extra: dict | None = None) -> dict:
     # NB: the property "image" contains an object that is ALSO called "image"
     # (this nesting is how Power BI Desktop writes it).
     img = {"image": {"image": {
@@ -644,6 +652,7 @@ def page_json(page_id: str, display: str, background: str, interactions=None) ->
                         "outspace": [{"properties": {"color": colour(INK), "transparency": literal(0)}}]}}
     if interactions:
         page["visualInteractions"] = interactions
+    page.update(extra or {})
     return page
 
 
@@ -656,7 +665,7 @@ def overview_interactions(visuals: list[dict]) -> list[dict]:
 
 
 def bookmark(name: str, display: str, show: list[str], hide: list[str], types: dict,
-             data_targets: list[str] | None = None) -> dict:
+             data_targets: list[str] | None = None, page: str = OVERVIEW) -> dict:
     """Display-only bookmark that changes visibility of the listed visuals only."""
     targets = show + hide + (data_targets or [])
     containers = {n: {"singleVisual": {"visualType": types[n]}} for n in show}
@@ -666,8 +675,8 @@ def bookmark(name: str, display: str, show: list[str], hide: list[str], types: d
     return {"$schema": S_BOOKMARK, "displayName": display, "name": name,
             "options": {"targetVisualNames": targets, "applyOnlyToTargetVisuals": True,
                         **({"suppressDisplay": True} if data_targets else {"suppressData": True})},
-            "explorationState": {"version": "1.3", "activeSection": OVERVIEW,
-                                 "sections": {OVERVIEW: {"visualContainers": containers}}}}
+            "explorationState": {"version": "1.3", "activeSection": page,
+                                 "sections": {page: {"visualContainers": containers}}}}
 
 
 def bookmarks(types: dict) -> list[dict]:
@@ -712,13 +721,12 @@ def register_resources() -> None:
     report["resourcePackages"].append({
         "name": "RegisteredResources", "type": "RegisteredResources",
         "items": [{"name": THEME.name, "path": THEME.name, "type": "CustomTheme"},
-                  {"name": BG_OVERVIEW, "path": BG_OVERVIEW, "type": "Image"},
-                  {"name": BG_ABOUT, "path": BG_ABOUT, "type": "Image"}]
+                  *[{"name": b, "path": b, "type": "Image"} for b in BACKGROUNDS]]
                  + [{"name": f, "path": f, "type": "Image"} for f in sorted(ICON_FILES)]})
     for f in sorted(ICON_FILES):
         (RESOURCES / f).write_text(icon_svg(f), encoding="utf-8", newline="\n")
     # drop icons / images no longer used (e.g. Desktop's renamed copies)
-    keep = {THEME.name, BG_OVERVIEW, BG_ABOUT, *ICON_FILES}
+    keep = {THEME.name, *BACKGROUNDS, *ICON_FILES}
     for f in RESOURCES.iterdir():
         if f.name not in keep and f.suffix in {".png", ".svg"}:
             f.unlink()
@@ -738,30 +746,473 @@ def write_page(page_id: str, page: dict, visuals: list[dict]) -> None:
     write_json(page_dir / "page.json", page)
 
 
+# =========================================================================
+# 7. UX-03 PAGES: Cohort Intelligence, Competency & Skills, Attendance &
+#    Participation, Trainee 360 (drill-through). Existing measures only, plus
+#    the approved [Withdrawal Rate (Snapshot)].
+# =========================================================================
+SPAN = XR - X0                         # 1744: content width
+COL_L = 860                            # left column width (two-column rows)
+COL_R = SPAN - COL_L - 16              # 868
+X_R = X0 + COL_L + 16                  # 1012: right column x
+COHORT_COLOURS = (("2026 Cohort 1", SKY), ("2026 Cohort 2", TEAL), ("2026 Cohort 3", GOLD))
+STATUS_SERIES = (("Active Trainees (Snapshot)", "Active", GOLD),
+                 ("Completed Trainees (Snapshot)", "Completed (to date)", TEAL),
+                 ("Withdrawn Trainees (Snapshot)", "Withdrawn", CORAL))
+ATT_STATUS = (("Present", TEAL), ("Absent", CORAL), ("Unrecorded", SLATE))
+UX03_SLICERS: dict[str, tuple[str, list[str]]] = {}     # page id -> (key, slicer names) for Clear filters
+
+
+def page_svg(active: str, frames=(), tiles=(), tracks=(), back=False) -> str:
+    """Background for a UX-03 page: shared rail + header pill/button + panel frames."""
+    out = svg_base(active)
+    out.append('<rect x="1152" y="40" width="336" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
+    out.append(f'<circle cx="1174" cy="60" r="4" fill="{TEAL}"/><circle cx="1174" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
+    out.append('<rect x="1764" y="40" width="116" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>')
+    for x, y, w, h in tracks:
+        out.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{h//2}" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>')
+    for f in frames:
+        out.append(svg_frame(*f))
+    for x, y, accent in tiles:
+        out.append(f'<rect x="{x}" y="{y}" width="40" height="40" rx="12" fill="{accent}" fill-opacity=".14"/>')
+    out.append('</svg>')
+    return "\n".join(out)
+
+
+def text(size, colour_, weight="Segoe UI"):
+    return {"fontFamily": weight, "fontSize": f"{size}pt", "color": colour_}
+
+
+def header(page_id: str, key: str, eyebrow: str, title: str, *, week_slicer=False, back=False) -> list[dict]:
+    """Eyebrow, title, snapshot label, Clear filters (or Back), cohort and week selectors."""
+    v = [container("headerEyebrow", X0 - 6, 34, 900, 30, 1000, textbox([[(eyebrow, text(10, GOLD, "Segoe UI Semibold"))]])),
+         container("headerTitle", X0 - 6, 58, 1000, 64, 1001, textbox([[(title, {"fontFamily": "Segoe UI Bold",
+                                                                                 "fontSize": "30pt", "color": CREAM})]])),
+         container("snapshotLabel", 1186, 38, 296, 44, 1002, {
+             "visualType": "card",
+             "query": {"queryState": {"Values": {"projections": [proj("Measure", SNAP, "Snapshot Label")]}}},
+             "objects": {"labels": props(fontSize=10, color=colour("#C9D2DE"), fontFamily=FONT["regular"]),
+                         "categoryLabels": props(show=False)}})]
+    if back:
+        v.append(container("btnBack", 1764, 40, 116, 40, 1003, button(
+            "←  Back", link={"type": "Back"}, fg="#C9D2DE", hover_alpha=90, size=10, tooltip="Back to the page you came from")))
+        return v
+    slicers = ["cohortSlicer"]
+    v.append(container("btnClearFilters", 1764, 40, 116, 40, 1003, button(
+        "✕  Clear filters", link=bookmark_link(f"bmClearFilters_{key}"), fg="#C9D2DE", hover_alpha=90, size=10,
+        tooltip="Clear the cohort and week selections on this page")))
+    v.append(container("cohortSlicer", X0 + 8, 124, 524, 44, 1004, {
+        "visualType": "slicer",
+        "query": {"queryState": {"Values": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]}}},
+        "objects": {"data": props(mode="Basic"), "general": props(orientation=1),
+                    "selection": props(selectAllCheckboxEnabled=False, singleSelect=False),
+                    "header": props(show=False),
+                    "items": props(fontColor=colour("#D8DEE6"), background=colour("#0B1D33"), outlineStyle=0, textSize=11)},
+        "syncGroup": {"groupName": "CohortSelection", "fieldChanges": True, "filterChanges": True}}))
+    note_x = 692
+    if week_slicer:
+        slicers.append("weekSlicer")
+        v.append(container("weekLabel", 690, 130, 130, 32, 1005, textbox([[("Programme week", text(10, "#8FA0B4"))]])))
+        v.append(container("weekSlicer", 820, 124, 180, 44, 1006, {
+            "visualType": "slicer",
+            "query": {"queryState": {"Values": {"projections": [proj("Column", WEEK, "week_label", "Programme week")]}}},
+            "objects": {"data": props(mode="Dropdown"), "header": props(show=False),
+                        "selection": props(selectAllCheckboxEnabled=True, singleSelect=False),
+                        "items": props(fontColor=colour("#D8DEE6"), background=colour("#0B1D33"), textSize=11)},
+            "syncGroup": {"groupName": "WeekSelection", "fieldChanges": True, "filterChanges": True}}))
+    else:   # no room beside a week selector; there the "Programme week" label makes the same point
+        v.append(container("cohortNote", note_x - 6, 132, 1150 - note_x, 30, 1007, textbox([[(
+            "Cohorts compared by programme week, not calendar date", text(10, "#7F8EA2"))]])))
+    UX03_SLICERS[page_id] = (key, slicers)
+    return v
+
+
+def panel_title(name: str, x: int, y: int, w: int, title: str, subtitle: str, z: int) -> dict:
+    return container(name, x + 16, y + 14, w - 32, 60, z, textbox([[(title, text(13, CREAM, "Segoe UI Semibold"))],
+                                                                     [(subtitle, text(9, "#8FA0B4"))]]))
+
+
+def body(x, y, w, h):
+    """Content area inside a panel frame, below its title."""
+    return x + 14, y + 74, w - 28, h - 86
+
+
+def number_card(measure_table: str, measure: str, label: str | None = None, size=30) -> dict:
+    return {"visualType": "card",
+            "query": {"queryState": {"Values": {"projections": [proj("Measure", measure_table, measure, label)]}}},
+            "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=size, color=colour(CREAM)),
+                        "categoryLabels": props(show=False)}}
+
+
+def category_filter(name: str, table: str, column: str, value: str) -> dict:
+    """Visual/page filter: <table>[<column>] = value (no DAX needed)."""
+    return {"name": name, "field": field("Column", table, column), "type": "Categorical", "howCreated": "User",
+            "filter": {"Version": 2, "From": [{"Name": "t", "Entity": table, "Type": 0}],
+                       "Where": [{"Condition": {"In": {
+                           "Expressions": [{"Column": {"Expression": {"SourceRef": {"Source": "t"}}, "Property": column}}],
+                           "Values": [[{"Literal": {"Value": f"'{value}'"}}]]}}}]}}
+
+
+def kpi_tile(prefix: str, x: int, y: int, w: int, h: int, z: int, label: str, table: str, measure: str,
+             context: str, icon: str, accent: str, visual_filter: dict | None = None) -> list[dict]:
+    """Icon + label + number + context line (frame and icon tile are in the background)."""
+    num = container(prefix, x + 14, y + 54, w - 28, 66, z + 2, number_card(table, measure))
+    if visual_filter:
+        num["filterConfig"] = {"filters": [visual_filter]}
+    return [container(f"{prefix}Icon", x + 33, y + 31, 22, 22, z, image(icon_file(icon, accent))),
+            container(f"{prefix}Label", x + 70, y + 28, w - 80, 30, z + 1,
+                      textbox([[(label, text(9, MUTED, "Segoe UI Semibold"))]])),
+            num,
+            container(f"{prefix}Context", x + 10, y + h - 40, w - 20, 30, z + 3,
+                      textbox([[(context, text(10, "#8FA0B4"))]], "center"))]
+
+
+def heatmap(row_table, row_col, row_label, col_table, col_col, col_label, m_table, measure, m_label,
+            low="#0B2A3E", high="#3FC1B0") -> dict:
+    return {"visualType": "pivotTable",
+            "query": {"queryState": {
+                "Rows": {"projections": [proj("Column", row_table, row_col, row_label)]},
+                "Columns": {"projections": [proj("Column", col_table, col_col, col_label)]},
+                "Values": {"projections": [proj("Measure", m_table, measure, m_label)]}}},
+            "objects": {
+                "values": [{"properties": {
+                    "backColor": {"solid": {"color": {"expr": {"FillRule": {
+                        "Input": field("Measure", m_table, measure),
+                        "FillRule": {"linearGradient2": {
+                            "min": {"color": {"Literal": {"Value": f"'{low}'"}}},
+                            "max": {"color": {"Literal": {"Value": f"'{high}'"}}},
+                            "nullColoringStrategy": {"strategy": {"Literal": {"Value": "'noColor'"}}}}}}}}}},
+                    "fontColorPrimary": colour(CREAM), "fontSize": literal(10)},
+                    "selector": {"data": [{"dataViewWildcard": {"matchingOption": 1}}], "metadata": f"{m_table}.{measure}"}}],
+                "subTotals": props(rowSubtotals=False, columnSubtotals=False),
+                "columnHeaders": props(fontSize=9, fontColor=colour("#8FA0B4")),
+                "rowHeaders": props(fontSize=10, fontColor=colour("#D8DEE6")),
+                "grid": props(gridVertical=True, gridVerticalColor=colour(NAVY), gridVerticalWeight=3,
+                              gridHorizontal=True, gridHorizontalColor=colour(NAVY), gridHorizontalWeight=3,
+                              rowPadding=12)}}
+
+
+def by_week_sort() -> dict:
+    return {"sort": [{"field": field("Column", WEEK, "programme_week"), "direction": "Ascending"}]}
+
+
+def by_cohort_sort() -> dict:
+    return {"sort": [{"field": field("Column", COHORT, "cohort_name"), "direction": "Ascending"}]}
+
+
+def cohort_colour_points() -> list[dict]:
+    return [{"properties": {"fill": colour(c)}, "selector": value_selector(COHORT, "cohort_name", n)} for n, c in COHORT_COLOURS]
+
+
+def status_colour_points() -> list[dict]:
+    return [{"properties": {"fill": colour(c)}, "selector": value_selector(ATTEND, "attendance_status", s)} for s, c in ATT_STATUS]
+
+
+def axis_objects(x_title: str | None = None, categorical=False) -> dict:
+    cat = props(showAxisTitle=bool(x_title), **({"titleText": x_title} if x_title else {}),
+                **({"axisType": "Categorical"} if categorical else {}))
+    return {"categoryAxis": cat, "valueAxis": props(showAxisTitle=False)}
+
+
+# ------------------------------------------------------------- A. Cohort Intelligence
+def cohort_page() -> dict:
+    pid, key = COHORTS_P, "cohorts"
+    v = header(pid, key, "COHORT INTELLIGENCE · STATUS AT THE DATA SNAPSHOT", "Cohort Intelligence")
+    z = 1100
+    score = (X0, 196, SPAN, 272)
+    third = (SPAN - 32) // 3                         # 570
+    status = (X0, 484, third, 300)
+    attend = (X0 + third + 16, 484, third, 300)
+    trend = (X0 + 2 * (third + 16), 484, SPAN - 2 * (third + 16), 300)
+    roster = (X0, 800, SPAN, 240)
+
+    v.append(panel_title("scoreTitle", *score[:3], "Cohort scorecard",
+                         "Snapshot status per cohort. Completed is to date for in-progress cohorts, not a final outcome. "
+                         "Starters = Active + Completed + Withdrawn.", z)); z += 1
+    cols = [proj("Column", COHORT, "cohort_name", "Cohort"), proj("Column", COHORT, "delivery_mode", "Delivery"),
+            proj("Column", COHORT, "schedule_status", "Programme status"), proj("Column", COHORT, "weeks_started", "Weeks started"),
+            proj("Measure", ENROL, "Total Enrolments", "Enrolments"), proj("Measure", ENROL, "Cancelled Before Start", "Cancelled before start"),
+            proj("Measure", ENROL, "Starting Headcount", "Starters"), proj("Measure", ENROL, "Active Trainees (Snapshot)", "Active"),
+            proj("Measure", ENROL, "Completed Trainees (Snapshot)", "Completed (to date)"),
+            proj("Measure", ENROL, "Withdrawn Trainees (Snapshot)", "Withdrawn"),
+            proj("Measure", ENROL, "Withdrawal Rate (Snapshot)", "Withdrawal rate"),
+            proj("Measure", ATTEND, "Recorded Attendance Rate", "Recorded attendance"),
+            proj("Measure", ATTEND, "Attendance Recording Rate", "Recording rate")]
+    v.append(container("scorecard", *body(*score), z, {
+        "visualType": "tableEx", "query": {"queryState": {"Values": {"projections": cols}}, "sortDefinition": by_cohort_sort()},
+        "objects": {"total": props(totals=True), "columnHeaders": props(wordWrap=True)}})); z += 1
+
+    v.append(panel_title("statusTitle", *status[:3], "Lifecycle status (share of starters)",
+                         "Pre-start cancellations excluded", z)); z += 1
+    v.append(container("statusMix", *body(*status), z, {
+        "visualType": "hundredPercentStackedBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Y": {"projections": [proj("Measure", ENROL, m, l) for m, l, _ in STATUS_SERIES]}},
+                  "sortDefinition": by_cohort_sort()},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(c)}, "selector": {"metadata": f"{ENROL}.{m}"}} for m, _, c in STATUS_SERIES],
+                    "labels": props(show=True, color=colour("#06111F"), fontSize=9, labelPrecision=0),
+                    **axis_objects()}})); z += 1
+
+    v.append(panel_title("attendTitle", *attend[:3], "Attendance: rate vs recording completeness",
+                         "Recorded rate = Present ÷ (Present + Absent); recording rate = recorded ÷ eligible", z)); z += 1
+    v.append(container("attendCompare", *body(*attend), z, {
+        "visualType": "clusteredBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Y": {"projections": [proj("Measure", ATTEND, "Recorded Attendance Rate", "Recorded attendance"),
+                                                       proj("Measure", ATTEND, "Attendance Recording Rate", "Recording rate")]}},
+                  "sortDefinition": by_cohort_sort()},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(TEAL)}, "selector": {"metadata": f"{ATTEND}.Recorded Attendance Rate"}},
+                                  {"properties": {"fill": colour(GOLD)}, "selector": {"metadata": f"{ATTEND}.Attendance Recording Rate"}}],
+                    "labels": props(show=True, color=colour(CREAM), fontSize=9, labelPrecision=1),
+                    **axis_objects()}})); z += 1
+
+    v.append(panel_title("trendTitle", *trend[:3], "Competency by programme week",
+                         "Same-week comparison; in-progress cohorts stop at their latest assessed week", z)); z += 1
+    v.append(container("cohortTrend", *body(*trend), z, {
+        "visualType": "lineChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Y": {"projections": [proj("Measure", COMPET, "Average Competency Score", "Average score")]},
+                                 "Series": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"dataPoint": cohort_colour_points(), "lineStyles": props(strokeWidth=3, showMarker=True),
+                    **axis_objects("Programme week", categorical=True)}})); z += 1
+
+    v.append(panel_title("rosterTitle", *roster[:3], "Enrolments",
+                         "One row per enrolment (a person can enrol more than once). Right-click a row → Drill through → Trainee 360.", z)); z += 1
+    v.append(container("enrolmentRoster", *body(*roster), z, {
+        "visualType": "tableEx",
+        "query": {"queryState": {"Values": {"projections": [
+            proj("Column", ENROL, "enrolment_id", "Enrolment"), proj("Column", ENROL, "employee_name", "Trainee (synthetic)"),
+            proj("Column", ENROL, "employee_id", "Employee"), proj("Column", COHORT, "cohort_name", "Cohort"),
+            proj("Column", ENROL, "status_as_of_snapshot", "Status at snapshot"), proj("Column", ENROL, "start_date", "Start date")]}},
+            "sortDefinition": {"sort": [{"field": field("Column", ENROL, "enrolment_id"), "direction": "Ascending"}]}}})); z += 1
+
+    v += nav_decor(key, 100) + nav_buttons(pid, 3000)
+    svg = page_svg(key, frames=[score, status, attend, trend, roster], tracks=[(X0, 120, 540, 52)])
+    return {"id": pid, "key": key, "display": "Cohort Intelligence", "svg": svg, "visuals": v}
+
+
+# ------------------------------------------------------------- B. Competency & Skills Development
+def skills_page() -> dict:
+    pid, key = SKILLS_P, "skills"
+    v = header(pid, key, "COMPETENCY & SKILLS DEVELOPMENT", "Competency & Skills Development", week_slicer=True)
+    z = 1100
+    trend = (X0, 196, COL_L, 420)
+    heat = (X_R, 196, COL_R, 420)
+    compare = (X0, 632, COL_L, 408)
+    sample = (X_R, 632, COL_R, 408)
+    v.append(panel_title("trendTitle", *trend[:3], "Average score by programme week, per competency",
+                         "Cohort means: a change can partly reflect which trainees were assessed that week", z)); z += 1
+    v.append(container("skillTrend", *body(*trend), z, {
+        "visualType": "lineChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Y": {"projections": [proj("Measure", COMPET, "Average Competency Score", "Average score")]},
+                                 "Series": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"lineStyles": props(strokeWidth=3, showMarker=True), **axis_objects("Programme week", categorical=True)}})); z += 1
+    v.append(panel_title("heatTitle", *heat[:3], "Competency × programme week",
+                         "Average score; darker = lower, brighter = higher; blank = not yet assessed", z)); z += 1
+    v.append(container("skillHeatmap", *body(*heat), z, heatmap(COMPET, "competency_name", "Competency", WEEK, "week_label",
+                                                                "Week", COMPET, "Average Competency Score", "Average score"))); z += 1
+    v.append(panel_title("compareTitle", *compare[:3], "Competency comparison across cohorts",
+                         "Pick ONE programme week above for a like-for-like comparison", z)); z += 1
+    # which week(s) the comparison is showing (text measure, filtered by the week selector)
+    v.append(container("compareWeeks", compare[0] + compare[2] - 390, compare[1] + 12, 374, 44, z, {
+        "visualType": "card",
+        "query": {"queryState": {"Values": {"projections": [proj("Measure", WEEK, "Selected Weeks Label")]}}},
+        "objects": {"labels": props(fontFamily=FONT["semibold"], fontSize=10, color=colour(GOLD)),
+                    "categoryLabels": props(show=False)}})); z += 1
+    v.append(container("skillCompare", *body(*compare), z, {
+        "visualType": "clusteredBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]},
+                                 "Series": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Y": {"projections": [proj("Measure", COMPET, "Average Competency Score", "Average score")]}},
+                  "sortDefinition": {"sort": [{"field": field("Column", COMPET, "competency_name"), "direction": "Ascending"}]}},
+        "objects": {"dataPoint": cohort_colour_points(), "labels": props(show=True, color=colour(CREAM), fontSize=9, labelPrecision=1),
+                    **axis_objects()}})); z += 1
+    v.append(panel_title("sampleTitle", *sample[:3], "Sample size: assessed trainees per week",
+                         "Distinct enrolments assessed; Cohort 3 has no Week 7-8 results yet", z)); z += 1
+    v.append(container("skillSample", *body(*sample), z, {
+        "visualType": "clusteredColumnChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Series": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Y": {"projections": [proj("Measure", COMPET, "Assessed Trainees", "Assessed trainees")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"dataPoint": cohort_colour_points(), "labels": props(show=True, color=colour(CREAM), fontSize=8),
+                    **axis_objects("Programme week", categorical=True)}})); z += 1
+    v += nav_decor(key, 100) + nav_buttons(pid, 3000)
+    # the week selector only drives the like-for-like comparison panel
+    interactions = [{"source": "weekSlicer", "target": t, "type": "NoFilter"} for t in ("skillTrend", "skillHeatmap", "skillSample")]
+    svg = page_svg(key, frames=[trend, heat, compare, sample], tracks=[(X0, 120, 540, 52), (812, 120, 196, 52)])
+    return {"id": pid, "key": key, "display": "Competency & Skills", "svg": svg, "visuals": v, "interactions": interactions}
+
+
+# ------------------------------------------------------------- C. Attendance & Participation
+def attendance_page() -> dict:
+    pid, key = ATTEND_P, "attendance"
+    v = header(pid, key, "ATTENDANCE & PARTICIPATION · ENROLMENT-SESSION GRAIN", "Attendance & Participation", week_slicer=True)
+    z = 1100
+    kw = (SPAN - 3 * 16) // 4                         # 424
+    tiles = []
+    cards = [("kpiEligible", "ELIGIBLE ENROLMENT-SESSIONS", ATTEND, "Eligible Attendance Sessions",
+              "One per enrolment per scheduled session", "attendance", TEAL, None),
+             ("kpiUnrecorded", "UNRECORDED ENROLMENT-SESSIONS", ATTEND, "Eligible Attendance Sessions",
+              "No mark recorded (not counted as absent)", "doc", SLATE,
+              category_filter("onlyUnrecorded", ATTEND, "attendance_status", "Unrecorded")),
+             ("kpiRecordedRate", "RECORDED ATTENDANCE RATE", ATTEND, "Recorded Attendance Rate",
+              "Present ÷ (Present + Absent)", "check", TEAL, None),
+             ("kpiRecordingRate", "ATTENDANCE RECORDING RATE", ATTEND, "Attendance Recording Rate",
+              "Recorded ÷ eligible enrolment-sessions", "doc", GOLD, None)]
+    frames = []
+    for i, (prefix, label, table, measure, context, icon, accent, vf) in enumerate(cards):
+        x = X0 + i * (kw + 16)
+        frames.append((x, 196, kw, 150)); tiles.append((x + 24, 196 + 22, accent))
+        v += kpi_tile(prefix, x, 196, kw, 150, z, label, table, measure, context, icon, accent, vf); z += 4
+    mix = (X0, 362, COL_L, 330)
+    weekly = (X_R, 362, COL_R, 330)
+    heat = (X0, 708, COL_L, 332)
+    counts = (X_R, 708, COL_R, 332)
+    v.append(panel_title("mixTitle", *mix[:3], "Attendance composition by cohort",
+                         "Share of eligible enrolment-sessions; hover for counts", z)); z += 1
+    v.append(container("attendMix", *body(*mix), z, {
+        "visualType": "hundredPercentStackedBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Series": {"projections": [proj("Column", ATTEND, "attendance_status", "Attendance")]},
+                                 "Y": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Sessions")]}},
+                  "sortDefinition": by_cohort_sort()},
+        "objects": {"dataPoint": status_colour_points(), "labels": props(show=True, color=colour("#06111F"), fontSize=9, labelPrecision=1),
+                    **axis_objects()}})); z += 1
+    v.append(panel_title("weeklyTitle", *weekly[:3], "Rates by programme week",
+                         "Ratios of summed counts, never averages of percentages", z)); z += 1
+    v.append(container("attendWeekly", *body(*weekly), z, {
+        "visualType": "lineChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Y": {"projections": [proj("Measure", ATTEND, "Recorded Attendance Rate", "Recorded attendance"),
+                                                       proj("Measure", ATTEND, "Attendance Recording Rate", "Recording rate")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(TEAL)}, "selector": {"metadata": f"{ATTEND}.Recorded Attendance Rate"}},
+                                  {"properties": {"fill": colour(GOLD)}, "selector": {"metadata": f"{ATTEND}.Attendance Recording Rate"}}],
+                    "lineStyles": props(strokeWidth=3, showMarker=True), **axis_objects("Programme week", categorical=True)}})); z += 1
+    v.append(panel_title("heatTitle", *heat[:3], "Recorded attendance rate: cohort × week",
+                         "Where are attendance gaps concentrated?", z)); z += 1
+    v.append(container("attendHeatmap", *body(*heat), z, heatmap(COHORT, "cohort_name", "Cohort", WEEK, "week_label", "Week",
+                                                                ATTEND, "Recorded Attendance Rate", "Recorded attendance",
+                                                                low="#5A2E2A", high="#3FC1B0"))); z += 1
+    v.append(panel_title("countsTitle", *counts[:3], "Enrolment-sessions per week by attendance mark",
+                         "Counts, including unrecorded marks", z)); z += 1
+    v.append(container("attendCounts", *body(*counts), z, {
+        "visualType": "columnChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Series": {"projections": [proj("Column", ATTEND, "attendance_status", "Attendance")]},
+                                 "Y": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Sessions")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"dataPoint": status_colour_points(), **axis_objects("Programme week", categorical=True)}})); z += 1
+    v += nav_decor(key, 100) + nav_buttons(pid, 3000)
+    svg = page_svg(key, frames=frames + [mix, weekly, heat, counts], tiles=tiles,
+                   tracks=[(X0, 120, 540, 52), (812, 120, 196, 52)])
+    return {"id": pid, "key": key, "display": "Attendance & Participation", "svg": svg, "visuals": v}
+
+
+# ------------------------------------------------------------- D. Trainee 360 (drill-through)
+def trainee_page() -> dict:
+    pid, key = TRAINEE_P, "trainee"
+    v = header(pid, key, "TRAINEE 360 · TRAINING · ONE ENROLMENT", "Trainee 360 — Training", back=True)
+    z = 1100
+    ident = (X0, 130, SPAN, 120)
+    kw = (SPAN - 2 * 16) // 3                         # 570
+    cards = [("kpiRecorded", "RECORDED ATTENDANCE RATE", ATTEND, "Recorded Attendance Rate", "Present ÷ (Present + Absent)", "check", TEAL),
+             ("kpiRecording", "ATTENDANCE RECORDING RATE", ATTEND, "Attendance Recording Rate", "Recorded ÷ eligible sessions", "doc", GOLD),
+             ("kpiScore", "AVERAGE COMPETENCY SCORE", COMPET, "Average Competency Score", "All assessed weeks, 0-100", "star", TEAL)]
+    frames, tiles = [ident], []
+    v.append(container("identity", *body(ident[0], ident[1] - 60, ident[2], ident[3] + 50), z, {
+        "visualType": "multiRowCard",
+        "query": {"queryState": {"Values": {"projections": [
+            proj("Column", ENROL, "employee_name", "Trainee (synthetic)"), proj("Column", ENROL, "enrolment_id", "Enrolment"),
+            proj("Column", ENROL, "employee_id", "Employee"), proj("Column", COHORT, "cohort_name", "Cohort"),
+            proj("Column", ENROL, "status_as_of_snapshot", "Status at snapshot"), proj("Column", ENROL, "start_date", "Start date")]}}}}))
+    z += 1
+    for i, (prefix, label, table, measure, context, icon, accent) in enumerate(cards):
+        x = X0 + i * (kw + 16)
+        frames.append((x, 266, kw, 150)); tiles.append((x + 24, 266 + 22, accent))
+        v += kpi_tile(prefix, x, 266, kw, 150, z, label, table, measure, context, icon, accent); z += 4
+    att = (X0, 432, COL_L, 608)
+    comp = (X_R, 432, COL_R, 608)
+    v.append(panel_title("attTitle", *att[:3], "Attendance by programme week",
+                         "This enrolment's sessions by mark; unrecorded is not absent", z)); z += 1
+    v.append(container("traineeAttendance", *body(*att), z, {
+        "visualType": "columnChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Series": {"projections": [proj("Column", ATTEND, "attendance_status", "Attendance")]},
+                                 "Y": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Sessions")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"dataPoint": status_colour_points(), **axis_objects("Programme week", categorical=True)}})); z += 1
+    v.append(panel_title("compTitle", *comp[:3], "Competency progression",
+                         "This enrolment by competency. Cohort same-week comparison: measure pending BI review.", z)); z += 1
+    v.append(container("traineeCompetency", *body(*comp), z, {
+        "visualType": "lineChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Y": {"projections": [proj("Measure", COMPET, "Average Competency Score", "Score")]},
+                                 "Series": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"lineStyles": props(strokeWidth=3, showMarker=True), **axis_objects("Programme week", categorical=True)}})); z += 1
+    v += nav_decor(key, 100) + nav_buttons(pid, 3000)
+    enrol_field = field("Column", ENROL, "enrolment_id")
+    extra = {"type": "Drillthrough", "visibility": "HiddenInViewMode",
+             "pageBinding": {"name": "trainee360Binding", "type": "Drillthrough",
+                             "parameters": [{"name": "trainee360Enrolment", "boundFilter": "drillEnrolment", "fieldExpr": enrol_field}]},
+             "filterConfig": {"filters": [{"name": "drillEnrolment", "field": enrol_field, "type": "Categorical",
+                                           "howCreated": "Drillthrough"}]}}
+    svg = page_svg(key, frames=frames + [att, comp], tiles=tiles)
+    return {"id": pid, "key": key, "display": "Trainee 360 — Training", "svg": svg, "visuals": v, "extra": extra}
+
+
+def ux03_pages() -> list[dict]:
+    return [cohort_page(), skills_page(), attendance_page(), trainee_page()]
+
+
+def ux03_bookmarks() -> list[dict]:
+    """One 'Clear filters' bookmark per UX-03 page: clears that page's slicers only."""
+    out = []
+    for pid, (key, slicers) in UX03_SLICERS.items():
+        out.append(bookmark(f"bmClearFilters_{key}", f"Clear filters · {key}", [], [],
+                            {n: "slicer" for n in slicers}, data_targets=slicers, page=pid))
+    return out
+
+
 def main() -> None:
     DESIGN.mkdir(parents=True, exist_ok=True)
-    (DESIGN / "overview-background.svg").write_text(overview_svg(), encoding="utf-8", newline="\n")
-    (DESIGN / "about-background.svg").write_text(about_svg(), encoding="utf-8", newline="\n")
+    def background(name: str, svg: str) -> str:
+        (DESIGN / f"{name}-background.svg").write_text(svg, encoding="utf-8", newline="\n")
+        BACKGROUNDS.append(f"{name}-background.png")
+        return f"{name}-background.png"
 
+    pages = {}   # page id -> (page.json, visuals)
     overview = overview_visuals()
+    pages[OVERVIEW] = (page_json(OVERVIEW, "Overview", background("overview", overview_svg()),
+                                 overview_interactions(overview)), overview)
+    for spec in ux03_pages():                      # Cohort Intelligence, Skills, Attendance, Trainee 360
+        pages[spec["id"]] = (page_json(spec["id"], spec["display"], background(spec["key"], spec["svg"]),
+                                       spec.get("interactions"), extra=spec.get("extra")), spec["visuals"])
     about = about_visuals()
-    write_page(OVERVIEW, page_json(OVERVIEW, "Overview", BG_OVERVIEW, overview_interactions(overview)), overview)
-    write_page(ABOUT, page_json(ABOUT, "About", BG_ABOUT), about)
+    pages[ABOUT] = (page_json(ABOUT, "About", background("about", about_svg())), about)
+    for pid, (pj, vis) in pages.items():
+        write_page(pid, pj, vis)
     write_json(DEFINITION / "pages" / "pages.json",
-               {"$schema": S_PAGES, "pageOrder": [OVERVIEW, ABOUT], "activePageName": OVERVIEW})
+               {"$schema": S_PAGES, "pageOrder": list(pages), "activePageName": OVERVIEW})
 
     bm_dir = DEFINITION / "bookmarks"
     if bm_dir.exists():
         shutil.rmtree(bm_dir)
     types = {v["name"]: v["visual"]["visualType"] for v in overview}
-    marks = bookmarks(types)
+    marks = bookmarks(types) + ux03_bookmarks()
     for b in marks:
         write_json(bm_dir / f"{b['name']}.bookmark.json", b)
     write_json(bm_dir / "bookmarks.json", {"$schema": S_BOOKMARKS, "items": [{"name": b["name"]} for b in marks]})
 
     register_resources()
-    print(f"Overview: {len(overview)} visuals · About: {len(about)} visuals · {len(marks)} bookmarks")
-    print("Backgrounds written to powerbi/design/*.svg - render them to PNG before opening Desktop.")
+    for pid, (pj, vis) in pages.items():
+        print(f"  {pj['displayName']:<34} {len(vis):>3} visuals")
+    print(f"{len(marks)} bookmarks · backgrounds in powerbi/design/*.svg - render them to PNG before opening Desktop.")
 
 
 if __name__ == "__main__":

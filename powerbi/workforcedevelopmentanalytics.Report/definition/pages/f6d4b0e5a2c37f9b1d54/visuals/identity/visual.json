@@ -1,0 +1,113 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "identity",
+  "position": {
+    "x": 150,
+    "y": 144,
+    "z": 1100,
+    "width": 1716,
+    "height": 84,
+    "tabOrder": 1100
+  },
+  "visual": {
+    "visualType": "multiRowCard",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "employee_name"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.employee_name",
+              "nativeQueryRef": "employee_name",
+              "displayName": "Trainee (synthetic)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "enrolment_id"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.enrolment_id",
+              "nativeQueryRef": "enrolment_id",
+              "displayName": "Enrolment"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "employee_id"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.employee_id",
+              "nativeQueryRef": "employee_id",
+              "displayName": "Employee"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "cohort_name"
+                }
+              },
+              "queryRef": "rpt dim_cohort.cohort_name",
+              "nativeQueryRef": "cohort_name",
+              "displayName": "Cohort"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "status_as_of_snapshot"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.status_as_of_snapshot",
+              "nativeQueryRef": "status_as_of_snapshot",
+              "displayName": "Status at snapshot"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "start_date"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.start_date",
+              "nativeQueryRef": "start_date",
+              "displayName": "Start date"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

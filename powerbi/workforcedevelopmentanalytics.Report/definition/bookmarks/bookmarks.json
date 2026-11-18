@@ -24,6 +24,15 @@
     },
     {
       "name": "bmClearFilters"
+    },
+    {
+      "name": "bmClearFilters_cohorts"
+    },
+    {
+      "name": "bmClearFilters_skills"
+    },
+    {
+      "name": "bmClearFilters_attendance"
     }
   ]
 }

@@ -221,3 +221,53 @@ Reviewed after the owner's local run (Routes A and B). Entries above marked `Rev
 
 **Owner refinement (2026-11-18):** `Starting Headcount Context` now omits the cancellation part when there are none ("72 enrolments"), and says "1 enrolment" in the singular. The owner implemented it in Power BI Desktop (commit `fcd4c89`) and tested the zero branch with a temporary threshold. It's display wording only; the counts come from the approved measures unchanged.
 
+### D25 — UX-03 report expansion: four pages on Build 01 data (2026-11-18)
+**Built:**
+- **Cohort Intelligence**: scorecard, lifecycle status mix, attendance rate vs completeness, same-week competency trend, and an enrolment roster that is the drill-through source.
+- **Competency & Skills Development**: trend per competency, competency × week heatmap, cross-cohort comparison driven by the week selector, and sample size per week.
+- **Attendance & Participation**: 4 KPI tiles, composition by cohort, rates by week, a cohort × week heatmap, and counts per week by mark.
+- **Trainee 360 — Training**: a drill-through page keyed on `enrolment_id`, hidden in view mode, with a Back button.
+
+**Key choices:**
+- **Sync group:** the cohort slicer on every page belongs to sync group `CohortSelection`, so a selection persists across pages. The week selector is synced separately (`WeekSelection`).
+- **Unrecorded count without a new measure:** the existing `[Eligible Attendance Sessions]` on a card with a **visual-level filter** `attendance_status = "Unrecorded"`.
+- **Week selector scope (Skills page):** it filters only the cross-cohort comparison, via `NoFilter` interactions, so the trend and heatmap always show every week.
+- **Drill-through key:** `enrolment_id`, **not** `employee_id`, so the two re-enrolled synthetic employees stay distinct per cohort.
+- **Navigation:** the rail links only to working pages. Trainee 360 is labelled "drill-through" and has no link.
+- **Only approved new DAX:** `Withdrawal Rate (Snapshot)`.
+
+**Pending ChatGPT review (drafted, NOT deployed):**
+
+1. *Paired person-level week-over-week change*: same enrolment, same competency, consecutive weeks.
+```dax
+Paired WoW Competency Change =
+-- Only for ONE selected programme week; blank otherwise (no mixing of weeks)
+IF (
+    HASONEVALUE ( 'rpt dim_programme_week'[programme_week] ),
+    AVERAGEX (
+        FILTER (
+            ADDCOLUMNS (
+                VALUES ( 'rpt fact_assessment'[enrolment_id] ),
+                "@change", CALCULATE ( AVERAGE ( 'rpt fact_assessment'[week_over_week_change] ) )
+            ),
+            NOT ISBLANK ( [@change] )       -- enrolments without a consecutive prior week are excluded, never zero
+        ),
+        [@change]                           -- average per enrolment first, then across enrolments
+    )
+)
+```
+2. *Trainee 360: cohort average at the same week*, for comparing one enrolment against its own cohort.
+```dax
+Cohort Avg Competency (Same Week) =
+VAR TraineeCohorts = VALUES ( 'rpt dim_enrolment'[cohort_id] )      -- the drilled enrolment's cohort
+RETURN
+    CALCULATE (
+        [Average Competency Score],
+        REMOVEFILTERS ( 'rpt dim_enrolment' ),                        -- drop the enrolment filter...
+        TREATAS ( TraineeCohorts, 'rpt dim_enrolment'[cohort_id] )    -- ...but keep its cohort
+    )
+```
+Both need review of semantics, filter context and naming before they're added to the model.
+
+**Owner addition (UX-03):** display-only measure `Selected Weeks Label` (in `rpt dim_programme_week`, folder *UX display*). It labels the Skills comparison panel "Showing Week 6", "Showing Week 4, Week 5 (combined)", or "Showing all weeks · mixed programme stages". It's text only and changes no calculation.
+

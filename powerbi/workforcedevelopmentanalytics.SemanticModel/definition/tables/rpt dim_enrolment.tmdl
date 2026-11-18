@@ -1,6 +1,13 @@
 table 'rpt dim_enrolment'
 	lineageTag: fc262d84-559f-4222-85eb-dbcd6365fcd2
 
+	measure 'Withdrawal Rate (Snapshot)' =
+			-- Approved in the UX-03 spec: withdrawn as a share of starters, at the snapshot
+			DIVIDE ( [Withdrawn Trainees (Snapshot)], [Starting Headcount] )
+		formatString: 0.0%
+		displayFolder: KPI context
+		lineageTag: ba2d99ee-437a-44c4-b4ad-2f0489ec7f1d
+
 	measure 'Starting Headcount' = ```
 			
 			CALCULATE(
