@@ -13,11 +13,13 @@
 | SSMS load | `sql/005_load_build02_data.sql`: `BULK INSERT`, one transaction |
 | Reporting views | `sql/006_create_build02_reporting_views.sql`: 6 `rpt` views |
 | Python load | `python/load_build02_to_sql.py`: checks Build 01, loads in one transaction, validates Build 02 and re-validates Build 01 |
-| Validation | `sql/build02_validation_queries.sql`: 26 error checks, 11 storyline checks, 4 info rows |
-| Examples / trace | `sql/build02_analysis_examples.sql` (8 queries), `sql/build02_trace_one_enrolment.sql` |
-| Tests | `tests/test_build02_generator.py` (39), `tests/test_build02_sql_integration.py` (22) |
-| Docs | `docs/build02_walkthrough.md`, `docs/build02_data_dictionary.md`, this log, decisions D27–D33 |
-| Changed Build 01 files | `sql/001_create_schema.sql` (+6 `DROP TABLE IF EXISTS` lines, D28); `.gitattributes` (LF rule for `data/synthetic/build02/`) |
+| Validation | `sql/build02_validation_queries.sql`: 30 error checks (incl. 4 population reconciliations), 11 storyline checks, 8 info rows |
+| Audit | `data/synthetic/build02/audit/review_signals.csv` (1,108 rows), `audit/readiness_evidence.csv` (127 rows), and their SQL twin `sql/build02_audit_queries.sql` |
+| Reset | `sql/007_reset_build02_objects.sql`, `python/full_reset.py --confirm`; the Build 01 drop guard is installed by `004` |
+| Examples / trace | `sql/build02_analysis_examples.sql` (10 queries: 9 = KPI populations, 10 = as of any date), `sql/build02_trace_one_enrolment.sql` |
+| Tests | `tests/test_build02_generator.py` (44), `tests/test_build02_sql_integration.py` (29) |
+| Docs | `docs/build02_walkthrough.md`, `docs/build02_data_dictionary.md`, this log, decisions D27–D37 |
+| Changed Build 01 files | **none.** `sql/001_create_schema.sql` is identical to `main` (D34 supersedes D28). Only `.gitattributes` gains LF rules for `data/synthetic/build02/` and its `audit/` folder |
 
 **No changes** to the Build 01 CSVs or their checksums, the Build 01 tables, views or generator, or anything under `powerbi/` (`git diff -- powerbi` is empty).
 
@@ -70,29 +72,44 @@ Seed 20261118, as of 2026-11-02, from Build 01 seed 20261115.
 - 7,231 eligible attendance; 533 unrecorded; 6,655 assessment rows.
 
 ## Evidence (Claude Code cloud container: SQL Server 2025 on Linux, SQL login)
+Re-run after the conditional-approval changes (D34–D37).
+
 | Command | Result |
 |---|---|
-| `python python/generate_synthetic_data.py` + `python python/generate_build02_data.py`, then `git status` | Build 01 files unchanged; Build 02 files reproduced exactly |
-| `python python/load_to_sql.py --server localhost` | 26 of 26 checks OK |
-| `python python/load_build02_to_sql.py --server localhost` | 6 tables loaded; **41 of 41** Build 02 checks OK; Build 01 re-validated, 26 of 26 OK |
-| SSMS route via `sqlcmd`: 004 → 005 (**run twice**) → 006 → validation | same row counts after the second load, no duplicates; 37 PASS + 4 INFO |
-| `python -m pytest` (with SQL Server) | **121 passed** (Build 01: 60; Build 02: 39 generator + 22 SQL) |
-| `sql/build02_analysis_examples.sql`, `sql/build02_trace_one_enrolment.sql` | all queries run; the numbers are above and in the walkthrough |
+| `python python/generate_synthetic_data.py` + `python python/generate_build02_data.py`, then `git status` | Build 01 files unchanged; the six Build 02 data CSVs are **byte-identical** to before the audit work (same checksums); audit files reproduced exactly |
+| `python python/full_reset.py --server localhost` (no `--confirm`) | refused: `add --confirm to proceed` |
+| `python python/full_reset.py --server localhost --confirm` | Build 01 **26 of 26**; Build 02 **49 of 49** (30 error + 11 story PASS, 8 INFO); `Full reset complete: all checks OK` |
+| `sql/001_create_schema.sql` run with Build 02 loaded | `Msg 50001 … Nothing was dropped` (+ follow-on `Msg 2714`); still 15 core tables and 6,655 assessment rows |
+| `python python/load_to_sql.py` with Build 02 loaded | refused with the same message; nothing dropped |
+| SSMS route via `sqlcmd`: 004 → 005 (run twice) → 006 → validation | same counts after the second load |
+| `sql/build02_audit_queries.sql` vs the audit CSVs | 1,108 / 127 rows; every key and value equal (averages within 0.01 rounding) |
+| `sql/build02_analysis_examples.sql` | all 10 queries run; populations and the as-of-date figures are in the walkthrough |
+| `python -m pytest` (with SQL Server) | **133 passed** (Build 01: 60; Build 02: 44 generator + 29 SQL) |
 
-**Negative tests (all pass, so the bad data IS rejected):**
+**Negative tests:**
 - **Constraints reject:** a duplicate attempt; approval without sign-off; a competency pass with no score; an unknown event type; a Closed event without a reason; a case for a missing enrolment; a manual referral with a trigger week.
 - **Validation catches:** overlapping cases; an action before its case opened; an attempt on the completion day; a future-dated attempt; a result that disagrees with the pass mark; an approval claiming evidence that wasn't on record.
-- **Python `validate()` catches** its own equivalents, plus too many attempts and an attempt by an active enrolment.
-- **Loading:** a failed load (bad value in the last table) leaves every table unchanged; the loader refuses a Build 02 dataset whose snapshot date differs from Build 01's.
+- **Loading:** a failed load changes nothing; a snapshot mismatch is refused; the guard refuses 001 with nothing dropped.
 
-**Bug found by a negative test:** the Python overlap check crashed instead of reporting two cases with the same opening date. It is fixed.
+**Bugs found and fixed during this work:**
+1. The Python overlap check crashed on equal opening dates.
+2. The audit first listed 4 case IDs whose records were entered after the snapshot.
+3. An "ends with 'case opened'" text match also caught "no case opened".
+4. SQL `ISNULL` truncated "Not reviewed" to `varchar(10)`.
+5. **The guard trigger, created through `sqlcmd`, broke every `DROP TABLE` (error 1934).** sqlcmd defaults `QUOTED_IDENTIFIER OFF`, SQL Server stores that setting with the trigger, and the trigger's XML method needs it ON.
+   - **Fix:** `004` now sets it ON explicitly, and `007` drops the trigger first.
+   - **Regression test:** creates the guard from a QUOTED_IDENTIFIER OFF session and checks it still works.
 
 **Not run here:** Windows authentication, SSMS itself and SQL Server 2022 (the owner's machine).
 
-## Deviations and points for review
-1. **D28:** a 6-line additive edit to Build 01's `001_create_schema.sql`. It's needed because Build 02 has real foreign keys to `core.enrolment`. **Please confirm.**
-2. **Signals aren't stored**, only the case decisions. The spec separates signals from decisions; a signal table would be a seventh table. Unrecorded attendance is simply excluded from signals; there is no separate "data-quality review" record.
-3. **Time awareness:** `is_latest_review` and `is_open_at_snapshot` are "as of the loaded snapshot". To see readiness *as of an earlier date*, regenerate with `--as-of-date`, or add date logic in the later BI increment.
+## Conditional-approval requirements (owner + ChatGPT, 2026-11-18)
+| # | Requirement | Done |
+|---|---|---|
+| 1 | Restore Build 01's schema script; explicit full-reset for the foreign-key dependency | `001` identical to `main`; guard trigger; `007`; `full_reset.py --confirm` (D34) |
+| 2 | Reproducible audit of risk signals, evidence completeness, missing-attendance data quality; no seventh core table | 2 audit CSVs in the manifest + SQL twin + row-by-row test (D35) |
+| 3 | Document snapshot semantics of the case and latest-review flags | view header, data dictionary, walkthrough; time-aware query 10 (D36) |
+| 4 | Preserve KPI grains; unactioned, unattempted and unreviewed reported separately | 4 population checks + 4 info rows; query 9; `readiness_evidence.csv` (D37) |
+| 5 | Power BI model, DAX and pages unchanged | `git diff main -- powerbi` is empty |
 
 ## Owner validation (pending)
 To fill in after the Windows run:
