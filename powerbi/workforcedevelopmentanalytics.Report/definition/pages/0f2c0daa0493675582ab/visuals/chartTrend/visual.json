@@ -3,10 +3,10 @@
   "name": "chartTrend",
   "position": {
     "x": 1136,
-    "y": 470,
+    "y": 504,
     "z": 1049,
     "width": 724,
-    "height": 550,
+    "height": 516,
     "tabOrder": 1049
   },
   "visual": {

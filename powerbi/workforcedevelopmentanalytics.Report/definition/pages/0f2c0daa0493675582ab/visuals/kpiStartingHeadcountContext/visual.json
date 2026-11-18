@@ -3,10 +3,10 @@
   "name": "kpiStartingHeadcountContext",
   "position": {
     "x": 140,
-    "y": 330,
+    "y": 322,
     "z": 1010,
     "width": 272,
-    "height": 30,
+    "height": 44,
     "tabOrder": 1010
   },
   "visual": {
