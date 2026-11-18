@@ -8,7 +8,14 @@
    dim_cohort -> dim_enrolment -> fact, so do NOT relate these facts to
    dim_cohort directly in Power BI (that would create a second path).
 
-   "As of snapshot" means core.data_snapshot.as_of_date (2026-11-02 by default).
+   SNAPSHOT-SPECIFIC FLAGS (read before using them in a KPI):
+     fact_watchlist_case.is_open_at_snapshot / case_status_as_of_snapshot / days_open
+     fact_readiness_review.is_latest_review
+   describe the state at core.data_snapshot.as_of_date (2026-11-02 by default),
+   using only records entered by then. They are NOT "as of any date": filtering
+   a report to September does not turn them into September's state. For an
+   earlier date, either regenerate the data with --as-of-date, or use the
+   "as of any date" pattern in build02_analysis_examples.sql (query 10).
 --------------------------------------------------------------------------- */
 USE WorkforceDevAnalytics;
 GO

@@ -3,7 +3,7 @@
   "seed": 20261118,
   "as_of_date": "2026-11-02",
   "policy_version": "B02-R1",
-  "config_sha256": "934ff42988700da17d7dae0cb1e245bad4e8a013f296855c45284b7223e53494",
+  "config_sha256": "7b2619908fbc2a7cf902307d20d0bb406b704fc719eb2a5d21ceb8a6d19a811f",
   "build01_manifest_sha256": "52228cf6b575c986e2889e7d0fdef75b1c8ff81523b434359213245d2d460f2e",
   "files": {
     "certification_type.csv": {
@@ -29,6 +29,14 @@
     "readiness_review.csv": {
       "rows": 168,
       "sha256": "b77ee7ad92e46461763657f265cc63855b62443258bc03e385e49784349b8d82"
+    },
+    "audit/review_signals.csv": {
+      "rows": 1108,
+      "sha256": "8eb359ed31fe5c07e6ebdbb175b0317e47cb9e80926378940ee0a5d5cedf350c"
+    },
+    "audit/readiness_evidence.csv": {
+      "rows": 127,
+      "sha256": "f11f0fa49a391c6f3651ee357d63cdd154e54fff96018fdae1c5ed4dd057c01b"
     }
   }
 }

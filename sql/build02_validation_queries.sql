@@ -71,6 +71,21 @@ review_evidence AS (
     FROM core.readiness_review AS r
     LEFT JOIN life AS l ON l.enrolment_id = r.enrolment_id
 ),
+completed_pop AS (   -- one row per enrolment COMPLETED at the snapshot, with its populations
+    SELECT
+        d.enrolment_id,
+        (SELECT COUNT(*) FROM core.certification_type WHERE mandatory_for_readiness = 1) AS mandatory_total,
+        (SELECT COUNT(DISTINCT a.certification_id) FROM core.certification_attempt AS a
+         JOIN core.certification_type AS ct ON ct.certification_id = a.certification_id AND ct.mandatory_for_readiness = 1
+         WHERE a.enrolment_id = d.enrolment_id) AS pairs_attempted,
+        (SELECT COUNT(DISTINCT a.certification_id) FROM core.certification_attempt AS a
+         JOIN core.certification_type AS ct ON ct.certification_id = a.certification_id AND ct.mandatory_for_readiness = 1
+         WHERE a.enrolment_id = d.enrolment_id AND a.result = 'Passed') AS mandatory_passed,
+        (SELECT r.decision FROM rpt.fact_readiness_review AS r
+         WHERE r.enrolment_id = d.enrolment_id AND r.is_latest_review = 1) AS latest_decision
+    FROM rpt.dim_enrolment AS d
+    WHERE d.status_as_of_snapshot = 'Completed'
+),
 checks AS (
     -- ================= B. relational integrity and chronology =================
     SELECT 'case_outside_enrolment_period' AS check_name, 'error' AS severity,
@@ -203,6 +218,33 @@ checks AS (
            (SELECT COUNT(*) FROM (SELECT enrolment_id FROM rpt.fact_readiness_review
                                   GROUP BY enrolment_id HAVING SUM(is_latest_review) <> 1) AS g)
 
+    -- ================= KPI populations: each split must add back up to its whole =================
+    -- (unactioned, unattempted and unreviewed are reported separately, never dropped)
+    UNION ALL
+    SELECT 'population_cases_actioned_plus_unactioned', 'error',
+           ABS((SELECT COUNT(*) FROM core.watchlist_case)
+               - (SELECT COUNT(*) FROM rpt.fact_watchlist_case WHERE has_action = 1)
+               - (SELECT COUNT(*) FROM rpt.fact_watchlist_case WHERE has_action = 0))
+    UNION ALL
+    SELECT 'population_completed_by_certification_status', 'error',
+           ABS((SELECT COUNT(*) FROM completed_pop)
+               - (SELECT COUNT(*) FROM completed_pop WHERE mandatory_passed = mandatory_total)
+               - (SELECT COUNT(*) FROM completed_pop WHERE mandatory_passed > 0 AND mandatory_passed < mandatory_total)
+               - (SELECT COUNT(*) FROM completed_pop WHERE mandatory_passed = 0 AND pairs_attempted > 0)
+               - (SELECT COUNT(*) FROM completed_pop WHERE pairs_attempted = 0))
+    UNION ALL
+    SELECT 'population_completed_by_latest_review', 'error',
+           ABS((SELECT COUNT(*) FROM completed_pop)
+               - (SELECT COUNT(*) FROM completed_pop WHERE latest_decision = 'Approved')
+               - (SELECT COUNT(*) FROM completed_pop WHERE latest_decision = 'Deferred')
+               - (SELECT COUNT(*) FROM completed_pop WHERE latest_decision IS NULL))
+    UNION ALL
+    SELECT 'population_pairs_attempted_plus_unattempted', 'error',
+           ABS((SELECT COUNT(*) FROM completed_pop) * (SELECT COUNT(*) FROM core.certification_type
+                                                       WHERE mandatory_for_readiness = 1)
+               - (SELECT SUM(pairs_attempted) FROM completed_pop)
+               - (SELECT SUM(mandatory_total - pairs_attempted) FROM completed_pop))
+
     -- ================= required synthetic storylines (1 = missing) =================
     UNION ALL
     SELECT 'story_coached_case_closed_as_improved', 'story',
@@ -258,6 +300,18 @@ checks AS (
     SELECT 'info_cases_opened_after_unrecorded_withdrawal', 'info',   -- staff could not know yet
            (SELECT COUNT(*) FROM cases AS c JOIN life AS l ON l.enrolment_id = c.enrolment_id
             WHERE l.withdrawn_on <= c.opened_effective_date)
+    UNION ALL
+    SELECT 'info_cases_without_any_action', 'info',
+           (SELECT COUNT(*) FROM rpt.fact_watchlist_case WHERE has_action = 0)
+    UNION ALL
+    SELECT 'info_completed_without_any_attempt', 'info',
+           (SELECT COUNT(*) FROM completed_pop WHERE pairs_attempted = 0)
+    UNION ALL
+    SELECT 'info_completed_mandatory_pairs_not_attempted', 'info',
+           (SELECT SUM(mandatory_total - pairs_attempted) FROM completed_pop)
+    UNION ALL
+    SELECT 'info_completed_not_reviewed', 'info',
+           (SELECT COUNT(*) FROM completed_pop WHERE latest_decision IS NULL)
     UNION ALL
     SELECT 'info_build01_enrolments', 'info', (SELECT COUNT(*) FROM core.enrolment)
     UNION ALL

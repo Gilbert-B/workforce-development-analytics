@@ -148,3 +148,74 @@ SELECT decision, decision_reason_code, COUNT(*) AS reviews,
 FROM rpt.fact_readiness_review
 GROUP BY decision, decision_reason_code
 ORDER BY decision, reviews DESC;
+
+/* 9. KPI populations side by side, per cohort. Every KPI keeps its own grain,
+      and the people OUTSIDE each KPI's denominator are shown, not dropped:
+        cases          -> actioned | not actioned
+        completed      -> fully / partly certified | attempted, none passed | not attempted
+        mandatory pairs (completed x mandatory certification) -> attempted | not attempted
+        completed      -> approved | deferred | not reviewed   (latest review)
+      The same split per enrolment, with its evidence, is in
+      build02_audit_queries.sql (query 2). */
+WITH cases AS (
+    SELECT cohort_id, COUNT(*) AS cases, SUM(has_action) AS actioned
+    FROM rpt.fact_watchlist_case GROUP BY cohort_id
+), completed AS (
+    SELECT d.enrolment_id, d.cohort_id,
+           (SELECT COUNT(*) FROM rpt.dim_certification WHERE mandatory_for_readiness = 1) AS mandatory_total,
+           (SELECT COUNT(DISTINCT a.certification_id) FROM rpt.fact_certification_attempt AS a
+            WHERE a.enrolment_id = d.enrolment_id) AS pairs_attempted,
+           (SELECT COUNT(DISTINCT a.certification_id) FROM rpt.fact_certification_attempt AS a
+            WHERE a.enrolment_id = d.enrolment_id AND a.is_passed = 1) AS passed,
+           (SELECT r.decision FROM rpt.fact_readiness_review AS r
+            WHERE r.enrolment_id = d.enrolment_id AND r.is_latest_review = 1) AS latest_decision
+    FROM rpt.dim_enrolment AS d
+    WHERE d.status_as_of_snapshot = 'Completed'
+)
+SELECT
+    co.cohort_id,
+    ISNULL(ca.cases, 0)                         AS cases,
+    ISNULL(ca.actioned, 0)                      AS cases_actioned,
+    ISNULL(ca.cases - ca.actioned, 0)           AS cases_not_actioned,
+    COUNT(c.enrolment_id)                       AS completed,
+    SUM(CASE WHEN c.passed = c.mandatory_total THEN 1 ELSE 0 END)                AS fully_certified,
+    SUM(CASE WHEN c.passed > 0 AND c.passed < c.mandatory_total THEN 1 ELSE 0 END) AS partly_certified,
+    SUM(CASE WHEN c.passed = 0 AND c.pairs_attempted > 0 THEN 1 ELSE 0 END)     AS attempted_none_passed,
+    SUM(CASE WHEN c.pairs_attempted = 0 THEN 1 ELSE 0 END)                      AS not_attempted,
+    ISNULL(SUM(c.pairs_attempted), 0)                                           AS mandatory_pairs_attempted,
+    ISNULL(SUM(c.mandatory_total - c.pairs_attempted), 0)                       AS mandatory_pairs_not_attempted,
+    SUM(CASE WHEN c.latest_decision = 'Approved' THEN 1 ELSE 0 END)             AS approved,
+    SUM(CASE WHEN c.latest_decision = 'Deferred' THEN 1 ELSE 0 END)             AS deferred,
+    SUM(CASE WHEN c.enrolment_id IS NOT NULL AND c.latest_decision IS NULL THEN 1 ELSE 0 END) AS not_reviewed
+FROM rpt.dim_cohort AS co
+LEFT JOIN cases AS ca ON ca.cohort_id = co.cohort_id
+LEFT JOIN completed AS c ON c.cohort_id = co.cohort_id
+GROUP BY co.cohort_id, ca.cases, ca.actioned
+ORDER BY co.cohort_id;
+
+/* 10. "As of any date": the TIME-AWARE pattern.
+       is_open_at_snapshot and is_latest_review describe the snapshot only.
+       For another date (on or before the snapshot), filter by BOTH the
+       effective date and the recorded date, then pick the latest row. */
+DECLARE @as_of DATE = '2026-10-20';   -- <== try other dates up to 2026-11-02 (e.g. 2026-06-15)
+DECLARE @as_of_end DATETIME2(0) = DATEADD(MINUTE, 23 * 60 + 59, CAST(@as_of AS DATETIME2(0)));
+
+-- 10a. Cases open on @as_of: opened (and entered) by then, not closed (and entered) by then
+SELECT c.cohort_id, COUNT(DISTINCT c.enrolment_id) AS open_watchlist_enrolments_on_date
+FROM rpt.fact_watchlist_case AS c
+WHERE c.opened_effective_date <= @as_of AND c.opened_recorded_at <= @as_of_end
+  AND NOT EXISTS (SELECT 1 FROM rpt.fact_watchlist_event AS ev
+                  WHERE ev.watchlist_case_id = c.watchlist_case_id AND ev.event_type = 'Closed'
+                    AND ev.effective_date <= @as_of AND ev.recorded_at <= @as_of_end)
+GROUP BY c.cohort_id;
+
+-- 10b. Readiness decision in force on @as_of: the latest review entered by then
+WITH known AS (
+    SELECT r.*, ROW_NUMBER() OVER (PARTITION BY r.enrolment_id ORDER BY r.review_number DESC) AS rn
+    FROM rpt.fact_readiness_review AS r
+    WHERE r.review_date <= @as_of AND r.recorded_at <= @as_of_end
+)
+SELECT cohort_id, decision, COUNT(*) AS enrolments
+FROM known WHERE rn = 1
+GROUP BY cohort_id, decision
+ORDER BY cohort_id, decision;

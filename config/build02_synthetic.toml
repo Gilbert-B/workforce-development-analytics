@@ -33,6 +33,9 @@ open_case_probability = 0.85
 manual_referral_probability = 0.006      # per trainee per review, without any signal
 clear_reviews_to_close = 2               # consecutive signal-free reviews before "Improved"
 max_recording_delay_days = 2             # business days between decision and data entry
+# Data quality: this many eligible sessions with NO recorded mark in the window
+# flags the review for staff to verify the registers (never treated as absence).
+unrecorded_review_min_sessions = 2
 
 # ---------------------------------------------------------------- coaching
 [coaching]

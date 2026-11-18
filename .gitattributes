@@ -10,3 +10,4 @@ powerbi/** text=auto eol=lf
 # Build 02 generated CSVs + manifest: same LF rule (the pattern above does not
 # reach into sub-folders).
 data/synthetic/build02/* text eol=lf
+data/synthetic/build02/audit/* text eol=lf
