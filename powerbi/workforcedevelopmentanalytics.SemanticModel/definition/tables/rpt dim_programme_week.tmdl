@@ -1,6 +1,31 @@
 table 'rpt dim_programme_week'
 	lineageTag: 879b7cc6-e501-4469-bd1e-3bd5633554f5
 
+	measure 'Selected Weeks Label' = ```
+			-- Display only: says which programme weeks the visual is showing
+			VAR SelectedWeeks = VALUES ( 'rpt dim_programme_week'[week_label] )
+			VAR WeekCount = COUNTROWS ( SelectedWeeks )
+			VAR AllWeeks = COUNTROWS ( ALL ( 'rpt dim_programme_week'[week_label] ) )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        NOT ISFILTERED ( 'rpt dim_programme_week'[week_label] ) || WeekCount = AllWeeks,
+			            "Showing all weeks · mixed programme stages",
+			        WeekCount = 1,
+			            "Showing " & SELECTEDVALUE ( 'rpt dim_programme_week'[week_label] ),
+			        "Showing "
+			            & CONCATENATEX (
+			                SelectedWeeks,
+			                'rpt dim_programme_week'[week_label],
+			                ", ",
+			                CALCULATE ( MIN ( 'rpt dim_programme_week'[programme_week] ) ), ASC
+			            )
+			            & " (combined)"
+			    )
+			```
+		displayFolder: UX display
+		lineageTag: a45097c1-a29f-4147-a178-55f639b0911f
+
 	column programme_week
 		dataType: int64
 		formatString: 0
