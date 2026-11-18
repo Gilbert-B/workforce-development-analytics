@@ -44,3 +44,4 @@ Teach at the point of use. No long theory.
 - With SQL Server: `python python/load_to_sql.py --server ...` → all checks OK, then `python -m pytest tests/test_sql_integration.py`
 - If the SQL changed: check the SSMS route too (`000` → `001` → `002` → `003_load_synthetic_data.sql` → `validation_queries.sql`)
 - Update `docs/build_log.md` reference numbers if the data changed
+- Build 02: `python python/generate_build02_data.py` (no `git status` change), then with SQL Server `python python/load_build02_to_sql.py --server ...` → 41 of 41 and Build 01 still OK; SSMS route `004` → `005_load_build02_data.sql` → `006` → `build02_validation_queries.sql`; update `docs/build02_build_log.md` if the data changed
