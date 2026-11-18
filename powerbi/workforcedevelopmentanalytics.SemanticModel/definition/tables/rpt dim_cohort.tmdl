@@ -1,6 +1,22 @@
 table 'rpt dim_cohort'
 	lineageTag: 1e7ff593-9c6e-488b-8f6d-6a06ab482add
 
+	measure 'Current Training Week Label' =
+			VAR SelectedCohort = SELECTEDVALUE ( 'rpt dim_cohort'[cohort_id] )
+			VAR CohortStatus = SELECTEDVALUE ( 'rpt dim_cohort'[schedule_status] )
+			VAR CurrentWeek = SELECTEDVALUE ( 'rpt dim_cohort'[weeks_started] )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( SelectedCohort )
+			            && CohortStatus = "In progress"
+			            && NOT ISBLANK ( CurrentWeek ),
+			        "Currently in Week " & FORMAT ( CurrentWeek, "0" ),
+			        -- "" instead of BLANK(): a card shows the literal text "(Blank)" for BLANK
+			        ""
+			    )
+		displayFolder: UX display
+		lineageTag: c8cbd6da-2765-4486-9068-06ebf13b7773
+
 	column cohort_id
 		dataType: string
 		lineageTag: e3e359e8-c122-4ecf-bc6b-91c039144ed7

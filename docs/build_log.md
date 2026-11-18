@@ -157,3 +157,35 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
   5. About ↔ Overview page navigation works.
 - **Habit learned:** after test-only clicking, close Desktop with *Don't save*. Otherwise Desktop rewrites every file and blocks the next `git pull`.
 
+---
+
+## UX-02 completion — ChatGPT-approved measures and interactions (2026-11-18, branch `ux/overview-complete`)
+**Built:**
+- **8 approved measures, additions only:**
+  - KPI context: Completion Share of Starters, Total Enrolments, Cancelled Before Start;
+  - 2 context-text measures;
+  - 2 SVG progress-bar measures;
+  - Current Training Week Label.
+- **Report changes:**
+  - measure-driven context lines on the Starting headcount and Completed cards;
+  - SVG progress bars on the two attendance-rate cards;
+  - the current-week marker;
+  - **Reset view** (layout) and **Clear filters** (selection) as separate buttons;
+  - "planned" rail items;
+  - an "Original project vs Portfolio Edition" section on About.
+- **Owner refinement:** Starting Headcount Context omits the cancellations when there are none (commit `fcd4c89`).
+
+**Evidence (Claude Code cloud container):**
+- 102 PBIR files validate against Microsoft's schemas.
+- The model loads in Microsoft's TMDL parser, with 21 measures and 8 relationships; no existing measure changed.
+- Every field reference, bookmark target and button link resolves.
+- No field appears twice with different display names in one visual. This check was added after Desktop reported it (fixed in `b2f3af6`).
+
+**Owner's Power BI Desktop validation (2026-11-18), with only Cohort 3 selected:**
+- KPIs read 64 · 63 · 0 · 63.5 · 92.2% · 99.2%.
+- Context lines read "66 enrolments · 2 cancelled before start" and "0.0% of starters completed to date".
+- The progress bars change with the selection: Recording rate shows a near-full bar at 99.2%.
+- "Currently in Week 7" shows only for the single in-progress cohort.
+- Reset view keeps the cohort selection. Clear filters clears it and keeps the panels.
+- The owner built a practice SVG measure in Desktop, which worked.
+

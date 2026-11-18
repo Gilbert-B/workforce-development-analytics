@@ -3,11 +3,11 @@
   "name": "kpiStartingHeadcount",
   "position": {
     "x": 150,
-    "y": 266,
-    "z": 1010,
+    "y": 252,
+    "z": 1011,
     "width": 252,
-    "height": 62,
-    "tabOrder": 1010
+    "height": 70,
+    "tabOrder": 1011
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "32D"
+                  "Value": "30D"
                 }
               }
             },

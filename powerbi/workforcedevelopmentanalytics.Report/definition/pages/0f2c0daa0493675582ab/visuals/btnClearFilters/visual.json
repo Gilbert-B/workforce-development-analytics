@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
-  "name": "btnReset",
+  "name": "btnClearFilters",
   "position": {
-    "x": 1786,
+    "x": 1764,
     "y": 40,
-    "z": 1004,
-    "width": 94,
+    "z": 1005,
+    "width": 116,
     "height": 40,
-    "tabOrder": 1004
+    "tabOrder": 1005
   },
   "visual": {
     "visualType": "actionButton",
@@ -25,7 +25,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'↺  Reset'"
+                  "Value": "'✕  Clear filters'"
                 }
               }
             },
@@ -43,7 +43,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11D"
+                  "Value": "10D"
                 }
               }
             },
@@ -191,14 +191,14 @@
             "bookmark": {
               "expr": {
                 "Literal": {
-                  "Value": "'bmReset'"
+                  "Value": "'bmClearFilters'"
                 }
               }
             },
             "tooltip": {
               "expr": {
                 "Literal": {
-                  "Value": "'Reset filters and views'"
+                  "Value": "'Clear the cohort selection (keeps the current panels)'"
                 }
               }
             }

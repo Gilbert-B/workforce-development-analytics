@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiRecordedAttendanceContext",
   "position": {
-    "x": 1322,
-    "y": 326,
-    "z": 1025,
-    "width": 250,
+    "x": 1314,
+    "y": 330,
+    "z": 1026,
+    "width": 260,
     "height": 30,
-    "tabOrder": 1025
+    "tabOrder": 1026
   },
   "visual": {
     "visualType": "textbox",
@@ -26,7 +26,8 @@
                       "color": "#8FA0B4"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "center"
               }
             ]
           }

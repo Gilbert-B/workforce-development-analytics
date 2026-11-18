@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "btnDefinitions",
   "position": {
-    "x": 1644,
+    "x": 1500,
     "y": 40,
     "z": 1003,
-    "width": 128,
+    "width": 124,
     "height": 40,
     "tabOrder": 1003
   },
@@ -43,7 +43,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11D"
+                  "Value": "10D"
                 }
               }
             },

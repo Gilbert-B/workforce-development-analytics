@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "chipCompetencyOff",
   "position": {
     "x": 1696,
     "y": 412,
-    "z": 1044,
-    "width": 152,
+    "z": 1048,
     "height": 36,
-    "tabOrder": 1044
+    "width": 152,
+    "tabOrder": 1048
   },
   "visual": {
     "visualType": "actionButton",
@@ -200,5 +200,6 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  }
+  },
+  "isHidden": true
 }

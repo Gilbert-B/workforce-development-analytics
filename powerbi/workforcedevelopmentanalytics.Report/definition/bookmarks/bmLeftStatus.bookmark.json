@@ -3,6 +3,7 @@
   "displayName": "Left panel · Status",
   "name": "bmLeftStatus",
   "options": {
+    "applyOnlyToTargetVisuals": true,
     "targetVisualNames": [
       "leftTitleStatus",
       "chipStatusOn",
@@ -13,11 +14,10 @@
       "chipAttendanceOn",
       "chartAttendance"
     ],
-    "applyOnlyToTargetVisuals": true,
     "suppressData": true
   },
   "explorationState": {
-    "version": "1.3",
+    "version": "1.0",
     "activeSection": "0f2c0daa0493675582ab",
     "sections": {
       "0f2c0daa0493675582ab": {

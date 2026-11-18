@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "kpiAvgCompetencyContext",
   "position": {
-    "x": 1030,
-    "y": 326,
-    "z": 1021,
-    "width": 250,
+    "x": 1022,
+    "y": 330,
+    "z": 1022,
     "height": 30,
-    "tabOrder": 1021
+    "width": 260,
+    "tabOrder": 1022
   },
   "visual": {
     "visualType": "textbox",
@@ -23,10 +23,11 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#8FA0B4"
+                      "color": "#8fa0b4"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "center"
               }
             ]
           }

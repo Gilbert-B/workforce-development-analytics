@@ -3,11 +3,11 @@
   "name": "kpiRecordedAttendance",
   "position": {
     "x": 1318,
-    "y": 266,
-    "z": 1026,
+    "y": 252,
+    "z": 1028,
     "width": 252,
-    "height": 62,
-    "tabOrder": 1026
+    "height": 70,
+    "tabOrder": 1028
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "32D"
+                  "Value": "30D"
                 }
               }
             },
