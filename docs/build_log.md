@@ -205,5 +205,12 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
 - Cross-file checks report no problems across 6 pages and 246 visuals: all 31 fields exist; no field has two display names in one visual; all 11 bookmark targets, button links and interaction targets resolve; no data visuals overlap.
 - No snapshot date is typed as text anywhere in the report.
 
-**Not yet checked:** rendering, drill-through and interactions in Power BI Desktop (owner), against the UX-03 acceptance numbers.
+**Owner's Power BI Desktop validation (2026-11-18):** all UX-03 acceptance checks passed:
+- **Navigation:** the rail opens Cohorts, Skills and Attendance; Trainee 360 has no link.
+- **Scorecard:** 68 / 67 / 64 starters, total 199 = 63 + 127 + 9; 208 enrolments and 9 cancelled.
+- **Attendance:** 7,231 eligible and 533 unrecorded enrolment-sessions; 92.1% recorded attendance, 92.6% recording rate.
+- **Week selector:** on the Skills page it drives only the comparison panel. The owner-requested `Selected Weeks Label` works.
+- **Synced selection:** the cohort selection carries across pages.
+- **Drill-through:** works by `enrolment_id`. ENR-00025 (Cohort 1, Withdrawn) and ENR-00143 (Cohort 3, Active) stay separate for the same person.
+- **Learning:** the owner built a practice drill-through page in Desktop.
 

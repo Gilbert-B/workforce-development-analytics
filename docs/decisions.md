@@ -269,3 +269,5 @@ RETURN
 ```
 Both need review of semantics, filter context and naming before they're added to the model.
 
+**Owner addition (UX-03):** display-only measure `Selected Weeks Label` (in `rpt dim_programme_week`, folder *UX display*). It labels the Skills comparison panel "Showing Week 6", "Showing Week 4, Week 5 (combined)", or "Showing all weeks · mixed programme stages". It's text only and changes no calculation.
+
