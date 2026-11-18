@@ -71,3 +71,23 @@ The page uses **two layers**:
 - **Progress bars:** an image visual whose picture is an **SVG measure**, i.e. DAX that returns `data:image/svg+xml;utf8,<svg …>`. The bar width is the rate, clamped to 0–100%.
 - **Current-week marker:** a small gold card in the competency panel. It appears only when exactly one in-progress cohort is selected, e.g. "Currently in Week 7".
 - **Planned pages:** Cohorts, Skills, Attendance and Trainee 360 show as "planned" in the rail, with no click action until they're built.
+
+---
+
+## UX-03 pages (Cohort Intelligence, Competency & Skills, Attendance & Participation, Trainee 360)
+
+**Where they live:** each page is a folder under `definition/pages/<id>/`, built by `cohort_page()`, `skills_page()`, `attendance_page()` and `trainee_page()` in the generator. They share helpers:
+- `header()`: eyebrow, title, snapshot label, Clear filters or Back, cohort tiles and the optional week selector;
+- `panel_title()`, `kpi_tile()` and `heatmap()`;
+- `page_svg()`: the background for each page.
+
+**Synced slicers:** the cohort tiles on every page are the same *sync group* (`"syncGroup": {"groupName": "CohortSelection"}`), so selecting Cohort 3 on one page keeps it selected on the others. To see this in Desktop, open **View → Sync slicers**.
+
+**Drill-through (Trainee 360):** the page has `"type": "Drillthrough"`, a page filter on `rpt dim_enrolment[enrolment_id]`, and a `pageBinding` linking the two. It's hidden in the page tabs.
+**To use it:** on **Cohort Intelligence**, right-click any row of the **Enrolments** table → **Drill through → Trainee 360 — Training**. **← Back** returns you.
+**To change the drill-through field in Desktop:** open the Trainee 360 page → **Visualizations → Build visual** → the **Drill through** well.
+
+**Filters on a single visual:** the "Unrecorded enrolment-sessions" card uses the existing `[Eligible Attendance Sessions]`, with its own filter `attendance_status = Unrecorded`. Select the card and look at **Filters on this visual**.
+
+**Grain in the labels:** attendance counts are **enrolment-sessions** (one per trainee per session), not distinct sessions. Status counts are **enrolments**, not people. Snapshot measures are labelled as snapshot / to date.
+
