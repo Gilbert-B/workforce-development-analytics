@@ -187,3 +187,16 @@ Reviewed after the owner's local run (Routes A and B). Entries above marked `Rev
 **Checked:** all 17 report JSON files against Microsoft's PBIR schemas, and the model with Microsoft's TMDL parser.
 **Not checked here:** rendering. Power BI Desktop is Windows-only, so the owner validates the page visually.
 
+### D23 — Showcase redesign: designed canvas, bookmarks, navigation (UX-02, owner-approved)
+**Decision:** the report moves to a dark design matching the portfolio website (navy, gold and teal), and deliberately demonstrates advanced Power BI UX:
+- an SVG/PNG background canvas;
+- an icon navigation rail with page-navigation buttons;
+- bookmark-driven view toggles;
+- a definitions drawer and a Reset bookmark;
+- a conditional-format heatmap;
+- an About page.
+
+**Why:** the owner wants the portfolio report to show that these techniques can be built and explained. The design stays credible for a banking/fintech audience: restrained colours, and definitions always one click away.
+**Constraint kept:** no new measures, model or SQL changes. Ideas that need new DAX (data-driven context lines, SVG progress bars, a current-week marker, the further pages) are proposed to ChatGPT separately.
+**Trade-off:** static labels drawn in the background image are edited in SVG rather than in Desktop. Each toggle needs 4 visuals and 2 bookmarks.
+
