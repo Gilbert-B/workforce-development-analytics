@@ -59,6 +59,7 @@ GOLD, TEAL, CORAL, SKY, SLATE = "#E3A640", "#3FC1B0", "#E0705A", "#7AA7D9", "#5B
 # ---------------------------------------------------------------- layout (1920 x 1080)
 W, H = 1920, 1080
 RAIL = 96                       # navigation rail width
+HEADER_BUTTONS = {"btnDefinitions": (1500, 124), "btnResetView": (1636, 116), "btnClearFilters": (1764, 116)}
 X0 = 136                        # content left edge
 XR = 1880                       # content right edge
 KPI_Y, KPI_W, KPI_H, KPI_GAP = 196, 280, 170, 12     # 6 x 280 + 5 x 12 = 1740 = XR - X0
@@ -88,6 +89,13 @@ KPIS = [
     ("kpiRecordedAttendance", ATTEND, "Recorded Attendance Rate", "RECORDED ATTENDANCE", "Present ÷ recorded sessions", "check", TEAL),
     ("kpiRecordingRate", ATTEND, "Attendance Recording Rate", "RECORDING RATE", "Recorded ÷ eligible sessions", "doc", GOLD),
 ]
+
+# Cards whose context line is a measure (responds to the cohort filter) ...
+CONTEXT_MEASURE = {"kpiStartingHeadcount": (ENROL, "Starting Headcount Context"),
+                   "kpiCompletedTrainees": (ENROL, "Completion Context")}
+# ... and cards that also show an SVG progress bar drawn by a measure
+BAR_MEASURE = {"kpiRecordedAttendance": (ATTEND, "Recorded Attendance Bar SVG"),
+               "kpiRecordingRate": (ATTEND, "Attendance Recording Bar SVG")}
 
 ICONS = {  # 24x24 stroke icons (drawn in the background SVG)
     "overview": '<rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/>',
@@ -155,9 +163,9 @@ def svg_base(active: str) -> list[str]:
 def overview_svg() -> str:
     out = svg_base("overview")
     # header: snapshot pill and button frames (text and icons are Power BI visuals)
-    out.append(f'<rect x="1296" y="40" width="334" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
-    out.append(f'<circle cx="1318" cy="60" r="4" fill="{TEAL}"/><circle cx="1318" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
-    for x, w in ((1644, 128), (1786, 94)):
+    out.append(f'<rect x="1152" y="40" width="336" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
+    out.append(f'<circle cx="1174" cy="60" r="4" fill="{TEAL}"/><circle cx="1174" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
+    for x, w in HEADER_BUTTONS.values():
         out.append(f'<rect x="{x}" y="40" width="{w}" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>')
     # cohort selector track + note
     out.append(f'<rect x="{X0}" y="120" width="540" height="52" rx="26" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>')
@@ -261,6 +269,13 @@ def icon_svg(fname: str) -> str:
             f'stroke="#{hex_code}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</svg>')
 
 
+def image_from_measure(table: str, measure: str) -> dict:
+    """Image visual whose picture is the SVG data-URL returned by a measure."""
+    return {"visualType": "image", "objects": {
+        "general": props(imageUrl={"expr": field("Measure", table, measure)}),
+        "imageScaling": props(imageScalingType="Fit")}}
+
+
 def image(fname: str) -> dict:
     return {"visualType": "image", "objects": {
         "general": props(imageUrl={"expr": {"ResourcePackageItem": {
@@ -336,7 +351,7 @@ def nav_decor(current_key: str, z: int) -> list[dict]:
         out.append(container(f"navIcon_{key}", 35, cy - 13, 26, 26, z, image(icon_file(key, tone)))); z += 1
         lines = [[(label, {"fontFamily": "Segoe UI Semibold" if on else "Segoe UI", "fontSize": "7pt", "color": tone})]]
         if page is None:
-            lines.append([("soon", {"fontFamily": "Segoe UI", "fontSize": "6pt", "color": "#3E4A5C"})])
+            lines.append([("planned", {"fontFamily": "Segoe UI", "fontSize": "6pt", "color": "#3E4A5C"})])
         out.append(container(f"navLabel_{key}", 4, cy + 22, 88, 34 if page is None else 24, z,
                              textbox(lines, "center"))); z += 1
     return out
@@ -366,15 +381,18 @@ def overview_visuals() -> list[dict]:
         {"fontFamily": "Segoe UI Semibold", "fontSize": "10pt", "color": GOLD})]]))
     add("headerTitle", X0 - 6, 58, 1000, 64, textbox([[("Workforce Intelligence Overview",
         {"fontFamily": "Segoe UI Bold", "fontSize": "30pt", "color": CREAM})]]))
-    add("snapshotLabel", 1330, 42, 296, 36, {
+    add("snapshotLabel", 1186, 38, 296, 44, {
         "visualType": "card",
         "query": {"queryState": {"Values": {"projections": [proj("Measure", SNAP, "Snapshot Label")]}}},
         "objects": {"labels": props(fontSize=10, color=colour("#C9D2DE"), fontFamily=FONT["regular"]),
                     "categoryLabels": props(show=False)}})
-    add("btnDefinitions", 1644, 40, 128, 40, button("ⓘ  Definitions", link=bookmark_link("bmDrawerOpen"),
-                                                    fg="#C9D2DE", hover_alpha=90, size=11, tooltip="Show definitions"))
-    add("btnReset", 1786, 40, 94, 40, button("↺  Reset", link=bookmark_link("bmReset"),
-                                             fg="#C9D2DE", hover_alpha=90, size=11, tooltip="Reset filters and views"))
+    for name, text, target, tip in (
+            ("btnDefinitions", "ⓘ  Definitions", "bmDrawerOpen", "Show definitions"),
+            ("btnResetView", "↺  Reset view", "bmResetView", "Restore the default panels (keeps your cohort selection)"),
+            ("btnClearFilters", "✕  Clear filters", "bmClearFilters", "Clear the cohort selection (keeps the current panels)")):
+        x, w = HEADER_BUTTONS[name]
+        add(name, x, 40, w, 40, button(text, link=bookmark_link(target), fg="#C9D2DE", hover_alpha=90, size=10,
+                                       tooltip=tip))
     add("cohortNote", 686, 132, 520, 30, textbox([[("Cohorts compared by programme week, not calendar date",
         {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": "#7F8EA2"})]]))
 
@@ -397,12 +415,23 @@ def overview_visuals() -> list[dict]:
         add(f"{vid}Icon", x + 33, KPI_Y + 31, 22, 22, image(icon_file(icon, accent)))
         add(f"{vid}Label", x + 70, KPI_Y + 28, KPI_W - 80, 30, textbox([[(label,
             {"fontFamily": "Segoe UI Semibold", "fontSize": "9pt", "color": MUTED})]]))
-        add(f"{vid}Context", x + 18, KPI_Y + 130, KPI_W - 30, 30, textbox([[(context,
-            {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": "#8FA0B4"})]]))
-        add(vid, x + 14, KPI_Y + 70, KPI_W - 28, 62, {
+        if vid in CONTEXT_MEASURE:          # data-driven context line
+            ctable, cmeasure = CONTEXT_MEASURE[vid]
+            add(f"{vid}Context", x + 4, KPI_Y + 126, KPI_W - 8, 44, {   # cards need ~40px+ or text is clipped
+                "visualType": "card",
+                "query": {"queryState": {"Values": {"projections": [proj("Measure", ctable, cmeasure)]}}},
+                "objects": {"labels": props(fontFamily=FONT["regular"], fontSize=9, color=colour("#8FA0B4")),
+                            "categoryLabels": props(show=False)}})
+        else:                               # static description
+            add(f"{vid}Context", x + 10, KPI_Y + 134, KPI_W - 20, 30, textbox([[(context,
+                {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": "#8FA0B4"})]], "center"))
+        if vid in BAR_MEASURE:              # SVG progress bar drawn by a measure
+            btable, bmeasure = BAR_MEASURE[vid]
+            add(f"{vid}Bar", x + 24, KPI_Y + 128, KPI_W - 48, 8, image_from_measure(btable, bmeasure))
+        add(vid, x + 14, KPI_Y + 56, KPI_W - 28, 70, {
             "visualType": "card",
             "query": {"queryState": {"Values": {"projections": [proj("Measure", table, name)]}}},
-            "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=32, color=colour(CREAM)),
+            "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=30, color=colour(CREAM)),
                         "categoryLabels": props(show=False)}})
 
     # ---- left panel: Status  <->  Attendance quality
@@ -445,6 +474,8 @@ def overview_visuals() -> list[dict]:
         "query": {"queryState": {
             "Category": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
             "Series": {"projections": [proj("Column", ATTEND, "attendance_status", "Attendance")]},
+            # one projection only: a field may appear once per visual with one display name.
+            # Data labels show the % share; the default tooltip shows the session count.
             "Y": {"projections": [proj("Measure", ATTEND, "Eligible Attendance Sessions", "Sessions")]}},
             "sortDefinition": {"sort": [{"field": field("Column", COHORT, "cohort_name"), "direction": "Ascending"}]}},
         "objects": {
@@ -457,6 +488,11 @@ def overview_visuals() -> list[dict]:
     # ---- right panel: By cohort (lines)  <->  By competency (heatmap)
     rx, ry, rw, _ = RIGHT
     chip_x = rx + rw - 262 - 28
+    add("currentWeekMarker", rx + 14, ry + 72, 320, 48, {
+        "visualType": "card",
+        "query": {"queryState": {"Values": {"projections": [proj("Measure", COHORT, "Current Training Week Label")]}}},
+        "objects": {"labels": props(fontFamily=FONT["semibold"], fontSize=10, color=colour(GOLD)),
+                    "categoryLabels": props(show=False)}})
     add("rightTitleCohort", rx + 22, ry + 18, 460, 64, textbox([
         [("Weekly competency progression", style(14, CREAM, "Segoe UI Semibold"))],
         [("Average core score (0-100) by programme week", style(10, "#8FA0B4"))]]))
@@ -474,7 +510,7 @@ def overview_visuals() -> list[dict]:
             hover_alpha=100 if on else 92), hidden=hidden)
 
     cohort_colours = (("2026 Cohort 1", SKY), ("2026 Cohort 2", TEAL), ("2026 Cohort 3", GOLD))
-    add("chartTrend", rx + 20, ry + 86, rw - 40, PANEL_H - 106, {
+    add("chartTrend", rx + 20, ry + 120, rw - 40, PANEL_H - 140, {
         "visualType": "lineChart",
         "query": {"queryState": {
             "Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
@@ -488,7 +524,7 @@ def overview_visuals() -> list[dict]:
             "valueAxis": props(showAxisTitle=False),
             "lineStyles": props(strokeWidth=4, showMarker=True, markerSize=6),
             "labels": props(show=False)}})
-    add("chartHeatmap", rx + 20, ry + 96, rw - 40, PANEL_H - 116, {
+    add("chartHeatmap", rx + 20, ry + 126, rw - 40, PANEL_H - 146, {
         "visualType": "pivotTable",
         "query": {"queryState": {
             "Rows": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]},
@@ -569,8 +605,9 @@ def about_visuals() -> list[dict]:
         [("•  Unrecorded attendance is shown separately and never counted as absent.", p)],
         [("•  Cohorts are compared by programme week; weeks not yet reached are blank, not zero.", p)],
         [("•  The snapshot date comes from the data itself and updates on refresh.", p)], [("", p)],
-        [("Data", h)],
-        [("Every person, cohort and score is synthetic, generated by a seeded Python script. The original professional project this builds on was a single-cohort learner dashboard; this multi-cohort edition, its pipeline and its design are new.", p)]]))
+        [("Original project vs Portfolio Edition", h)],
+        [("Original (professional): ", b), ("a single-cohort learner-performance Power BI dashboard built on Azure SQL, Power Query and an Import model.", p)],
+        [("Portfolio Edition (this report): ", b), ("a fictional banking/fintech scenario with multiple cohorts, a new Python and SQL pipeline, a redesigned model and report, and 100% synthetic data. None of it comes from the original project.", p)]]))
     add("aboutPipeline", 1044, 154, 812, 400, textbox([
         [("How it's built", h)],
         [("1  ", b), ("Python generator creates reproducible synthetic CSVs (fixed seed and as-of date).", p)],
@@ -613,6 +650,7 @@ def page_json(page_id: str, display: str, background: str, interactions=None) ->
 def overview_interactions(visuals: list[dict]) -> list[dict]:
     """Chart clicks must not filter the KPI numbers (only the slicer does)."""
     kpis = [k[0] for k in KPIS]
+    kpis += [f"{k}Context" for k in CONTEXT_MEASURE] + [f"{k}Bar" for k in BAR_MEASURE]
     charts = ["chartStatus", "chartAttendance", "chartTrend", "chartHeatmap"]
     return [{"source": c, "target": k, "type": "NoFilter"} for c in charts for k in kpis]
 
@@ -627,7 +665,7 @@ def bookmark(name: str, display: str, show: list[str], hide: list[str], types: d
         containers[n] = {"singleVisual": {"visualType": types[n]}, "filters": {"byExpr": []}}
     return {"$schema": S_BOOKMARK, "displayName": display, "name": name,
             "options": {"targetVisualNames": targets, "applyOnlyToTargetVisuals": True,
-                        **({} if data_targets else {"suppressData": True})},
+                        **({"suppressDisplay": True} if data_targets else {"suppressData": True})},
             "explorationState": {"version": "1.3", "activeSection": OVERVIEW,
                                  "sections": {OVERVIEW: {"visualContainers": containers}}}}
 
@@ -645,8 +683,10 @@ def bookmarks(types: dict) -> list[dict]:
         bookmark("bmRightCompetency", "Right panel · By competency", right_comp, right_cohort, types),
         bookmark("bmDrawerOpen", "Definitions · open", drawer, [], types),
         bookmark("bmDrawerClose", "Definitions · close", [], drawer, types),
-        bookmark("bmReset", "Reset view", left_status + right_cohort, left_att + right_comp + drawer, types,
-                 data_targets=["cohortSlicer"]),
+        # Reset view: layout only - keeps the user's cohort selection
+        bookmark("bmResetView", "Reset view", left_status + right_cohort, left_att + right_comp + drawer, types),
+        # Clear filters: cohort selection only - keeps the current panels
+        bookmark("bmClearFilters", "Clear filters", [], [], types, data_targets=["cohortSlicer"]),
     ]
 
 

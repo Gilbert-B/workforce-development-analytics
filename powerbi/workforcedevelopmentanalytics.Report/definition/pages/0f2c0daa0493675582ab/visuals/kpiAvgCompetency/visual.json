@@ -3,11 +3,11 @@
   "name": "kpiAvgCompetency",
   "position": {
     "x": 1026,
-    "y": 266,
-    "z": 1022,
+    "y": 252,
+    "z": 1023,
     "width": 252,
-    "height": 62,
-    "tabOrder": 1022
+    "height": 70,
+    "tabOrder": 1023
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "32D"
+                  "Value": "30D"
                 }
               }
             },

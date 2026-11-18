@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "headerEyebrow",
   "position": {
     "x": 130,
     "y": 34,
     "z": 1000,
-    "width": 900,
     "height": 30,
+    "width": 900,
     "tabOrder": 1000
   },
   "visual": {
@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "10pt",
-                      "color": "#E3A640"
+                      "color": "#e3a640"
                     }
                   }
                 ]

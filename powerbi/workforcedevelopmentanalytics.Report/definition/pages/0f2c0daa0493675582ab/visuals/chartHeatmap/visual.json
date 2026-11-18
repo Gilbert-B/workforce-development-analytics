@@ -1,37 +1,18 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "chartHeatmap",
   "position": {
     "x": 1136,
-    "y": 480,
-    "z": 1046,
+    "y": 510,
+    "z": 1050,
+    "height": 510,
     "width": 724,
-    "height": 540,
-    "tabOrder": 1046
+    "tabOrder": 1050
   },
   "visual": {
     "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Rows": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt dim_competency"
-                    }
-                  },
-                  "Property": "competency_name"
-                }
-              },
-              "queryRef": "rpt dim_competency.competency_name",
-              "nativeQueryRef": "competency_name",
-              "displayName": "Competency"
-            }
-          ]
-        },
         "Columns": {
           "projections": [
             {
@@ -47,7 +28,28 @@
               },
               "queryRef": "rpt dim_programme_week.week_label",
               "nativeQueryRef": "week_label",
+              "active": true,
               "displayName": "Week"
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_competency"
+                    }
+                  },
+                  "Property": "competency_name"
+                }
+              },
+              "queryRef": "rpt dim_competency.competency_name",
+              "nativeQueryRef": "competency_name",
+              "active": true,
+              "displayName": "Competency"
             }
           ]
         },
@@ -301,6 +303,5 @@
         }
       ]
     }
-  },
-  "isHidden": true
+  }
 }

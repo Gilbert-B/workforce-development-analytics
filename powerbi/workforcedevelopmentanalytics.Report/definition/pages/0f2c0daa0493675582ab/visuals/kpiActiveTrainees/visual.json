@@ -3,11 +3,11 @@
   "name": "kpiActiveTrainees",
   "position": {
     "x": 442,
-    "y": 266,
-    "z": 1014,
+    "y": 252,
+    "z": 1015,
     "width": 252,
-    "height": 62,
-    "tabOrder": 1014
+    "height": 70,
+    "tabOrder": 1015
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "32D"
+                  "Value": "30D"
                 }
               }
             },

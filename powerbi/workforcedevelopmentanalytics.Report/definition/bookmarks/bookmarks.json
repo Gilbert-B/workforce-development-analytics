@@ -20,7 +20,10 @@
       "name": "bmDrawerClose"
     },
     {
-      "name": "bmReset"
+      "name": "bmResetView"
+    },
+    {
+      "name": "bmClearFilters"
     }
   ]
 }
