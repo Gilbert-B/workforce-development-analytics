@@ -20,6 +20,14 @@ IF SCHEMA_ID(N'rpt')  IS NULL EXEC (N'CREATE SCHEMA rpt');
 GO
 
 -- Drop in reverse dependency order (children before parents).
+-- Build 02 tables (if present) reference core.enrolment, so they go first.
+-- Reload Build 02 afterwards with 004-006 or python/load_build02_to_sql.py.
+DROP TABLE IF EXISTS core.readiness_review;
+DROP TABLE IF EXISTS core.certification_attempt;
+DROP TABLE IF EXISTS core.coaching_action;
+DROP TABLE IF EXISTS core.watchlist_case_event;
+DROP TABLE IF EXISTS core.watchlist_case;
+DROP TABLE IF EXISTS core.certification_type;
 DROP TABLE IF EXISTS core.assessment;
 DROP TABLE IF EXISTS core.attendance;
 DROP TABLE IF EXISTS core.enrolment_status_event;
