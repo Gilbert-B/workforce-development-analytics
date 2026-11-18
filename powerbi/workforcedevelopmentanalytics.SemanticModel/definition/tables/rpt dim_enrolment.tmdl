@@ -1,55 +1,6 @@
 table 'rpt dim_enrolment'
 	lineageTag: fc262d84-559f-4222-85eb-dbcd6365fcd2
 
-	measure 'Completion Share of Starters' = ```
-			DIVIDE (
-			    [Completed Trainees (Snapshot)],
-			    [Starting Headcount]
-			)
-			```
-		formatString: 0.0%
-		displayFolder: KPI context
-		lineageTag: 6e97a9c8-7748-47e1-a0ff-2afa9c2209a7
-
-	measure 'Total Enrolments' = ```
-			COUNTROWS ( 'rpt dim_enrolment' )
-			```
-		formatString: #,0
-		displayFolder: KPI context
-		lineageTag: fac96d49-97f4-47fc-bf85-0d331394d301
-
-	measure 'Cancelled Before Start' = ```
-			COALESCE (
-			    CALCULATE (
-			        COUNTROWS ( 'rpt dim_enrolment' ),
-			        'rpt dim_enrolment'[status_as_of_snapshot] = "Cancelled before start"
-			    ),
-			    0
-			)
-			```
-		formatString: 0
-		displayFolder: KPI context
-		lineageTag: 106d30b7-0e45-44de-9bff-60cd39a058ff
-
-	measure 'Starting Headcount Context' = ```
-			-- Text for the Starting headcount card; "enrolments", not "employees" (repeats exist)
-			FORMAT ( [Total Enrolments], "#,0" ) & " enrolments · "
-			    & FORMAT ( [Cancelled Before Start], "0" ) & " cancelled before start"
-			```
-		displayFolder: UX display
-		lineageTag: b5698aa2-2614-4549-8042-44062c63246b
-
-	measure 'Completion Context' = ```
-			-- As-of-snapshot share; active cohorts are included, so this is NOT a final completion rate
-			IF (
-			    ISBLANK ( [Completion Share of Starters] ),
-			    BLANK (),
-			    FORMAT ( [Completion Share of Starters], "0.0%" ) & " of starters completed to date"
-			)
-			```
-		displayFolder: UX display
-		lineageTag: 77bd94b8-263a-4c72-8c7f-d59ee9823833
-
 	measure 'Starting Headcount' = ```
 			
 			CALCULATE(
@@ -102,6 +53,58 @@ table 'rpt dim_enrolment'
 			```
 		formatString: 0
 		lineageTag: 56fd5eba-f309-4a95-9dee-11762c1ac3a3
+
+	measure 'Completion Share of Starters' =
+			DIVIDE (
+			    [Completed Trainees (Snapshot)],
+			    [Starting Headcount]
+			)
+		formatString: 0.0%
+		displayFolder: KPI context
+		lineageTag: 6e97a9c8-7748-47e1-a0ff-2afa9c2209a7
+
+	measure 'Total Enrolments' = COUNTROWS ( 'rpt dim_enrolment' )
+		formatString: #,0
+		displayFolder: KPI context
+		lineageTag: fac96d49-97f4-47fc-bf85-0d331394d301
+
+	measure 'Cancelled Before Start' =
+			COALESCE (
+			    CALCULATE (
+			        COUNTROWS ( 'rpt dim_enrolment' ),
+			        'rpt dim_enrolment'[status_as_of_snapshot] = "Cancelled before start"
+			    ),
+			    0
+			)
+		formatString: 0
+		displayFolder: KPI context
+		lineageTag: 106d30b7-0e45-44de-9bff-60cd39a058ff
+
+	measure 'Starting Headcount Context' =
+			
+			VAR Enrolments = [Total Enrolments]
+			VAR Cancelled = [Cancelled Before Start]
+			VAR EnrolmentText =
+			    FORMAT ( Enrolments, "#,0" )
+			        & IF ( Enrolments = 1, " enrolment", " enrolments" )
+			RETURN
+			    IF (
+			        Cancelled > 0,
+			        EnrolmentText & " · " & FORMAT ( Cancelled, "0" ) & " cancelled before start",
+			        EnrolmentText
+			    )
+		displayFolder: UX display
+		lineageTag: b5698aa2-2614-4549-8042-44062c63246b
+
+	measure 'Completion Context' =
+			-- As-of-snapshot share; active cohorts are included, so this is NOT a final completion rate
+			IF (
+			    ISBLANK ( [Completion Share of Starters] ),
+			    BLANK (),
+			    FORMAT ( [Completion Share of Starters], "0.0%" ) & " of starters completed to date"
+			)
+		displayFolder: UX display
+		lineageTag: 77bd94b8-263a-4c72-8c7f-d59ee9823833
 
 	column enrolment_id
 		dataType: string

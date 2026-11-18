@@ -1,50 +1,6 @@
 table 'rpt fact_attendance'
 	lineageTag: 3854ae56-a5be-446f-9492-81e01469cf43
 
-	measure 'Recorded Attendance Bar SVG' = ```
-			-- Progress bar drawn from the existing [Recorded Attendance Rate] measure (no new logic).
-			-- Clamped to 0-100%; blank or invalid input returns BLANK.
-			VAR Rate = [Recorded Attendance Rate]
-			VAR Pct =
-			    IF ( ISBLANK ( Rate ) || NOT ISNUMBER ( Rate ), BLANK (), MAX ( 0, MIN ( 1, Rate ) ) )
-			VAR BarWidth = ROUND ( Pct * 240, 1 )
-			RETURN
-			    IF (
-			        ISBLANK ( Pct ),
-			        BLANK (),
-			        "data:image/svg+xml;utf8,"
-			            & "<svg xmlns='http://www.w3.org/2000/svg' width='240' height='10' viewBox='0 0 240 10'>"
-			            & "<rect width='240' height='10' rx='5' fill='%23FFFFFF' fill-opacity='0.10'/>"
-			            & "<rect width='" & BarWidth & "' height='10' rx='5' fill='%233FC1B0'/>"
-			            & "</svg>"
-			    )
-			```
-		dataCategory: ImageUrl
-		displayFolder: UX display
-		lineageTag: de32734a-8752-4bd1-8db8-e4a5da2018b5
-
-	measure 'Attendance Recording Bar SVG' = ```
-			-- Progress bar drawn from the existing [Attendance Recording Rate] measure (no new logic).
-			-- Clamped to 0-100%; blank or invalid input returns BLANK.
-			VAR Rate = [Attendance Recording Rate]
-			VAR Pct =
-			    IF ( ISBLANK ( Rate ) || NOT ISNUMBER ( Rate ), BLANK (), MAX ( 0, MIN ( 1, Rate ) ) )
-			VAR BarWidth = ROUND ( Pct * 240, 1 )
-			RETURN
-			    IF (
-			        ISBLANK ( Pct ),
-			        BLANK (),
-			        "data:image/svg+xml;utf8,"
-			            & "<svg xmlns='http://www.w3.org/2000/svg' width='240' height='10' viewBox='0 0 240 10'>"
-			            & "<rect width='240' height='10' rx='5' fill='%23FFFFFF' fill-opacity='0.10'/>"
-			            & "<rect width='" & BarWidth & "' height='10' rx='5' fill='%23E3A640'/>"
-			            & "</svg>"
-			    )
-			```
-		dataCategory: ImageUrl
-		displayFolder: UX display
-		lineageTag: b33a3dbf-c7e3-47b8-bd6d-74676ecd1e24
-
 	measure 'Eligible Attendance Sessions' = ```
 			
 			COUNTROWS('rpt fact_attendance')
@@ -93,6 +49,48 @@ table 'rpt fact_attendance'
 			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 06c0e13f-6a82-40ac-9ff8-b076adea8da6
+
+	measure 'Recorded Attendance Bar SVG' =
+			-- Progress bar drawn from the existing [Recorded Attendance Rate] measure (no new logic).
+			-- Clamped to 0-100%; blank or invalid input returns BLANK.
+			VAR Rate = [Recorded Attendance Rate]
+			VAR Pct =
+			    IF ( ISBLANK ( Rate ) || NOT ISNUMBER ( Rate ), BLANK (), MAX ( 0, MIN ( 1, Rate ) ) )
+			VAR BarWidth = ROUND ( Pct * 240, 1 )
+			RETURN
+			    IF (
+			        ISBLANK ( Pct ),
+			        BLANK (),
+			        "data:image/svg+xml;utf8,"
+			            & "<svg xmlns='http://www.w3.org/2000/svg' width='240' height='10' viewBox='0 0 240 10'>"
+			            & "<rect width='240' height='10' rx='5' fill='%23FFFFFF' fill-opacity='0.10'/>"
+			            & "<rect width='" & BarWidth & "' height='10' rx='5' fill='%233FC1B0'/>"
+			            & "</svg>"
+			    )
+		displayFolder: UX display
+		lineageTag: de32734a-8752-4bd1-8db8-e4a5da2018b5
+		dataCategory: ImageUrl
+
+	measure 'Attendance Recording Bar SVG' =
+			-- Progress bar drawn from the existing [Attendance Recording Rate] measure (no new logic).
+			-- Clamped to 0-100%; blank or invalid input returns BLANK.
+			VAR Rate = [Attendance Recording Rate]
+			VAR Pct =
+			    IF ( ISBLANK ( Rate ) || NOT ISNUMBER ( Rate ), BLANK (), MAX ( 0, MIN ( 1, Rate ) ) )
+			VAR BarWidth = ROUND ( Pct * 240, 1 )
+			RETURN
+			    IF (
+			        ISBLANK ( Pct ),
+			        BLANK (),
+			        "data:image/svg+xml;utf8,"
+			            & "<svg xmlns='http://www.w3.org/2000/svg' width='240' height='10' viewBox='0 0 240 10'>"
+			            & "<rect width='240' height='10' rx='5' fill='%23FFFFFF' fill-opacity='0.10'/>"
+			            & "<rect width='" & BarWidth & "' height='10' rx='5' fill='%23E3A640'/>"
+			            & "</svg>"
+			    )
+		displayFolder: UX display
+		lineageTag: b33a3dbf-c7e3-47b8-bd6d-74676ecd1e24
+		dataCategory: ImageUrl
 
 	column enrolment_id
 		dataType: string

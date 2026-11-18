@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "chartTrend",
   "position": {
     "x": 1136,
     "y": 504,
     "z": 1049,
-    "width": 724,
     "height": 516,
+    "width": 724,
     "tabOrder": 1049
   },
   "visual": {
@@ -28,26 +28,8 @@
               },
               "queryRef": "rpt dim_programme_week.programme_week",
               "nativeQueryRef": "programme_week",
+              "active": true,
               "displayName": "Programme week"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt dim_competency"
-                    }
-                  },
-                  "Property": "Average Competency Score"
-                }
-              },
-              "queryRef": "rpt dim_competency.Average Competency Score",
-              "nativeQueryRef": "Average Competency Score",
-              "displayName": "Average score"
             }
           ]
         },
@@ -67,6 +49,25 @@
               "queryRef": "rpt dim_cohort.cohort_name",
               "nativeQueryRef": "cohort_name",
               "displayName": "Cohort"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_competency"
+                    }
+                  },
+                  "Property": "Average Competency Score"
+                }
+              },
+              "queryRef": "rpt dim_competency.Average Competency Score",
+              "nativeQueryRef": "Average Competency Score",
+              "displayName": "Average score"
             }
           ]
         }
@@ -296,5 +297,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

@@ -65,16 +65,6 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "WorkforceIntelligenceDark.json",
-          "path": "WorkforceIntelligenceDark.json",
-          "type": "CustomTheme"
-        },
-        {
-          "name": "overview-background.png",
-          "path": "overview-background.png",
-          "type": "Image"
-        },
-        {
           "name": "about-background.png",
           "path": "about-background.png",
           "type": "Image"
@@ -148,6 +138,16 @@
           "name": "icon-users-3fc1b0.svg",
           "path": "icon-users-3fc1b0.svg",
           "type": "Image"
+        },
+        {
+          "name": "overview-background.png",
+          "path": "overview-background.png",
+          "type": "Image"
+        },
+        {
+          "name": "WorkforceIntelligenceDark.json",
+          "path": "WorkforceIntelligenceDark.json",
+          "type": "CustomTheme"
         }
       ]
     }
