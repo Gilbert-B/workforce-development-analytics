@@ -115,7 +115,7 @@ On macOS or Linux, use `python3 -m venv .venv` and `source .venv/bin/activate`.
 **Build 02 (after Build 01 is loaded):**
 ```powershell
 python python\generate_build02_data.py                    # reproduces data/synthetic/build02/ exactly
-python python\load_build02_to_sql.py --server localhost   # 41 of 41 Build 02 checks, then Build 01 re-checked
+python python\full_reset.py --server localhost --confirm  # rebuilds Build 01 + Build 02: 26 of 26 and 49 of 49 checks
 ```
 Step by step, with expected output and exercises: [`docs/build02_walkthrough.md`](docs/build02_walkthrough.md).
 

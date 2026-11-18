@@ -127,11 +127,56 @@ Every fact has `enrolment_id`, the key for Power BI, plus `cohort_id` and `emplo
 | `fact_certification_attempt` | one attempt | `pass_mark`, `is_passed`, `is_first_attempt`, `is_retake`, `pair_attempt_count`, `pair_passed` (the enrolment × certification ever passed), `completion_date`, `days_after_completion` |
 | `fact_readiness_review` | one review decision | `is_approved`, `is_latest_review` (the decision in force at the snapshot), `completion_date`, `days_from_completion` |
 
+**Snapshot-specific flags (important):**
+- **Which columns:** `is_open_at_snapshot`, `case_status_as_of_snapshot` and `days_open` (fact_watchlist_case), and `is_latest_review` (fact_readiness_review).
+- **What they mean:** the state on the snapshot date (2026-11-02), from records entered by then.
+- **What they don't mean:** filtering a report to an earlier period does **not** change them, so they are not "as of any date". For another date, either regenerate with `--as-of-date`, or use the time-aware pattern in `build02_analysis_examples.sql` query 10.
+- `pair_passed` and `pair_attempt_count` are likewise "by the snapshot".
+
 **Joins:**
 - `fact_* .enrolment_id` → `rpt.dim_enrolment.enrolment_id` (many to one);
 - `fact_certification_attempt.certification_id` → `dim_certification.certification_id`.
 
 All keys are non-null and unique on the "one" side.
+
+---
+
+## Audit outputs (not loaded into SQL tables)
+
+| File | Grain | Key | SQL twin |
+|---|---|---|---|
+| `data/synthetic/build02/audit/review_signals.csv` | one weekly watch-list review that was actually held (trainee known started, no exit on record) | enrolment_id + review_after_week | `sql/build02_audit_queries.sql` query 1 |
+| `data/synthetic/build02/audit/readiness_evidence.csv` | one enrolment whose completion is on record at the snapshot | enrolment_id | query 2 |
+
+**`review_signals.csv`:** every value is what staff could know at `review_at` (the Monday after the week, 10:00).
+
+| Columns | Meaning |
+|---|---|
+| `eligible_sessions` | sessions from the start date, and before a withdrawal on record |
+| `recorded_sessions`, `present_sessions` | marks entered by `review_at` |
+| `unrecorded_sessions` | eligible − recorded: **missing, never absent** |
+| `recorded_attendance_rate` | present ÷ recorded; blank if nothing is recorded |
+| `attendance_evidence` | `Sufficient` with at least 4 recorded marks |
+| `attendance_dq_flag` | `VERIFY_UNRECORDED_MARKS` when 2 or more marks are missing; a register check for staff, not a risk signal |
+| `latest_full_week`, `latest_full_week_avg` | the latest week with every competency scored; blank = no such week (`competency_evidence`) |
+| `cohort_same_week_avg`, `gap_vs_cohort` | the comparable score |
+| `previous_week_avg`, `week_change` | the decline check |
+| `signal_low_attendance`, `signal_low_competency`, `signal_declining_scores`, `signal_count` | 0/1 per signal, then the total |
+| `open_case_before_review`, `review_outcome`, `watchlist_case_id`, `case_closed_reason` | the decision |
+
+An outcome ending "(entered after snapshot)" means the decision was taken on the snapshot day but entered later; its ID is hidden.
+
+**`readiness_evidence.csv`:**
+
+| Columns | Meaning |
+|---|---|
+| `completion_date` | from Build 01 |
+| `latest_full_week`, `latest_full_week_avg` | competency evidence |
+| `partially_assessed_weeks` | weeks with some, but not all, competencies scored |
+| `mandatory_certifications`, `certifications_attempted`, `certifications_passed`, `certifications_exhausted` | exhausted = failed at max attempts |
+| `certification_population` | Fully certified / Partly certified / Attempted, none passed / **Not attempted** |
+| `review_count`, `latest_review_date`, `latest_decision_reason` | from the readiness reviews |
+| `readiness_population` | Approved / Deferred / **Not reviewed** |
 
 ---
 
@@ -153,6 +198,13 @@ All keys are non-null and unique on the "one" side.
 | Ready / Approved (snapshot) | completed enrolments whose `is_latest_review = 1` row is Approved | enrolment | never count all Approved rows |
 | Readiness Approval Rate | latest Approved / latest reviewed | enrolment | show **Readiness Coverage** (approved / all completed) separately |
 | Days to Readiness | approved `review_date` − completion date | enrolment | approved only |
+
+**Populations outside each denominator are always reported separately:**
+- unactioned cases (15);
+- completers with no attempt (4) and mandatory pairs not attempted (16);
+- completers not reviewed (8).
+
+The validation checks `population_…` prove each split adds back up to its whole. See analysis query 9.
 
 ---
 
