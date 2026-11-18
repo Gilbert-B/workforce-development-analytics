@@ -31,7 +31,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "This enrolment by competency. Cohort same-week comparison: measure pending BI review.",
+                    "value": "This enrolment, one line per competency",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",

@@ -1040,10 +1040,22 @@ def skills_page() -> dict:
                   "sortDefinition": by_week_sort()},
         "objects": {"dataPoint": cohort_colour_points(), "labels": props(show=True, color=colour(CREAM), fontSize=8),
                     **axis_objects("Programme week", categorical=True)}})); z += 1
+    # D26: paired change strip. Same trainees, consecutive weeks: removes the "who was assessed" effect
+    paired = (X_R, 120, COL_R, 52)
+    v.append(container("pairedLabel", paired[0] + 18, 124, 600, 44, z, textbox([
+        [("PAIRED WEEK-OVER-WEEK CHANGE", text(9, GOLD, "Segoe UI Semibold"))],
+        [("Same trainees vs their previous week · follows the cohort and week selectors · score points",
+          text(9, "#8FA0B4"))]]))); z += 1
+    v.append(container("pairedValue", paired[0] + paired[2] - 196, 122, 180, 48, z, {
+        "visualType": "card",
+        "query": {"queryState": {"Values": {"projections": [proj("Measure", COMPET, "Paired WoW Competency Change")]}}},
+        "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=18, color=colour(TEAL)),
+                    "categoryLabels": props(show=False)}})); z += 1
     v += nav_decor(key, 100) + nav_buttons(pid, 3000)
-    # the week selector only drives the like-for-like comparison panel
+    # the week selector only drives the like-for-like comparison panel and the paired-change strip
     interactions = [{"source": "weekSlicer", "target": t, "type": "NoFilter"} for t in ("skillTrend", "skillHeatmap", "skillSample")]
-    svg = page_svg(key, frames=[trend, heat, compare, sample], tracks=[(X0, 120, 540, 52), (812, 120, 196, 52)])
+    svg = page_svg(key, frames=[trend, heat, compare, sample],
+                   tracks=[(X0, 120, 540, 52), (812, 120, 196, 52), paired])
     return {"id": pid, "key": key, "display": "Competency & Skills", "svg": svg, "visuals": v, "interactions": interactions}
 
 
@@ -1136,7 +1148,8 @@ def trainee_page() -> dict:
         frames.append((x, 266, kw, 150)); tiles.append((x + 24, 266 + 22, accent))
         v += kpi_tile(prefix, x, 266, kw, 150, z, label, table, measure, context, icon, accent); z += 4
     att = (X0, 432, COL_L, 608)
-    comp = (X_R, 432, COL_R, 608)
+    comp = (X_R, 432, COL_R, 300)
+    bench = (X_R, 748, COL_R, 292)                    # D26: cohort same-week benchmark
     v.append(panel_title("attTitle", *att[:3], "Attendance by programme week",
                          "This enrolment's sessions by mark; unrecorded is not absent", z)); z += 1
     v.append(container("traineeAttendance", *body(*att), z, {
@@ -1147,7 +1160,7 @@ def trainee_page() -> dict:
                   "sortDefinition": by_week_sort()},
         "objects": {"dataPoint": status_colour_points(), **axis_objects("Programme week", categorical=True)}})); z += 1
     v.append(panel_title("compTitle", *comp[:3], "Competency progression",
-                         "This enrolment by competency. Cohort same-week comparison: measure pending BI review.", z)); z += 1
+                         "This enrolment, one line per competency", z)); z += 1
     v.append(container("traineeCompetency", *body(*comp), z, {
         "visualType": "lineChart",
         "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
@@ -1155,6 +1168,17 @@ def trainee_page() -> dict:
                                  "Series": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]}},
                   "sortDefinition": by_week_sort()},
         "objects": {"lineStyles": props(strokeWidth=3, showMarker=True), **axis_objects("Programme week", categorical=True)}})); z += 1
+    v.append(panel_title("benchTitle", *bench[:3], "This trainee vs cohort, same programme week",
+                         "Average across competencies · cohort line = all trainees in the same cohort that week", z)); z += 1
+    v.append(container("traineeBenchmark", *body(*bench), z, {
+        "visualType": "lineChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WEEK, "programme_week", "Programme week")]},
+                                 "Y": {"projections": [proj("Measure", COMPET, "Average Competency Score", "This trainee"),
+                                                       proj("Measure", COMPET, "Cohort Same-Week Average", "Cohort, same week")]}},
+                  "sortDefinition": by_week_sort()},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(TEAL)}, "selector": {"metadata": f"{COMPET}.Average Competency Score"}},
+                                  {"properties": {"fill": colour(GOLD)}, "selector": {"metadata": f"{COMPET}.Cohort Same-Week Average"}}],
+                    "lineStyles": props(strokeWidth=3, showMarker=True), **axis_objects("Programme week", categorical=True)}})); z += 1
     v += nav_decor(key, 100) + nav_buttons(pid, 3000)
     enrol_field = field("Column", ENROL, "enrolment_id")
     extra = {"type": "Drillthrough", "visibility": "HiddenInViewMode",
@@ -1162,7 +1186,7 @@ def trainee_page() -> dict:
                              "parameters": [{"name": "trainee360Enrolment", "boundFilter": "drillEnrolment", "fieldExpr": enrol_field}]},
              "filterConfig": {"filters": [{"name": "drillEnrolment", "field": enrol_field, "type": "Categorical",
                                            "howCreated": "Drillthrough"}]}}
-    svg = page_svg(key, frames=frames + [att, comp], tiles=tiles)
+    svg = page_svg(key, frames=frames + [att, comp, bench], tiles=tiles)
     return {"id": pid, "key": key, "display": "Trainee 360 — Training", "svg": svg, "visuals": v, "extra": extra}
 
 

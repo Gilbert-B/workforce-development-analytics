@@ -177,3 +177,9 @@ dim_date[date] ──> fact_assessment[assessment_date]
 
 All of these respond to the cohort selection.
 
+## Competency measures added in D26 (table `rpt dim_competency`, folder *Competency · D25*)
+| Measure | Returns | Grain and filters | Blank when |
+|---|---|---|---|
+| Paired WoW Competency Change | score points (signed) | Each enrolment's average `week_over_week_change` over the rows in context, then averaged across enrolments | No enrolment in context has a consecutive prior week, e.g. Week 1 only |
+| Cohort Same-Week Average | score 0–100 | `[Average Competency Score]` for the single enrolment's cohort, keeping the week and competency filters | More than one enrolment or cohort is in context |
+

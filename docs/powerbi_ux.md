@@ -91,3 +91,7 @@ The page uses **two layers**:
 
 **Grain in the labels:** attendance counts are **enrolment-sessions** (one per trainee per session), not distinct sessions. Status counts are **enrolments**, not people. Snapshot measures are labelled as snapshot / to date.
 
+## D26 additions
+- **Skills header strip:** `Paired WoW Competency Change` sits next to the week selector and follows both selectors. It answers "how much did the *same* trainees improve on their previous week?", which the trend chart can't, because its weekly means mix different trainees.
+- **Trainee 360 benchmark:** the lower-right panel plots `Average Competency Score` (*This trainee*, teal) against `Cohort Same-Week Average` (*Cohort, same week*, gold) by programme week.
+
