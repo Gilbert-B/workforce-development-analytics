@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "chipCompetencyOn",
   "position": {
     "x": 1696,
     "y": 412,
     "z": 1047,
-    "width": 152,
     "height": 36,
+    "width": 152,
     "tabOrder": 1047
   },
   "visual": {
@@ -170,8 +170,6 @@
         }
       ]
     },
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
-  },
-  "isHidden": true
+  }
 }
