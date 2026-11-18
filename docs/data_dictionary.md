@@ -160,3 +160,20 @@ dim_date[date] ──> fact_assessment[assessment_date]
 - `fact_assessment[score]` is a whole number from 0 to 100.
 - `fact_assessment[week_over_week_change]` is blank when the previous week is missing.
 - `dim_enrolment[status_as_of_snapshot]` is text. It reflects the **snapshot date (2026-11-02) only**. A date slicer doesn't change it; as-of headcount by date needs status-history logic in a later build.
+
+---
+
+## Report measures added for the Overview page (UX-02)
+| Measure | Table | Returns | Note |
+|---|---|---|---|
+| Completion Share of Starters | rpt dim_enrolment | % | Completed (snapshot) ÷ Starting Headcount; as-of snapshot, not final |
+| Total Enrolments | rpt dim_enrolment | count | All enrolments, including cancelled before start |
+| Cancelled Before Start | rpt dim_enrolment | count | Enrolments whose snapshot status is "Cancelled before start" |
+| Starting Headcount Context | rpt dim_enrolment | text | "208 enrolments · 9 cancelled before start" |
+| Completion Context | rpt dim_enrolment | text | "63.8% of starters completed to date" |
+| Recorded Attendance Bar SVG | rpt fact_attendance | image URL (SVG) | Progress bar from Recorded Attendance Rate, clamped 0–100% |
+| Attendance Recording Bar SVG | rpt fact_attendance | image URL (SVG) | Progress bar from Attendance Recording Rate, clamped 0–100% |
+| Current Training Week Label | rpt dim_cohort | text | "Currently in Week N" for exactly one in-progress cohort; otherwise empty |
+
+All of these respond to the cohort selection.
+

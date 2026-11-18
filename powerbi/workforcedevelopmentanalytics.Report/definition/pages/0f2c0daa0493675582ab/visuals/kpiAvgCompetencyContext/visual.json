@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiAvgCompetencyContext",
   "position": {
-    "x": 1030,
-    "y": 326,
-    "z": 1021,
-    "width": 250,
+    "x": 1022,
+    "y": 330,
+    "z": 1022,
+    "width": 260,
     "height": 30,
-    "tabOrder": 1021
+    "tabOrder": 1022
   },
   "visual": {
     "visualType": "textbox",
@@ -26,7 +26,8 @@
                       "color": "#8FA0B4"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "center"
               }
             ]
           }

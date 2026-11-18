@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiActiveTraineesContext",
   "position": {
-    "x": 446,
-    "y": 326,
-    "z": 1013,
-    "width": 250,
+    "x": 438,
+    "y": 330,
+    "z": 1014,
+    "width": 260,
     "height": 30,
-    "tabOrder": 1013
+    "tabOrder": 1014
   },
   "visual": {
     "visualType": "textbox",
@@ -26,7 +26,8 @@
                       "color": "#8FA0B4"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "center"
               }
             ]
           }

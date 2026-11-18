@@ -3,11 +3,11 @@
   "name": "kpiCompletedTrainees",
   "position": {
     "x": 734,
-    "y": 266,
-    "z": 1018,
+    "y": 258,
+    "z": 1019,
     "width": 252,
-    "height": 62,
-    "tabOrder": 1018
+    "height": 58,
+    "tabOrder": 1019
   },
   "visual": {
     "visualType": "card",
