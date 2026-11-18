@@ -1,0 +1,3 @@
+certification_id,certification_code,certification_name,mandatory_for_readiness,pass_mark,max_attempts,policy_version
+CERT-01,PEH,Payments Exception Handling,1,70,2,B02-R1
+CERT-02,OCR,Operational Controls & Reconciliation,1,70,2,B02-R1

@@ -1,0 +1,88 @@
+# Build 02 synthetic-data assumptions: coaching, certification and readiness.
+#
+# Every value here is FICTIONAL company policy for a portfolio scenario.
+# None of it describes how a real bank certifies or deploys staff.
+# Change values here, not in the Python code, then re-run
+#     python python/generate_build02_data.py
+#
+# Inputs: the committed Build 01 CSVs in data/synthetic/ (never modified).
+# The as-of date is NOT set here: it is read from Build 01's
+# data_snapshot.csv, so both builds always describe the same "today".
+
+[run]
+seed = 20261118            # Build 02's own seed; Build 01 keeps 20261115
+policy_version = "B02-R1"  # stored on every case, attempt and review
+
+# ---------------------------------------------------------------- watch-list
+# Staff review every trainee on the first working day after each programme
+# week (10:00), using only records already entered by then.
+[watchlist]
+review_hour = 10
+first_review_after_week = 2     # weeks 1-2 give a baseline before any review
+last_review_after_week = 7      # after week 8 the programme has ended
+
+# Signals: reasons to LOOK at a trainee. They are not dropout predictions.
+attendance_window_weeks = 2              # recent window
+attendance_min_recorded_sessions = 4     # fewer known marks = not enough evidence
+low_recorded_attendance_rate = 0.75      # Present / (Present + Absent), unrecorded ignored
+low_score_gap_vs_cohort = 9.0            # trainee week avg <= cohort same-week avg - this
+declining_score_drop = 2.5               # week avg fell by at least this vs previous week
+
+# Signals are reviewed by people, so not every signal opens a case.
+open_case_probability = 0.85
+manual_referral_probability = 0.006      # per trainee per review, without any signal
+clear_reviews_to_close = 2               # consecutive signal-free reviews before "Improved"
+max_recording_delay_days = 2             # business days between decision and data entry
+
+# ---------------------------------------------------------------- coaching
+[coaching]
+no_action_probability = 0.12             # some cases are never actioned
+first_action_min_days = 1                # business days after the case is recorded
+first_action_max_days = 4
+next_action_min_days = 3
+next_action_max_days = 8
+max_actions_per_case = 3
+followup_recommended_probability = 0.5
+
+# ---------------------------------------------------------------- certification
+[certification]
+no_attempt_probability = 0.05            # per completed enrolment: attempts nothing
+skip_probability = 0.03                  # per enrolment x certification
+first_attempt_min_days = 5               # business days after completion is RECORDED
+first_attempt_max_days = 25
+retake_probability = 0.8                 # after a failed first attempt
+retake_min_days = 10                     # business days after the failed attempt
+retake_max_days = 20
+score_offset = -1.0                      # exam mean = latest training average + offset
+score_sd = 7.0
+retake_gain_mean = 7.0
+retake_gain_sd = 5.0
+
+# Two fictional internal certifications, both mandatory for readiness.
+[[certification.types]]
+certification_id = "CERT-01"
+certification_code = "PEH"
+certification_name = "Payments Exception Handling"
+mandatory_for_readiness = true
+pass_mark = 70
+max_attempts = 2
+
+[[certification.types]]
+certification_id = "CERT-02"
+certification_code = "OCR"
+certification_name = "Operational Controls & Reconciliation"
+mandatory_for_readiness = true
+pass_mark = 70
+max_attempts = 2
+
+# ---------------------------------------------------------------- readiness
+[readiness]
+review_hour = 10
+competency_threshold = 65.0              # latest week where EVERY competency was scored
+unreviewed_probability = 0.07            # completed but never put forward (yet)
+first_review_min_days = 28               # business days after completion
+first_review_max_days = 45
+re_review_min_days = 10
+re_review_max_days = 20
+max_reviews = 3
+signoff_probability = 0.85               # manager signs off when all gates pass
