@@ -214,3 +214,44 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
 - **Drill-through:** works by `enrolment_id`. ENR-00025 (Cohort 1, Withdrawn) and ENR-00143 (Cohort 3, Active) stay separate for the same person.
 - **Learning:** the owner built a practice drill-through page in Desktop.
 
+## D26 — D25 measure review (2026-11-18, branch `ux/d25-measures`)
+**Scope:**
+- two new measures, `Paired WoW Competency Change` and `Cohort Same-Week Average`;
+- one new strip on the Skills page;
+- the Trainee 360 competency panel split in two.
+
+No SQL, data, relationship or existing-measure changes.
+
+**Expected values** (computed in SQL in Claude's environment after a fresh load, 26 of 26 load checks OK):
+
+| Paired WoW change | Week 2 | Week 3 | Week 4 | Week 5 | Week 6 | Week 7 | Week 8 | All weeks |
+|---|---|---|---|---|---|---|---|---|
+| Cohort 1 | 5.74 | 4.47 | 3.24 | 1.91 | 1.93 | 1.15 | 1.11 | 2.82 |
+| Cohort 2 | 8.52 | 5.18 | 4.69 | 3.46 | 2.35 | 2.08 | 1.12 | 4.05 |
+| Cohort 3 | 6.23 | 4.71 | 3.33 | 2.95 | 2.06 | — | — | 3.90 |
+
+Week 1 is blank (no previous week). The card rounds to one decimal, e.g. Cohort 2, Week 3 → **+5.2**.
+
+**Cohort Same-Week Average:**
+- ENR-00143, Week 3: trainee **63.6**, Cohort 3 **63.2**.
+- Cohort 2: **66.3** at Week 3, **71.4** at Week 4.
+
+**SQL for checking a Paired WoW value:**
+```sql
+WITH per_enrol AS (
+  SELECT cohort_id, programme_week, enrolment_id, AVG(CAST(week_over_week_change AS DECIMAL(9,4))) AS enrol_avg
+  FROM rpt.fact_assessment WHERE week_over_week_change IS NOT NULL
+  GROUP BY cohort_id, programme_week, enrolment_id)
+SELECT cohort_id, programme_week, COUNT(*) AS enrolments, CAST(AVG(enrol_avg) AS DECIMAL(5,2)) AS paired_wow
+FROM per_enrol GROUP BY cohort_id, programme_week ORDER BY cohort_id, programme_week;
+```
+
+**Evidence (Claude Code cloud container):**
+- 272 PBIR files validate against Microsoft's schemas.
+- The model loads in Microsoft's TMDL parser: `rpt dim_competency` now has 5 measures, and the 8 relationships are unchanged.
+- Cross-file checks report no problems across 6 pages and 251 visuals (34 fields).
+
+**Owner's Power BI Desktop validation (2026-11-18):** all D26 checks passed.
+- **Skills strip:** Cohort 2 shows +5.2 at Week 3 and +4.7 at Week 4. Week 1 alone is empty. With all weeks, Cohort 1 shows +2.8 and Cohort 3 shows +3.9.
+- **Trainee 360:** ENR-00143 at Week 3 shows trainee 63.6 against Cohort 3's 63.2.
+

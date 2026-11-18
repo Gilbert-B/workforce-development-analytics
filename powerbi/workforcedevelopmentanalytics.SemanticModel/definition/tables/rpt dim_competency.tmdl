@@ -1,6 +1,37 @@
 table 'rpt dim_competency'
 	lineageTag: a8315087-bcc6-4503-8a27-899810db34d5
 
+	/// D25/D26: average of each trainee's own week-over-week change (same trainee, consecutive weeks), then averaged across trainees. Week 1 has no previous week, so it is blank.
+	measure 'Paired WoW Competency Change' = ```
+			-- one value per enrolment first, so trainees with more competency rows don't weigh more
+			AVERAGEX (
+			    VALUES ( 'rpt dim_enrolment'[enrolment_id] ),
+			    CALCULATE ( AVERAGE ( 'rpt fact_assessment'[week_over_week_change] ) )
+			)
+			```
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Competency · D25
+		lineageTag: be646548-d25b-49f8-b52a-31af8b108304
+
+	/// D25/D26: the trainee's cohort average for the same programme week(s) and competencies. Blank unless exactly one enrolment (and so one cohort) is in context.
+	measure 'Cohort Same-Week Average' = ```
+			VAR CurrentCohort = SELECTEDVALUE ( 'rpt dim_enrolment'[cohort_id] )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( CurrentCohort )
+			            && HASONEVALUE ( 'rpt dim_enrolment'[enrolment_id] ),
+			        CALCULATE (
+			            [Average Competency Score],
+			            REMOVEFILTERS ( 'rpt dim_enrolment' ),                -- drop the drill-through trainee
+			            REMOVEFILTERS ( 'rpt fact_assessment'[enrolment_id] ), -- safeguard; nothing filters it today
+			            TREATAS ( { CurrentCohort }, 'rpt dim_cohort'[cohort_id] ) -- keep that trainee's cohort only
+			        )
+			    )
+			```
+		formatString: 0.0
+		displayFolder: Competency · D25
+		lineageTag: 1736c113-ff4a-40ff-bf96-5b38c7e82251
+
 	measure 'Average Competency Score' = ```
 			
 			AVERAGE('rpt fact_assessment'[score])
