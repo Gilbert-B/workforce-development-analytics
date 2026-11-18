@@ -169,7 +169,7 @@ dim_date[date] ──> fact_assessment[assessment_date]
 | Completion Share of Starters | rpt dim_enrolment | % | Completed (snapshot) ÷ Starting Headcount; as-of snapshot, not final |
 | Total Enrolments | rpt dim_enrolment | count | All enrolments, including cancelled before start |
 | Cancelled Before Start | rpt dim_enrolment | count | Enrolments whose snapshot status is "Cancelled before start" |
-| Starting Headcount Context | rpt dim_enrolment | text | "208 enrolments · 9 cancelled before start" |
+| Starting Headcount Context | rpt dim_enrolment | text | "208 enrolments · 9 cancelled before start"; just "72 enrolments" when none are cancelled |
 | Completion Context | rpt dim_enrolment | text | "63.8% of starters completed to date" |
 | Recorded Attendance Bar SVG | rpt fact_attendance | image URL (SVG) | Progress bar from Recorded Attendance Rate, clamped 0–100% |
 | Attendance Recording Bar SVG | rpt fact_attendance | image URL (SVG) | Progress bar from Attendance Recording Rate, clamped 0–100% |
