@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiRecordingRateBar",
   "position": {
-    "x": 1616,
-    "y": 318,
+    "x": 1620,
+    "y": 324,
     "z": 1032,
-    "width": 240,
-    "height": 10,
+    "width": 232,
+    "height": 8,
     "tabOrder": 1032
   },
   "visual": {

@@ -3,10 +3,10 @@
   "name": "kpiRecordingRate",
   "position": {
     "x": 1610,
-    "y": 258,
+    "y": 252,
     "z": 1033,
     "width": 252,
-    "height": 58,
+    "height": 70,
     "tabOrder": 1033
   },
   "visual": {
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "32D"
+                  "Value": "30D"
                 }
               }
             },
