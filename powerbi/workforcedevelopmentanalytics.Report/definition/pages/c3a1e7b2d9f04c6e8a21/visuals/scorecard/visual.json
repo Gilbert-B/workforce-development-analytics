@@ -1,0 +1,263 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "scorecard",
+  "position": {
+    "x": 150,
+    "y": 270,
+    "z": 1101,
+    "width": 1716,
+    "height": 186,
+    "tabOrder": 1101
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "cohort_name"
+                }
+              },
+              "queryRef": "rpt dim_cohort.cohort_name",
+              "nativeQueryRef": "cohort_name",
+              "displayName": "Cohort"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "delivery_mode"
+                }
+              },
+              "queryRef": "rpt dim_cohort.delivery_mode",
+              "nativeQueryRef": "delivery_mode",
+              "displayName": "Delivery"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "schedule_status"
+                }
+              },
+              "queryRef": "rpt dim_cohort.schedule_status",
+              "nativeQueryRef": "schedule_status",
+              "displayName": "Programme status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "weeks_started"
+                }
+              },
+              "queryRef": "rpt dim_cohort.weeks_started",
+              "nativeQueryRef": "weeks_started",
+              "displayName": "Weeks started"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Total Enrolments"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Total Enrolments",
+              "nativeQueryRef": "Total Enrolments",
+              "displayName": "Enrolments"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Cancelled Before Start"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Cancelled Before Start",
+              "nativeQueryRef": "Cancelled Before Start",
+              "displayName": "Cancelled before start"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Starting Headcount"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Starting Headcount",
+              "nativeQueryRef": "Starting Headcount",
+              "displayName": "Starters"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Active Trainees (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Active Trainees (Snapshot)",
+              "nativeQueryRef": "Active Trainees (Snapshot)",
+              "displayName": "Active"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Completed Trainees (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Completed Trainees (Snapshot)",
+              "nativeQueryRef": "Completed Trainees (Snapshot)",
+              "displayName": "Completed (to date)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Withdrawn Trainees (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Withdrawn Trainees (Snapshot)",
+              "nativeQueryRef": "Withdrawn Trainees (Snapshot)",
+              "displayName": "Withdrawn"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_enrolment"
+                    }
+                  },
+                  "Property": "Withdrawal Rate (Snapshot)"
+                }
+              },
+              "queryRef": "rpt dim_enrolment.Withdrawal Rate (Snapshot)",
+              "nativeQueryRef": "Withdrawal Rate (Snapshot)",
+              "displayName": "Withdrawal rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_attendance"
+                    }
+                  },
+                  "Property": "Recorded Attendance Rate"
+                }
+              },
+              "queryRef": "rpt fact_attendance.Recorded Attendance Rate",
+              "nativeQueryRef": "Recorded Attendance Rate",
+              "displayName": "Recorded attendance"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_attendance"
+                    }
+                  },
+                  "Property": "Attendance Recording Rate"
+                }
+              },
+              "queryRef": "rpt fact_attendance.Attendance Recording Rate",
+              "nativeQueryRef": "Attendance Recording Rate",
+              "displayName": "Recording rate"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt dim_cohort"
+                  }
+                },
+                "Property": "cohort_name"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
