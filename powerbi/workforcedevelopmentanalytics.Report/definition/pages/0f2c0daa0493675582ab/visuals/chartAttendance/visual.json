@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chartAttendance",
   "position": {
     "x": 156,
     "y": 470,
     "z": 1041,
-    "height": 550,
     "width": 924,
+    "height": 550,
     "tabOrder": 1041
   },
   "visual": {
@@ -28,7 +28,6 @@
               },
               "queryRef": "rpt dim_cohort.cohort_name",
               "nativeQueryRef": "cohort_name",
-              "active": true,
               "displayName": "Cohort"
             }
           ]

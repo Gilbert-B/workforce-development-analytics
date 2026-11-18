@@ -6,7 +6,7 @@
     "y": 312,
     "z": 106,
     "width": 88,
-    "height": 34,
+    "height": 24,
     "tabOrder": 106
   },
   "visual": {
@@ -23,20 +23,7 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "7pt",
-                      "color": "#3E4A5C"
-                    }
-                  }
-                ],
-                "horizontalTextAlignment": "center"
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "planned",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "6pt",
-                      "color": "#3E4A5C"
+                      "color": "#6F7D90"
                     }
                   }
                 ],
