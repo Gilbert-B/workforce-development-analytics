@@ -219,3 +219,5 @@ Reviewed after the owner's local run (Routes A and B). Entries above marked `Rev
 **Navigation:** unbuilt pages appear as "planned" rail items with **no click action**. Next iteration: Cohort Intelligence, Competency & Skills Development, Attendance & Engagement, and a Trainee 360 drill-through (by `enrolment_id`).
 **Attendance quality:** shows % data labels and adds the session **count** to the tooltip.
 
+**Owner refinement (2026-11-18):** `Starting Headcount Context` now omits the cancellation part when there are none ("72 enrolments"), and says "1 enrolment" in the singular. The owner implemented it in Power BI Desktop (commit `fcd4c89`) and tested the zero branch with a temporary threshold. It's display wording only; the counts come from the approved measures unchanged.
+
