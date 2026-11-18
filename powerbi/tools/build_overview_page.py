@@ -504,13 +504,14 @@ def overview_visuals() -> list[dict]:
                         "max": {"color": {"Literal": {"Value": "'#3FC1B0'"}}},
                         "nullColoringStrategy": {"strategy": {"Literal": {"Value": "'noColor'"}}}}}}}}}},
                 "fontColorPrimary": colour(CREAM),
-                "fontSize": literal(15)},
+                "fontSize": literal(11)},
                 # every data cell (wildcard) OF this measure (metadata = the projection's queryRef)
                 "selector": {"data": [{"dataViewWildcard": {"matchingOption": 1}}],
                              "metadata": f"{COMPET}.Average Competency Score"}}],
             "subTotals": props(rowSubtotals=False, columnSubtotals=False),
-            "columnHeaders": props(fontSize=13, fontColor=colour("#8FA0B4")),
-            "rowHeaders": props(fontSize=13, fontColor=colour("#D8DEE6")),
+            # sizes chosen so the competency names + 8 week columns fit the 724px panel
+            "columnHeaders": props(fontSize=10, fontColor=colour("#8FA0B4")),
+            "rowHeaders": props(fontSize=11, fontColor=colour("#D8DEE6")),
             "grid": props(gridVertical=True, gridVerticalColor=colour(NAVY), gridVerticalWeight=3,
                           gridHorizontal=True, gridHorizontalColor=colour(NAVY), gridHorizontalWeight=3,
                           rowPadding=26)}}, hidden=True)
