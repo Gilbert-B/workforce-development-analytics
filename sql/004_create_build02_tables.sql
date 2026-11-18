@@ -150,5 +150,43 @@ CREATE TABLE core.readiness_review (
 GO
 -- No extra indexes: the largest Build 02 table has a few hundred rows.
 
-PRINT 'Build 02 core tables created.';
+/* ----- Guard: protect Build 01 while Build 02 depends on it ----------------
+   The Build 02 tables have foreign keys to core.enrolment, so Build 01's
+   001_create_schema.sql can no longer drop all its tables. Left alone, 001
+   would drop SOME Build 01 tables and then stop with an error, leaving
+   Build 01 half-deleted.
+
+   This database-level DDL trigger runs whenever a table is dropped. If the
+   table is a Build 01 core table AND Build 02 tables exist, it cancels the
+   drop (ROLLBACK) before anything is removed and says what to do instead.
+   To rebuild everything, use the explicit reset: 007_reset_build02_objects.sql
+   (SSMS) or python/full_reset.py --confirm.
+
+   SET QUOTED_IDENTIFIER ON: the trigger reads EVENTDATA() with an XML method,
+   which needs this setting, and SQL Server stores it WITH the trigger when
+   it is created. SSMS and Python default it ON, but sqlcmd defaults it OFF,
+   which would create a trigger that breaks every DROP TABLE. Set explicitly. */
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_NULLS ON;
+GO
+CREATE OR ALTER TRIGGER trg_protect_build01_from_partial_drop
+ON DATABASE
+FOR DROP_TABLE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @schema SYSNAME = EVENTDATA().value('(/EVENT_INSTANCE/SchemaName)[1]', 'sysname');
+    DECLARE @table  SYSNAME = EVENTDATA().value('(/EVENT_INSTANCE/ObjectName)[1]', 'sysname');
+    IF @schema = N'core'
+       AND @table IN (N'data_snapshot', N'cohort', N'employee', N'competency', N'enrolment',
+                      N'enrolment_status_event', N'scheduled_session', N'attendance', N'assessment')
+       AND OBJECT_ID(N'core.watchlist_case') IS NOT NULL
+    BEGIN
+        ROLLBACK;
+        THROW 50001, 'Build 02 tables depend on Build 01. Nothing was dropped. To rebuild, run sql/007_reset_build02_objects.sql first (or python/full_reset.py --confirm).', 1;
+    END
+END;
+GO
+
+PRINT 'Build 02 core tables created (Build 01 drop guard installed).';
 GO
