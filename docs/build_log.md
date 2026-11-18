@@ -251,5 +251,7 @@ FROM per_enrol GROUP BY cohort_id, programme_week ORDER BY cohort_id, programme_
 - The model loads in Microsoft's TMDL parser: `rpt dim_competency` now has 5 measures, and the 8 relationships are unchanged.
 - Cross-file checks report no problems across 6 pages and 251 visuals (34 fields).
 
-**Owner's Power BI Desktop validation:** *pending.*
+**Owner's Power BI Desktop validation (2026-11-18):** all D26 checks passed.
+- **Skills strip:** Cohort 2 shows +5.2 at Week 3 and +4.7 at Week 4. Week 1 alone is empty. With all weeks, Cohort 1 shows +2.8 and Cohort 3 shows +3.9.
+- **Trainee 360:** ENR-00143 at Week 3 shows trainee 63.6 against Cohort 3's 63.2.
 
