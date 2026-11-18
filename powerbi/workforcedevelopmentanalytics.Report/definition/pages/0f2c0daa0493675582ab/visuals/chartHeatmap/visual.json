@@ -1,38 +1,18 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chartHeatmap",
   "position": {
     "x": 1136,
     "y": 510,
     "z": 1050,
-    "height": 510,
     "width": 724,
+    "height": 510,
     "tabOrder": 1050
   },
   "visual": {
     "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "rpt dim_programme_week"
-                    }
-                  },
-                  "Property": "week_label"
-                }
-              },
-              "queryRef": "rpt dim_programme_week.week_label",
-              "nativeQueryRef": "week_label",
-              "active": true,
-              "displayName": "Week"
-            }
-          ]
-        },
         "Rows": {
           "projections": [
             {
@@ -48,8 +28,26 @@
               },
               "queryRef": "rpt dim_competency.competency_name",
               "nativeQueryRef": "competency_name",
-              "active": true,
               "displayName": "Competency"
+            }
+          ]
+        },
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_programme_week"
+                    }
+                  },
+                  "Property": "week_label"
+                }
+              },
+              "queryRef": "rpt dim_programme_week.week_label",
+              "nativeQueryRef": "week_label",
+              "displayName": "Week"
             }
           ]
         },
@@ -303,5 +301,6 @@
         }
       ]
     }
-  }
+  },
+  "isHidden": true
 }

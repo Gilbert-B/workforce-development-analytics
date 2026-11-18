@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "cohortSlicer",
   "position": {
     "x": 144,
     "y": 124,
     "z": 1007,
-    "height": 44,
     "width": 524,
+    "height": 44,
     "tabOrder": 1007
   },
   "visual": {
@@ -28,7 +28,6 @@
               },
               "queryRef": "rpt dim_cohort.cohort_name",
               "nativeQueryRef": "cohort_name",
-              "active": true,
               "displayName": "Cohort"
             }
           ]
@@ -137,6 +136,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "CohortSelection",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   }
 }

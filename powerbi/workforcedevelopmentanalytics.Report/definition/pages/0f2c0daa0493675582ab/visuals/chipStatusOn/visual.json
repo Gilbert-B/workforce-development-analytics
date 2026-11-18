@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chipStatusOn",
   "position": {
     "x": 846,
     "y": 412,
     "z": 1036,
-    "height": 36,
     "width": 76,
+    "height": 36,
     "tabOrder": 1036
   },
   "visual": {
@@ -170,6 +170,7 @@
         }
       ]
     },
+    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }
