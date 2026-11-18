@@ -189,3 +189,21 @@ See the decisions marked `Review: ChatGPT` in `decisions.md`: D1, D5, D6, D7, D1
 - Reset view keeps the cohort selection. Clear filters clears it and keeps the panels.
 - The owner built a practice SVG measure in Desktop, which worked.
 
+---
+
+## UX-03 — Report expansion (2026-11-18, branch `ux/report-expansion-03`)
+**Commits:**
+- the model measure (Withdrawal Rate);
+- the framework (header, sync groups, navigation, theme);
+- one commit per page: Cohort Intelligence, Competency & Skills, Attendance & Participation, Trainee 360;
+- the icon cleanup;
+- docs.
+
+**Evidence (Claude Code cloud container):**
+- 267 PBIR files validate against Microsoft's schemas, including the drill-through binding, the visual filter and the sync groups.
+- The model loads in Microsoft's TMDL parser.
+- Cross-file checks report no problems across 6 pages and 246 visuals: all 31 fields exist; no field has two display names in one visual; all 11 bookmark targets, button links and interaction targets resolve; no data visuals overlap.
+- No snapshot date is typed as text anywhere in the report.
+
+**Not yet checked:** rendering, drill-through and interactions in Power BI Desktop (owner), against the UX-03 acceptance numbers.
+
