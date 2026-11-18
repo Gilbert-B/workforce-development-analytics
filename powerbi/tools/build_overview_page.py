@@ -1016,6 +1016,12 @@ def skills_page() -> dict:
                                                                 "Week", COMPET, "Average Competency Score", "Average score"))); z += 1
     v.append(panel_title("compareTitle", *compare[:3], "Competency comparison across cohorts",
                          "Pick ONE programme week above for a like-for-like comparison", z)); z += 1
+    # which week(s) the comparison is showing (text measure, filtered by the week selector)
+    v.append(container("compareWeeks", compare[0] + compare[2] - 390, compare[1] + 12, 374, 44, z, {
+        "visualType": "card",
+        "query": {"queryState": {"Values": {"projections": [proj("Measure", WEEK, "Selected Weeks Label")]}}},
+        "objects": {"labels": props(fontFamily=FONT["semibold"], fontSize=10, color=colour(GOLD)),
+                    "categoryLabels": props(show=False)}})); z += 1
     v.append(container("skillCompare", *body(*compare), z, {
         "visualType": "clusteredBarChart",
         "query": {"queryState": {"Category": {"projections": [proj("Column", COMPET, "competency_name", "Competency")]},
