@@ -15,8 +15,8 @@
 <rect x="22" y="28" width="52" height="52" rx="14" fill="url(#logo)"/>
 <rect x="18" y="112" width="60" height="60" rx="14" fill="#E3A640" fill-opacity=".13"/>
 <rect x="0" y="126" width="4" height="32" rx="2" fill="#E3A640"/>
-<rect x="1346" y="40" width="284" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>
-<circle cx="1368" cy="60" r="4" fill="#3FC1B0"/><circle cx="1368" cy="60" r="8" fill="#3FC1B0" fill-opacity=".25"/>
+<rect x="1296" y="40" width="334" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>
+<circle cx="1318" cy="60" r="4" fill="#3FC1B0"/><circle cx="1318" cy="60" r="8" fill="#3FC1B0" fill-opacity=".25"/>
 <rect x="1644" y="40" width="128" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="1786" y="40" width="94" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="136" y="120" width="540" height="52" rx="26" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>
@@ -35,5 +35,5 @@
 <rect x="136" y="384" width="964" height="656" rx="16" fill="#FFFFFF" fill-opacity=".035" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="842" y="408" width="230" height="44" rx="12" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>
 <rect x="1116" y="384" width="764" height="656" rx="16" fill="#FFFFFF" fill-opacity=".035" stroke="#FFFFFF" stroke-opacity=".09"/>
-<rect x="1626" y="408" width="226" height="44" rx="12" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>
+<rect x="1590" y="408" width="262" height="44" rx="12" fill="#000000" fill-opacity=".25" stroke="#FFFFFF" stroke-opacity=".09"/>
 </svg>

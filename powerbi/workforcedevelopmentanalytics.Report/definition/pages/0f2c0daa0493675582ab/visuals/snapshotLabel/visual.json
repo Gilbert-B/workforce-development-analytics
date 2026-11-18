@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "snapshotLabel",
   "position": {
-    "x": 1380,
+    "x": 1330,
     "y": 42,
     "z": 1002,
-    "width": 246,
+    "width": 296,
     "height": 36,
     "tabOrder": 1002
   },

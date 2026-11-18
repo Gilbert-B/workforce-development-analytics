@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chipCompetencyOn",
   "position": {
-    "x": 1732,
+    "x": 1696,
     "y": 412,
     "z": 1043,
-    "width": 116,
+    "width": 152,
     "height": 36,
     "tabOrder": 1043
   },
