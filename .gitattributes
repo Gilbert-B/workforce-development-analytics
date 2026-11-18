@@ -6,3 +6,7 @@ data/synthetic/* text eol=lf
 # repository whatever editor or OS wrote them, so diffs show real changes only.
 # Git for Windows checks them out with CRLF, which Power BI Desktop reads fine.
 powerbi/** text=auto eol=lf
+
+# Build 02 generated CSVs + manifest: same LF rule (the pattern above does not
+# reach into sub-folders).
+data/synthetic/build02/* text eol=lf

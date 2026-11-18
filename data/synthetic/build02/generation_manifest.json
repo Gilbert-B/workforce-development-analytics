@@ -1,0 +1,34 @@
+{
+  "generator_version": "build02-1.0",
+  "seed": 20261118,
+  "as_of_date": "2026-11-02",
+  "policy_version": "B02-R1",
+  "config_sha256": "934ff42988700da17d7dae0cb1e245bad4e8a013f296855c45284b7223e53494",
+  "build01_manifest_sha256": "52228cf6b575c986e2889e7d0fdef75b1c8ff81523b434359213245d2d460f2e",
+  "files": {
+    "certification_type.csv": {
+      "rows": 2,
+      "sha256": "e01a7a9cd6fd4c4cd4312970fdf804c16f45b4cc9ffb05e501e7b5d8fa583fc8"
+    },
+    "watchlist_case.csv": {
+      "rows": 64,
+      "sha256": "2b03f3872f44e3f57b464fe04d11b041a7240ed115350751eedbf6585107bc28"
+    },
+    "watchlist_case_event.csv": {
+      "rows": 113,
+      "sha256": "6b7e876a6509879fd58ba497c8732cbd0ee939ccc5379fba3e99d97f14935624"
+    },
+    "coaching_action.csv": {
+      "rows": 110,
+      "sha256": "230a37dc1f8be7910f3854c150a060f9337c258af12eae4bf8b64fb8d1af2a39"
+    },
+    "certification_attempt.csv": {
+      "rows": 304,
+      "sha256": "a06b71ee6f58a96afb7b78120027cdb28c08451f3b396cde1e608b7b7914e050"
+    },
+    "readiness_review.csv": {
+      "rows": 168,
+      "sha256": "b77ee7ad92e46461763657f265cc63855b62443258bc03e385e49784349b8d82"
+    }
+  }
+}
