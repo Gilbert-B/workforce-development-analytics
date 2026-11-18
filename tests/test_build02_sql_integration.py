@@ -30,19 +30,16 @@ SQL = REPO_ROOT / "sql"
 
 @pytest.fixture(scope="module")
 def conn():
-    import load_to_sql as b01      # imported here so pyodbc is only needed for these tests
-    import load_build02_to_sql as b02
+    import full_reset              # imported here so pyodbc is only needed for these tests
+    import load_to_sql as b01
     server = os.environ["WDA_SQL_SERVER"]
-    b01.run_sql_file(b01.connect(server, "master"), SQL / "000_create_database.sql")
+    assert full_reset.full_reset(server)          # 007 -> Build 01 -> Build 02, all checks OK
     c = b01.connect(server, b01.DATABASE)
-    b01.run_sql_file(c, SQL / "001_create_schema.sql")
-    b01.load_csvs(c, B01_DIR)
-    b01.run_sql_file(c, SQL / "002_reporting_views.sql")
-    b02.check_build01_loaded(c, B02_DIR)
-    b01.run_sql_file(c, SQL / "004_create_build02_tables.sql")
-    b02.load_csvs(c, B02_DIR)
-    b01.run_sql_file(c, SQL / "006_create_build02_reporting_views.sql")
     yield c
+    # Leave the database as Build 01 alone, so Build 01's own SQL tests (which
+    # rebuild it with 001) can run next. Reload Build 02 afterwards with
+    # python/full_reset.py --confirm.
+    b01.run_sql_file(c, SQL / "007_reset_build02_objects.sql")
     c.close()
 
 
@@ -323,3 +320,106 @@ def test_loader_refuses_a_different_build01_snapshot(conn, tmp_path):
     (other / "generation_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(SystemExit):
         b02.check_build01_loaded(conn, other)
+
+
+# ---------------------------------------------------------------- explicit reset and the Build 01 guard
+
+def test_build01_schema_script_is_refused_while_build02_is_loaded(conn):
+    """001 (unchanged from Build 01) would otherwise drop SOME tables and then
+    fail on core.enrolment. The guard refuses before anything is dropped."""
+    import pyodbc
+    import load_to_sql as b01
+    tables_before = scalar(conn, "SELECT COUNT(*) FROM sys.tables WHERE schema_id = SCHEMA_ID('core')")
+    rows_before = scalar(conn, "SELECT COUNT(*) FROM core.assessment")
+    with pytest.raises(pyodbc.Error, match="Nothing was dropped"):
+        b01.run_sql_file(conn, SQL / "001_create_schema.sql")
+    assert scalar(conn, "SELECT COUNT(*) FROM sys.tables WHERE schema_id = SCHEMA_ID('core')") == tables_before == 15
+    assert scalar(conn, "SELECT COUNT(*) FROM core.assessment") == rows_before == 6655
+
+
+def test_build01_schema_script_is_unchanged_from_build01():
+    """D28 resolved: 001 has no Build 02 knowledge at all."""
+    text = (SQL / "001_create_schema.sql").read_text(encoding="utf-8")
+    assert "watchlist" not in text and "readiness" not in text and "certification" not in text
+
+
+def test_full_reset_requires_confirm(monkeypatch):
+    import full_reset
+    monkeypatch.setattr("sys.argv", ["full_reset.py", "--server", os.environ["WDA_SQL_SERVER"]])
+    with pytest.raises(SystemExit):
+        full_reset.main()
+
+
+# ---------------------------------------------------------------- audit: SQL reproduces the generator's audit files
+
+def run_audit_queries(conn):
+    cur = conn.cursor().execute((SQL / "build02_audit_queries.sql").read_text(encoding="utf-8"))
+    results = []
+    while True:
+        if cur.description:
+            cols = [d[0] for d in cur.description]
+            results.append([dict(zip(cols, r)) for r in cur.fetchall()])
+        if not cur.nextset():
+            break
+    return results
+
+
+def _norm(value):
+    if value is None or value == "":
+        return None
+    text = str(value)
+    try:
+        return round(float(text), 2)
+    except ValueError:
+        return text[:19]          # datetimes: 'YYYY-MM-DD HH:MM:SS'
+
+
+@pytest.mark.parametrize("index, filename, key", [
+    (0, "review_signals.csv", ("enrolment_id", "review_after_week")),
+    (1, "readiness_evidence.csv", ("enrolment_id",)),
+])
+def test_sql_audit_reproduces_the_generator_audit(conn, index, filename, key):
+    sql_rows = run_audit_queries(conn)[index]
+    with open(B02_DIR / "audit" / filename, newline="", encoding="utf-8") as f:
+        csv_rows = list(csv.DictReader(f))
+    as_key = lambda r: tuple(str(r[k]) for k in key)   # noqa: E731
+    by_sql = {as_key(r): r for r in sql_rows}
+    by_csv = {as_key(r): r for r in csv_rows}
+    assert by_sql.keys() == by_csv.keys()
+    for k, row in by_sql.items():
+        for col, value in row.items():
+            a, b = _norm(value), _norm(by_csv[k][col])
+            if isinstance(a, float) and isinstance(b, float):
+                assert abs(a - b) <= 0.011, (k, col, a, b)      # rounding of averages only
+            else:
+                assert a == b, (k, col, a, b)
+
+
+def test_audit_sql_settings_match_the_config():
+    import tomllib
+    cfg = tomllib.loads((REPO_ROOT / "config" / "build02_synthetic.toml").read_text(encoding="utf-8"))["watchlist"]
+    text = (SQL / "build02_audit_queries.sql").read_text(encoding="utf-8")
+    for var, key in [("first_review_week", "first_review_after_week"), ("last_review_week", "last_review_after_week"),
+                     ("review_hour", "review_hour"), ("window_weeks", "attendance_window_weeks"),
+                     ("min_recorded", "attendance_min_recorded_sessions"),
+                     ("unrecorded_flag", "unrecorded_review_min_sessions")]:
+        assert f"DECLARE @{var}" in text
+        line = next(line for line in text.splitlines() if line.startswith(f"DECLARE @{var} "))
+        assert int(line.split("=")[1].split(";")[0]) == cfg[key], var
+
+
+def test_guard_works_even_when_created_from_a_quoted_identifier_off_session(conn):
+    """sqlcmd defaults QUOTED_IDENTIFIER OFF, and SQL Server stores that setting
+    with the trigger. 004 sets it ON itself, so the guard must still refuse
+    with its own message (not error 1934). Runs last: it recreates Build 02."""
+    import pyodbc
+    import load_to_sql as b01
+    import load_build02_to_sql as b02
+    conn.cursor().execute("SET QUOTED_IDENTIFIER OFF")
+    b01.run_sql_file(conn, SQL / "004_create_build02_tables.sql")
+    with pytest.raises(pyodbc.Error, match="Nothing was dropped"):
+        conn.cursor().execute("DROP TABLE core.assessment")
+    conn.cursor().execute("SET QUOTED_IDENTIFIER ON")
+    b02.load_csvs(conn, B02_DIR)                       # put the rows back for anything after
+    b01.run_sql_file(conn, SQL / "006_create_build02_reporting_views.sql")
+    assert scalar(conn, "SELECT COUNT(*) FROM core.assessment") == 6655

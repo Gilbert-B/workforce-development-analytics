@@ -3,7 +3,9 @@
 Everything produced is fictional. Inputs:
   * the committed Build 01 CSVs (data/synthetic/), which are only READ;
   * config/build02_synthetic.toml (thresholds and probabilities).
-Output: six CSVs plus generation_manifest.json in data/synthetic/build02/.
+Output: six CSVs plus generation_manifest.json in data/synthetic/build02/,
+and two AUDIT files in data/synthetic/build02/audit/ that show the evidence
+behind every weekly review and every completed enrolment's readiness.
 
 The idea worth understanding: decisions only use what was RECORDED by then.
 Every business decision (open a watch-list case, close it, sit an exam,
@@ -49,6 +51,8 @@ GENERATOR_VERSION = "build02-1.0"
 
 TABLES = ["certification_type", "watchlist_case", "watchlist_case_event",
           "coaching_action", "certification_attempt", "readiness_review"]
+AUDIT_FILES = {"audit_review_signals": "review_signals.csv",
+               "audit_readiness_evidence": "readiness_evidence.csv"}
 
 # Controlled vocabularies (no free text anywhere).
 ACTION_FOR_REASON = {
@@ -111,6 +115,9 @@ class Build01:
             self.events[ev["enrolment_id"]][ev["event_type"]] = (
                 date.fromisoformat(ev["effective_date"]), datetime.fromisoformat(ev["recorded_at"]))
         week_of = {s["session_id"]: int(s["programme_week"]) for s in t["scheduled_session"]}
+        self.sessions = defaultdict(list)     # cohort -> [(week, session date)]
+        for s in t["scheduled_session"]:
+            self.sessions[s["cohort_id"]].append((int(s["programme_week"]), date.fromisoformat(s["session_date"])))
         self.attendance = defaultdict(list)   # enrolment -> [(week, status, recorded)]
         for a in t["attendance"]:
             self.attendance[a["enrolment_id"]].append(
@@ -142,6 +149,15 @@ class Build01:
                 return w, avg
         return None
 
+    def eligible_sessions(self, enrolment_id: str, cohort_id: str, weeks: set[int], when: datetime) -> int:
+        """Sessions the trainee should have a mark for, as far as staff knew at
+        `when`: from their start date, and before a withdrawal ON RECORD."""
+        started = self.event_known(enrolment_id, "started", when)
+        withdrawn = self.event_known(enrolment_id, "withdrawn", when)
+        return sum(1 for w, d in self.sessions[cohort_id]
+                   if w in weeks and started and d >= started[0] and d < when.date()
+                   and not (withdrawn and d >= withdrawn[0]))
+
     def recorded_attendance_rate(self, enrolment_id: str, weeks: set[int], when: datetime):
         """(present / recorded, recorded count). Unrecorded marks are simply
         absent from Build 01's attendance table, so they never count as Absent."""
@@ -170,11 +186,19 @@ class Case:
 
 
 def review_signals(b1: Build01, cfg: dict, enrolment_id: str, cohort_id: str, week: int,
-                   when: datetime, cohort_avg_cache: dict) -> list[str]:
-    """The reasons a reviewer would look at this trainee at `when`."""
+                   when: datetime, cohort_avg_cache: dict) -> tuple[list[str], dict]:
+    """The reasons a reviewer would look at this trainee at `when`, plus the
+    evidence they were based on (written to the audit file)."""
     signals = []
     window = set(range(week - cfg["attendance_window_weeks"] + 1, week + 1))
     rate, n = b1.recorded_attendance_rate(enrolment_id, window, when)
+    eligible = b1.eligible_sessions(enrolment_id, cohort_id, window, when)
+    present = round(rate * n) if n else 0
+    ev = {"window_start_week": min(window), "window_end_week": week, "eligible_sessions": eligible,
+          "recorded_sessions": n, "present_sessions": present, "unrecorded_sessions": eligible - n,
+          "recorded_attendance_rate": round(rate, 4) if n else None,
+          "latest_full_week": None, "latest_full_week_avg": None, "cohort_same_week_avg": None,
+          "gap_vs_cohort": None, "previous_week_avg": None, "week_change": None}
     if n >= cfg["attendance_min_recorded_sessions"] and rate < cfg["low_recorded_attendance_rate"]:
         signals.append("LOW_ATTENDANCE")
     latest = b1.latest_full_week(enrolment_id, when)
@@ -192,12 +216,41 @@ def review_signals(b1: Build01, cfg: dict, enrolment_id: str, cohort_id: str, we
         prev = b1.week_average(enrolment_id, w - 1, when)
         if prev is not None and prev - avg >= cfg["declining_score_drop"]:
             signals.append("DECLINING_SCORES")
-    return signals
+        ev.update(latest_full_week=w, latest_full_week_avg=round(avg, 2),
+                  cohort_same_week_avg=round(cohort_avg, 2) if cohort_avg is not None else None,
+                  gap_vs_cohort=round(avg - cohort_avg, 2) if cohort_avg is not None else None,
+                  previous_week_avg=round(prev, 2) if prev is not None else None,
+                  week_change=round(avg - prev, 2) if prev is not None else None)
+    return signals, ev
 
 
-def simulate_watchlist(b1: Build01, config: dict, seed: int) -> list[Case]:
+def audit_row(e: dict, week: int, when: datetime, cfg: dict, signals: list[str], ev: dict,
+              case_before: str | None, outcome: str, case_id: str | None, closed_reason: str | None) -> dict:
+    """One weekly review as the auditor sees it: evidence, flags, decision."""
+    return {
+        "enrolment_id": e["enrolment_id"], "cohort_id": e["cohort_id"],
+        "review_after_week": week, "review_at": when, **ev,
+        "attendance_evidence": ("Sufficient" if ev["recorded_sessions"] >= cfg["attendance_min_recorded_sessions"]
+                                else "Insufficient"),
+        # missing marks are a DATA-QUALITY question for staff, never an absence
+        "attendance_dq_flag": ("VERIFY_UNRECORDED_MARKS"
+                               if ev["unrecorded_sessions"] >= cfg["unrecorded_review_min_sessions"] else "OK"),
+        "competency_evidence": "Full week available" if ev["latest_full_week"] else "No fully assessed week",
+        "signal_low_attendance": int("LOW_ATTENDANCE" in signals),
+        "signal_low_competency": int("LOW_COMPETENCY" in signals),
+        "signal_declining_scores": int("DECLINING_SCORES" in signals),
+        "signal_count": len(signals),
+        "open_case_before_review": case_before,
+        "review_outcome": outcome,
+        "watchlist_case_id": case_id,
+        "case_closed_reason": closed_reason,
+    }
+
+
+def simulate_watchlist(b1: Build01, config: dict, seed: int) -> tuple[list[Case], list[dict]]:
     cfg = config["watchlist"]
     cases: list[Case] = []
+    audit: list[dict] = []
     cache: dict = {}
     for e in b1.enrolments:
         eid, num = e["enrolment_id"], e["enrolment_id"].split("-")[1]
@@ -216,18 +269,26 @@ def simulate_watchlist(b1: Build01, config: dict, seed: int) -> list[Case]:
                 open_case = None
             if b1.ended_known(eid, when):
                 break                                           # no reviews once an exit is recorded
-            signals = review_signals(b1, cfg, eid, e["cohort_id"], week, when, cache)
+            signals, ev = review_signals(b1, cfg, eid, e["cohort_id"], week, when, cache)
             if open_case:
+                before = open_case.case_id
                 clear_reviews = clear_reviews + 1 if not signals else 0
+                closed_reason = None
                 if clear_reviews >= cfg["clear_reviews_to_close"]:
                     open_case.closed = review_day
                     open_case.closed_recorded = recorded_after(review_day, draws[2], cfg, 16)
-                    open_case.closure_reason = ("Administrative" if open_case.source_type == "Manual referral"
-                                                else "Improved")
+                    open_case.closure_reason = closed_reason = (
+                        "Administrative" if open_case.source_type == "Manual referral" else "Improved")
                     cases.append(open_case)
                     open_case = None
+                outcome = ("Case closed at this review" if closed_reason
+                           else "Signal: case already open" if signals else "No signal: case already open")
+                audit.append(audit_row(e, week, when, cfg, signals, ev, before, outcome, before, closed_reason))
                 continue
             manual = not signals and draws[1] < cfg["manual_referral_probability"]
+            if not ((signals and draws[0] < cfg["open_case_probability"]) or manual):
+                outcome = "Signal: reviewed, no case opened" if signals else "No signal"
+                audit.append(audit_row(e, week, when, cfg, signals, ev, None, outcome, None, None))
             if (signals and draws[0] < cfg["open_case_probability"]) or manual:
                 episode += 1
                 open_case = Case(
@@ -238,12 +299,14 @@ def simulate_watchlist(b1: Build01, config: dict, seed: int) -> list[Case]:
                     trigger_week=None if manual else week,
                     source_type="Manual referral" if manual else "Observed signal")
                 clear_reviews = 0
+                outcome = "Manual referral: case opened" if manual else "Signal: case opened"
+                audit.append(audit_row(e, week, when, cfg, signals, ev, None, outcome, open_case.case_id, None))
         if open_case:   # still open after the last review: closes when the exit is recorded (if ever)
             close_for_end_event(b1, open_case, datetime.max, rng_draw=rng.random())
             cases.append(open_case)
     for case in cases:
         case.actions = simulate_actions(b1, config, seed, case)
-    return cases
+    return cases, audit
 
 
 def recorded_after(day: date, draw: float, cfg: dict, hour: int) -> datetime:
@@ -462,6 +525,74 @@ def observe(cases: list[Case], attempts: list[dict], reviews: list[dict],
     return t
 
 
+def snapshot_view(row: dict, tables: dict) -> dict:
+    """A decision taken at a review on the snapshot day may not have been
+    ENTERED by the end of that day. The audit must not reveal a case record
+    the dataset doesn't contain yet, so such rows say so and hide the ID."""
+    row = dict(row)
+    opened = {c["watchlist_case_id"] for c in tables["watchlist_case"]}
+    closed = {e["watchlist_case_id"] for e in tables["watchlist_case_event"] if e["event_type"] == "Closed"}
+    if (row["review_outcome"].endswith(": case opened") and row["watchlist_case_id"]
+            and row["watchlist_case_id"] not in opened):
+        row["review_outcome"] += " (entered after snapshot)"
+        row["watchlist_case_id"] = None
+    if row["case_closed_reason"] and row["watchlist_case_id"] not in closed:
+        row["review_outcome"] += " (entered after snapshot)"
+        row["case_closed_reason"] = None
+    return row
+
+
+def readiness_evidence_audit(b1: Build01, config: dict, t: dict, as_of: date) -> list[dict]:
+    """One row per enrolment whose completion is on record at the snapshot:
+    the evidence available, and which KPI population it falls into. Facts
+    only (no thresholds), so SQL can reproduce it exactly."""
+    cutoff = at(as_of, 23, 59)
+    types = config["certification"]["types"]
+    mandatory = {c["certification_id"]: c["max_attempts"] for c in types if c["mandatory_for_readiness"]}
+    attempts, reviews = defaultdict(list), defaultdict(list)
+    for a in t["certification_attempt"]:
+        attempts[a["enrolment_id"]].append(a)
+    for r in t["readiness_review"]:
+        reviews[r["enrolment_id"]].append(r)
+    rows = []
+    for e in b1.enrolments:
+        eid = e["enrolment_id"]
+        done = b1.event_known(eid, "completed", cutoff)
+        if not done:
+            continue
+        latest = b1.latest_full_week(eid, cutoff)
+        known_weeks = defaultdict(int)
+        for w, _, rec in b1.scores[eid]:
+            if rec <= cutoff:
+                known_weeks[w] += 1
+        mine = attempts[eid]
+        passed = {a["certification_id"] for a in mine if a["result"] == "Passed"}
+        attempted = {a["certification_id"] for a in mine}
+        exhausted = {c for c, mx in mandatory.items()
+                     if c not in passed and sum(a["certification_id"] == c for a in mine) >= mx}
+        n_passed = len(passed & set(mandatory))
+        last = max(reviews[eid], key=lambda r: r["review_number"]) if reviews[eid] else None
+        rows.append({
+            "enrolment_id": eid, "cohort_id": e["cohort_id"], "completion_date": done[0],
+            "latest_full_week": latest[0] if latest else None,
+            "latest_full_week_avg": round(latest[1], 1) if latest else None,
+            "partially_assessed_weeks": sum(1 for n in known_weeks.values() if n < b1.n_competencies),
+            "competency_evidence": "Full week available" if latest else "No fully assessed week",
+            "mandatory_certifications": len(mandatory),
+            "certifications_attempted": len(attempted & set(mandatory)),
+            "certifications_passed": n_passed,
+            "certifications_exhausted": len(exhausted),
+            "certification_population": ("Fully certified" if n_passed == len(mandatory)
+                                         else "Partly certified" if n_passed
+                                         else "Attempted, none passed" if attempted else "Not attempted"),
+            "review_count": len(reviews[eid]),
+            "latest_review_date": last["review_date"] if last else None,
+            "latest_decision_reason": last["decision_reason_code"] if last else None,
+            "readiness_population": last["decision"] if last else "Not reviewed",
+        })
+    return rows
+
+
 def _cell(value):
     if value is None:
         return ""                        # empty CSV field = SQL NULL
@@ -596,10 +727,15 @@ def build_tables(config: dict, b1: Build01, as_of: date) -> dict[str, list[dict]
     if as_of > b1.as_of:
         raise ValueError(f"as-of date {as_of} is after the Build 01 snapshot {b1.as_of}")
     seed = config["run"]["seed"]
-    cases = simulate_watchlist(b1, config, seed)
+    cases, review_audit = simulate_watchlist(b1, config, seed)
     attempts = simulate_certification(b1, config, seed)
     reviews = simulate_readiness(b1, config, seed, attempts)
-    return observe(cases, attempts, reviews, config, as_of)
+    tables = observe(cases, attempts, reviews, config, as_of)
+    cutoff = at(as_of, 23, 59)
+    tables["audit_review_signals"] = sorted((snapshot_view(r, tables) for r in review_audit if r["review_at"] <= cutoff),
+                                            key=lambda r: (r["enrolment_id"], r["review_after_week"]))
+    tables["audit_readiness_evidence"] = readiness_evidence_audit(b1, config, tables, as_of)
+    return tables
 
 
 def generate(config_path: Path = DEFAULT_CONFIG, build01_dir: Path = DEFAULT_BUILD01,
@@ -630,6 +766,13 @@ def generate(config_path: Path = DEFAULT_CONFIG, build01_dir: Path = DEFAULT_BUI
         path = output_dir / f"{name}.csv"
         write_csv(path, [{k: _cell(v) for k, v in row.items()} for row in tables[name]])
         manifest["files"][path.name] = {"rows": len(tables[name]), "sha256": sha256(path)}
+    # Audit files: evidence behind the decisions. Not loaded into SQL tables;
+    # sql/build02_audit_queries.sql recomputes the same evidence independently.
+    (output_dir / "audit").mkdir(exist_ok=True)
+    for name, filename in AUDIT_FILES.items():
+        path = output_dir / "audit" / filename
+        write_csv(path, [{k: _cell(v) for k, v in row.items()} for row in tables[name]])
+        manifest["files"][f"audit/{filename}"] = {"rows": len(tables[name]), "sha256": sha256(path)}
     (output_dir / "generation_manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     return manifest

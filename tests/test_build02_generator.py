@@ -389,3 +389,66 @@ def test_committed_files_load_back_with_the_expected_rows():
     committed = read_tables(BUILD02_DIR)
     assert set(committed) == set(b02.TABLES)
     assert all(committed[n] for n in b02.TABLES)
+
+
+# ---------------------------------------------------------------- audit outputs (signals, evidence, data quality)
+
+def test_audit_files_are_written_and_in_the_manifest(tmp_path):
+    m = b02.generate(output_dir=tmp_path)
+    for filename in b02.AUDIT_FILES.values():
+        assert (tmp_path / "audit" / filename).exists()
+        assert f"audit/{filename}" in m["files"]
+
+
+def test_audit_case_ids_match_the_case_table(tables):
+    """Every case in the table appears once as 'case opened' in the audit, and
+    the audit never names a case the dataset doesn't contain (no look-ahead)."""
+    audit = tables["audit_review_signals"]
+    opened = [r["watchlist_case_id"] for r in audit if r["review_outcome"].endswith(": case opened")]
+    assert sorted(opened) == sorted(c["watchlist_case_id"] for c in tables["watchlist_case"])
+    known = {c["watchlist_case_id"] for c in tables["watchlist_case"]}
+    assert {r["watchlist_case_id"] for r in audit if r["watchlist_case_id"]} <= known
+    closed = {e["watchlist_case_id"]: e["closure_reason"] for e in tables["watchlist_case_event"]
+              if e["event_type"] == "Closed"}
+    for r in audit:
+        if r["case_closed_reason"]:
+            assert closed[r["watchlist_case_id"]] == r["case_closed_reason"]
+
+
+def test_audit_signals_follow_the_evidence_and_config(tables, config02):
+    cfg = config02["watchlist"]
+    for r in tables["audit_review_signals"]:
+        low_att = (r["recorded_sessions"] >= cfg["attendance_min_recorded_sessions"]
+                   and r["recorded_attendance_rate"] < cfg["low_recorded_attendance_rate"])
+        assert r["signal_low_attendance"] == int(low_att), r
+        if r["gap_vs_cohort"] is not None and abs(r["gap_vs_cohort"] + cfg["low_score_gap_vs_cohort"]) > 0.01:
+            assert r["signal_low_competency"] == int(r["gap_vs_cohort"] <= -cfg["low_score_gap_vs_cohort"]), r
+        if r["latest_full_week"] is None:
+            assert r["signal_low_competency"] == r["signal_declining_scores"] == 0
+        assert r["signal_count"] == r["signal_low_attendance"] + r["signal_low_competency"] + r["signal_declining_scores"]
+
+
+def test_missing_attendance_is_a_data_quality_flag_not_an_absence(tables, config02):
+    threshold = config02["watchlist"]["unrecorded_review_min_sessions"]
+    flagged = 0
+    for r in tables["audit_review_signals"]:
+        assert r["unrecorded_sessions"] == r["eligible_sessions"] - r["recorded_sessions"] >= 0
+        if r["recorded_sessions"]:
+            # the rate uses recorded marks only: unrecorded never lowers it
+            assert abs(r["recorded_attendance_rate"] - r["present_sessions"] / r["recorded_sessions"]) < 1e-4
+        assert (r["attendance_dq_flag"] == "VERIFY_UNRECORDED_MARKS") == (r["unrecorded_sessions"] >= threshold)
+        flagged += r["attendance_dq_flag"] != "OK"
+    assert flagged > 0
+
+
+def test_readiness_evidence_populations_reconcile(tables, b1):
+    rows = tables["audit_readiness_evidence"]
+    completed = [e for e, ev in b1.events.items() if "completed" in ev]
+    assert len(rows) == len(completed) == 127
+    reviewed = {r["enrolment_id"] for r in tables["readiness_review"]}
+    attempted = {a["enrolment_id"] for a in tables["certification_attempt"]}
+    for r in rows:
+        assert (r["readiness_population"] == "Not reviewed") == (r["enrolment_id"] not in reviewed)
+        assert (r["certification_population"] == "Not attempted") == (r["enrolment_id"] not in attempted)
+    pops = {p: sum(r["readiness_population"] == p for r in rows) for p in ("Approved", "Deferred", "Not reviewed")}
+    assert sum(pops.values()) == 127 and all(pops.values())
