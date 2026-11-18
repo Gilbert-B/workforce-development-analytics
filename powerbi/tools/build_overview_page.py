@@ -427,11 +427,11 @@ def overview_visuals() -> list[dict]:
                 {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": "#8FA0B4"})]], "center"))
         if vid in BAR_MEASURE:              # SVG progress bar drawn by a measure
             btable, bmeasure = BAR_MEASURE[vid]
-            add(f"{vid}Bar", x + 20, KPI_Y + 122, KPI_W - 40, 10, image_from_measure(btable, bmeasure))
-        add(vid, x + 14, KPI_Y + 62, KPI_W - 28, 58, {
+            add(f"{vid}Bar", x + 24, KPI_Y + 128, KPI_W - 48, 8, image_from_measure(btable, bmeasure))
+        add(vid, x + 14, KPI_Y + 56, KPI_W - 28, 70, {
             "visualType": "card",
             "query": {"queryState": {"Values": {"projections": [proj("Measure", table, name)]}}},
-            "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=32, color=colour(CREAM)),
+            "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=30, color=colour(CREAM)),
                         "categoryLabels": props(show=False)}})
 
     # ---- left panel: Status  <->  Attendance quality
