@@ -503,12 +503,17 @@ def overview_visuals() -> list[dict]:
                         "min": {"color": {"Literal": {"Value": "'#0B2A3E'"}}},
                         "max": {"color": {"Literal": {"Value": "'#3FC1B0'"}}},
                         "nullColoringStrategy": {"strategy": {"Literal": {"Value": "'noColor'"}}}}}}}}}},
-                "fontColorPrimary": colour(CREAM)},
-                "selector": {"data": [{"dataViewWildcard": {"matchingOption": 1}}]}}],
+                "fontColorPrimary": colour(CREAM),
+                "fontSize": literal(15)},
+                # every data cell (wildcard) OF this measure (metadata = the projection's queryRef)
+                "selector": {"data": [{"dataViewWildcard": {"matchingOption": 1}}],
+                             "metadata": f"{COMPET}.Average Competency Score"}}],
             "subTotals": props(rowSubtotals=False, columnSubtotals=False),
+            "columnHeaders": props(fontSize=13, fontColor=colour("#8FA0B4")),
+            "rowHeaders": props(fontSize=13, fontColor=colour("#D8DEE6")),
             "grid": props(gridVertical=True, gridVerticalColor=colour(NAVY), gridVerticalWeight=3,
                           gridHorizontal=True, gridHorizontalColor=colour(NAVY), gridHorizontalWeight=3,
-                          rowPadding=10)}}, hidden=True)
+                          rowPadding=26)}}, hidden=True)
 
     # ---- definitions drawer (hidden until the Definitions button is clicked)
     add("drawerScrim", 0, 0, W, H, shape("#030810", 40), hidden=True)
