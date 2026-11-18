@@ -148,6 +148,13 @@
                   }
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "15D"
+                }
+              }
             }
           },
           "selector": {
@@ -157,7 +164,8 @@
                   "matchingOption": 1
                 }
               }
-            ]
+            ],
+            "metadata": "rpt dim_competency.Average Competency Score"
           }
         }
       ],
@@ -175,6 +183,54 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#8FA0B4'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D8DEE6'"
+                    }
+                  }
                 }
               }
             }
@@ -237,7 +293,7 @@
             "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "26D"
                 }
               }
             }
