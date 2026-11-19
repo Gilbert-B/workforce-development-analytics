@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "kpiOpenWatchIcon",
+  "position": {
+    "x": 169,
+    "y": 227,
+    "z": 1100,
+    "width": 22,
+    "height": 22,
+    "tabOrder": 1100
+  },
+  "visual": {
+    "visualType": "image",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "imageUrl": {
+              "expr": {
+                "ResourcePackageItem": {
+                  "PackageName": "RegisteredResources",
+                  "PackageType": 1,
+                  "ItemName": "icon-users-e3a640.svg"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "imageScaling": [
+        {
+          "properties": {
+            "imageScalingType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Fit'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

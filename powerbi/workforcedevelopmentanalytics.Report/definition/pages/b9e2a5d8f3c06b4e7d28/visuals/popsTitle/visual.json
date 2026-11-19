@@ -1,0 +1,49 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "popsTitle",
+  "position": {
+    "x": 1324,
+    "y": 376,
+    "z": 1132,
+    "width": 540,
+    "height": 60,
+    "tabOrder": 1132
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Populations outside the rates",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontSize": "13pt",
+                      "color": "#F6F0E4"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Different populations: never add these together",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#8FA0B4"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

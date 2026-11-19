@@ -1,0 +1,222 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "chartFirstAction",
+  "position": {
+    "x": 736,
+    "y": 782,
+    "z": 1127,
+    "width": 542,
+    "height": 246,
+    "tabOrder": 1127
+  },
+  "visual": {
+    "visualType": "columnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "days_to_first_action"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.days_to_first_action",
+              "nativeQueryRef": "days_to_first_action",
+              "displayName": "Days to first action"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "Watch-list Cases"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.Watch-list Cases",
+              "nativeQueryRef": "Watch-list Cases",
+              "displayName": "Cases"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_watchlist_case"
+                  }
+                },
+                "Property": "days_to_first_action"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E3A640'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#06111F'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Days'"
+                }
+              }
+            },
+            "axisType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Categorical'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "onlyActioned",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "rpt fact_watchlist_case"
+              }
+            },
+            "Property": "has_action"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "User",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "rpt fact_watchlist_case",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "t"
+                          }
+                        },
+                        "Property": "has_action"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "1L"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

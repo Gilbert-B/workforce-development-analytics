@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "kpiApprovalRateLabel",
+  "position": {
+    "x": 1456,
+    "y": 224,
+    "z": 1121,
+    "width": 158,
+    "height": 30,
+    "tabOrder": 1121
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "APPROVAL RATE",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontSize": "9pt",
+                      "color": "#9BA8B9"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

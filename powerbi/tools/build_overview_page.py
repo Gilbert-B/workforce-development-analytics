@@ -46,6 +46,8 @@ COHORTS_P = "c3a1e7b2d9f04c6e8a21"         # UX-03 pages
 SKILLS_P = "d4b2f8c3e0a15d7f9b32"
 ATTEND_P = "e5c3a9d4f1b26e8a0c43"
 TRAINEE_P = "f6d4b0e5a2c37f9b1d54"         # drill-through (hidden in view mode)
+COACH_P = "a8d1f4c7e2b95a3d6c17"           # BI-02 pages
+READY_P = "b9e2a5d8f3c06b4e7d28"
 BACKGROUNDS: list[str] = []                # filled as page backgrounds are written
 BG_OVERVIEW = "overview-background.png"
 BG_ABOUT = "about-background.png"
@@ -76,7 +78,9 @@ NAV = [  # key, label, centre y, page it opens (None = coming later)
     ("cohorts", "Cohorts", 216, COHORTS_P),
     ("skills", "Skills", 290, SKILLS_P),
     ("attendance", "Attendance", 364, ATTEND_P),
-    ("trainee", "Trainee 360", 438, None),   # reached by drill-through only, never a nav link
+    ("coaching", "Coaching", 438, COACH_P),       # BI-02
+    ("readiness", "Readiness", 512, READY_P),     # BI-02
+    ("trainee", "Trainee 360", 586, None),   # reached by drill-through only, never a nav link
     ("about", "About", 1016, ABOUT),
 ]
 
@@ -84,6 +88,10 @@ NAV = [  # key, label, centre y, page it opens (None = coming later)
 ENROL, ATTEND, COMPET, COHORT, WEEK, SNAP = (
     "rpt dim_enrolment", "rpt fact_attendance", "rpt dim_competency",
     "rpt dim_cohort", "rpt dim_programme_week", "rpt dim_snapshot")
+# BI-02 (Build 02 views)
+WLC, WLE, COACH, CERT, CATT, RREV = (
+    "rpt fact_watchlist_case", "rpt fact_watchlist_event", "rpt fact_coaching_action",
+    "rpt dim_certification", "rpt fact_certification_attempt", "rpt fact_readiness_review")
 
 # Six KPI cards: id, table, measure, LABEL (background), context line (background), icon, accent
 KPIS = [
@@ -117,6 +125,8 @@ ICONS = {  # 24x24 stroke icons (drawn in the background SVG)
     "doc": '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>',
     "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     "reset": '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+    "coaching": '<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+    "readiness": '<path d="M12 3 4 6v6c0 4.5 3.4 8.2 8 9 4.6-.8 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
 }
 
 
@@ -139,8 +149,9 @@ def svg_text(x, y, text, size=13, colour=MUTED, weight=400, anchor="start", spac
             f'font-weight="{weight}" fill="{colour}" text-anchor="{anchor}" letter-spacing="{spacing}">{text}</text>')
 
 
-def svg_base(active: str) -> list[str]:
-    """Canvas, grid texture and navigation rail shared by both pages."""
+def svg_base(active: str, height: int = H) -> list[str]:
+    """Canvas, grid texture and navigation rail shared by every page."""
+    H = height                     # noqa: N806  (a taller page, e.g. Trainee 360)
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
            '<defs>',
            f'<linearGradient id="base" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#081A30"/><stop offset=".7" stop-color="{INK}"/></linearGradient>',
@@ -230,6 +241,13 @@ def proj(kind: str, table: str, name: str, label: str | None = None) -> dict:
     if label:
         p["displayName"] = label
     return p
+
+
+def count_proj(table: str, column: str, label: str) -> dict:
+    """Power BI's built-in 'Count of <column>' (an implicit aggregation, not a DAX measure)."""
+    return {"field": {"Aggregation": {"Expression": {"Column": {"Expression": {"SourceRef": {"Entity": table}},
+                                                                 "Property": column}}, "Function": 5}},
+            "queryRef": f"Count({table}.{column})", "nativeQueryRef": f"Count of {column}", "displayName": label}
 
 
 def value_selector(table: str, column: str, value: str) -> dict:
@@ -763,9 +781,9 @@ ATT_STATUS = (("Present", TEAL), ("Absent", CORAL), ("Unrecorded", SLATE))
 UX03_SLICERS: dict[str, tuple[str, list[str]]] = {}     # page id -> (key, slicer names) for Clear filters
 
 
-def page_svg(active: str, frames=(), tiles=(), tracks=(), back=False) -> str:
+def page_svg(active: str, frames=(), tiles=(), tracks=(), back=False, height: int = H) -> str:
     """Background for a UX-03 page: shared rail + header pill/button + panel frames."""
-    out = svg_base(active)
+    out = svg_base(active, height)
     out.append('<rect x="1152" y="40" width="336" height="40" rx="20" fill="#FFFFFF" fill-opacity=".04" stroke="#FFFFFF" stroke-opacity=".09"/>')
     out.append(f'<circle cx="1174" cy="60" r="4" fill="{TEAL}"/><circle cx="1174" cy="60" r="8" fill="{TEAL}" fill-opacity=".25"/>')
     out.append('<rect x="1764" y="40" width="116" height="40" rx="12" fill="#FFFFFF" fill-opacity=".03" stroke="#FFFFFF" stroke-opacity=".09"/>')
@@ -783,7 +801,8 @@ def text(size, colour_, weight="Segoe UI"):
     return {"fontFamily": weight, "fontSize": f"{size}pt", "color": colour_}
 
 
-def header(page_id: str, key: str, eyebrow: str, title: str, *, week_slicer=False, back=False) -> list[dict]:
+def header(page_id: str, key: str, eyebrow: str, title: str, *, week_slicer=False, back=False,
+           note: str = "Cohorts compared by programme week, not calendar date") -> list[dict]:
     """Eyebrow, title, snapshot label, Clear filters (or Back), cohort and week selectors."""
     v = [container("headerEyebrow", X0 - 6, 34, 900, 30, 1000, textbox([[(eyebrow, text(10, GOLD, "Segoe UI Semibold"))]])),
          container("headerTitle", X0 - 6, 58, 1000, 64, 1001, textbox([[(title, {"fontFamily": "Segoe UI Bold",
@@ -822,7 +841,7 @@ def header(page_id: str, key: str, eyebrow: str, title: str, *, week_slicer=Fals
             "syncGroup": {"groupName": "WeekSelection", "fieldChanges": True, "filterChanges": True}}))
     else:   # no room beside a week selector; there the "Programme week" label makes the same point
         v.append(container("cohortNote", note_x - 6, 132, 1150 - note_x, 30, 1007, textbox([[(
-            "Cohorts compared by programme week, not calendar date", text(10, "#7F8EA2"))]])))
+            note, text(10, "#7F8EA2"))]])))
     UX03_SLICERS[page_id] = (key, slicers)
     return v
 
@@ -842,6 +861,15 @@ def number_card(measure_table: str, measure: str, label: str | None = None, size
             "query": {"queryState": {"Values": {"projections": [proj("Measure", measure_table, measure, label)]}}},
             "objects": {"labels": props(fontFamily=FONT["bold"], fontSize=size, color=colour(CREAM)),
                         "categoryLabels": props(show=False)}}
+
+
+def number_filter(name: str, table: str, column: str, value: int) -> dict:
+    """Visual filter: <table>[<column>] = whole number (e.g. has_action = 0)."""
+    return {"name": name, "field": field("Column", table, column), "type": "Categorical", "howCreated": "User",
+            "filter": {"Version": 2, "From": [{"Name": "t", "Entity": table, "Type": 0}],
+                       "Where": [{"Condition": {"In": {
+                           "Expressions": [{"Column": {"Expression": {"SourceRef": {"Source": "t"}}, "Property": column}}],
+                           "Values": [[{"Literal": {"Value": f"{value}L"}}]]}}}]}}
 
 
 def category_filter(name: str, table: str, column: str, value: str) -> dict:
@@ -1179,6 +1207,59 @@ def trainee_page() -> dict:
         "objects": {"dataPoint": [{"properties": {"fill": colour(TEAL)}, "selector": {"metadata": f"{COMPET}.Average Competency Score"}},
                                   {"properties": {"fill": colour(GOLD)}, "selector": {"metadata": f"{COMPET}.Cohort Same-Week Average"}}],
                     "lineStyles": props(strokeWidth=3, showMarker=True), **axis_objects("Programme week", categorical=True)}})); z += 1
+    # ---- BI-02 extension: coaching, certification and readiness history of THIS enrolment
+    status = (X0, 1056, SPAN, 96)
+    cases = (X0, 1168, COL_L, 300)
+    actions = (X_R, 1168, COL_R, 300)
+    attempts = (X0, 1484, COL_L, 300)
+    reviews = (X_R, 1484, COL_R, 300)
+    v.append(container("readinessStatusLabel", status[0] + 24, status[1] + 14, 330, 30, z,
+                       textbox([[("READINESS STATUS · AT THE SNAPSHOT", text(9, GOLD, "Segoe UI Semibold"))]]))); z += 1
+    v.append(container("readinessStatusValue", status[0] + 14, status[1] + 40, 900, 48, z, {
+        "visualType": "card",
+        "query": {"queryState": {"Values": {"projections": [proj("Measure", RREV, "Readiness Status Label")]}}},
+        "objects": {"labels": props(fontFamily=FONT["semibold"], fontSize=16, color=colour(CREAM)),
+                    "categoryLabels": props(show=False)}})); z += 1
+    v.append(container("readinessStatusNote", status[0] + 940, status[1] + 30, status[2] - 960, 52, z,
+                       textbox([[("Readiness is a dated management decision, not deployment. A trainee still in training "
+                                  "is \u201cnot yet eligible\u201d; a completer without a review is \u201cnot reviewed\u201d. Neither is a failure.",
+                                  text(10, "#8FA0B4"))]]))); z += 1
+    for frame, name, title, sub, cols, sort_col in [
+        (cases, "traineeCases", "Watch-list episodes",
+         "Support cases for this enrolment · empty = never watch-listed",
+         [proj("Column", WLC, "watchlist_case_id", "Case"), proj("Column", WLC, "opened_effective_date", "Opened"),
+          proj("Column", WLC, "primary_reason", "Reason"), proj("Column", WLC, "severity", "Severity"),
+          proj("Column", WLC, "case_status_as_of_snapshot", "Status (snapshot)"),
+          proj("Column", WLC, "closure_reason", "Closure reason"), proj("Column", WLC, "action_count", "Actions")],
+         (WLC, "opened_effective_date")),
+        (actions, "traineeActions", "Coaching actions",
+         "Completed, dated actions · association only, not proof of effect",
+         [proj("Column", COACH, "action_date", "Date"), proj("Column", COACH, "action_type", "Action"),
+          proj("Column", COACH, "staff_role", "By (role)"), proj("Column", COACH, "days_since_case_opened", "Days after opening"),
+          proj("Column", COACH, "watchlist_case_id", "Case")],
+         (COACH, "action_date")),
+        (attempts, "traineeAttempts", "Certification attempts",
+         "Fictional internal certifications · empty = no attempt yet (not a failure)",
+         [proj("Column", CERT, "certification_name", "Certification"), proj("Column", CATT, "attempt_number", "Attempt"),
+          proj("Column", CATT, "attempt_date", "Date"), proj("Column", CATT, "score", "Score"),
+          proj("Column", CATT, "pass_mark", "Pass mark"), proj("Column", CATT, "result", "Result")],
+         (CATT, "attempt_date")),
+        (reviews, "traineeReviews", "Readiness reviews (timeline)",
+         "Evidence as it stood at each review · the latest review is in force",
+         [proj("Column", RREV, "review_number", "Review"), proj("Column", RREV, "review_date", "Date"),
+          proj("Column", RREV, "decision", "Decision"), proj("Column", RREV, "decision_reason_code", "Reason"),
+          proj("Column", RREV, "certification_gate_passed", "Certified"),
+          proj("Column", RREV, "competency_gate_passed", "Competency gate"),
+          proj("Column", RREV, "review_competency_score", "Score"), proj("Column", RREV, "signoff_recorded", "Signed off"),
+          proj("Column", RREV, "is_latest_review", "Latest")],
+         (RREV, "review_number")),
+    ]:
+        v.append(panel_title(f"{name}Title", *frame[:3], title, sub, z)); z += 1
+        v.append(container(name, *body(*frame), z, {
+            "visualType": "tableEx",
+            "query": {"queryState": {"Values": {"projections": cols}},
+                      "sortDefinition": {"sort": [{"field": field("Column", *sort_col), "direction": "Ascending"}]}},
+            "objects": {"columnHeaders": props(wordWrap=True)}})); z += 1
     v += nav_decor(key, 100) + nav_buttons(pid, 3000)
     enrol_field = field("Column", ENROL, "enrolment_id")
     extra = {"type": "Drillthrough", "visibility": "HiddenInViewMode",
@@ -1186,12 +1267,216 @@ def trainee_page() -> dict:
                              "parameters": [{"name": "trainee360Enrolment", "boundFilter": "drillEnrolment", "fieldExpr": enrol_field}]},
              "filterConfig": {"filters": [{"name": "drillEnrolment", "field": enrol_field, "type": "Categorical",
                                            "howCreated": "Drillthrough"}]}}
-    svg = page_svg(key, frames=frames + [att, comp, bench], tiles=tiles)
+    extra.update({"height": TRAINEE_H, "displayOption": "FitToWidth"})     # taller page: scroll down
+    svg = page_svg(key, frames=frames + [att, comp, bench, status, cases, actions, attempts, reviews],
+                   tiles=tiles, height=TRAINEE_H)
     return {"id": pid, "key": key, "display": "Trainee 360 — Training", "svg": svg, "visuals": v, "extra": extra}
 
 
+TRAINEE_H = 1824     # Trainee 360 grew downwards in BI-02 (1080 + coaching/certification/readiness rows)
+
+
+def kpi_row(prefixes: list[tuple], y: int, h: int, z: int, gap: int = 16) -> tuple[list, list, list, int]:
+    """A row of equal KPI tiles across the content width. Returns visuals, frames, icon tiles, z."""
+    n = len(prefixes)
+    w = (SPAN - (n - 1) * gap) // n
+    v, frames, tiles = [], [], []
+    for i, (prefix, label, table, measure, context, icon, accent) in enumerate(prefixes):
+        x = X0 + i * (w + gap)
+        frames.append((x, y, w, h)); tiles.append((x + 24, y + 22, accent))
+        v += kpi_tile(prefix, x, y, w, h, z, label, table, measure, context, icon, accent); z += 4
+    return v, frames, tiles, z
+
+
+def no_filter_on(sources: list[str], targets: list[str]) -> list[dict]:
+    """Chart clicks highlight other charts but never change the KPI numbers."""
+    return [{"source": s, "target": t, "type": "NoFilter"} for s in sources for t in targets]
+
+
+SEVERITY_COLOURS = (("High", CORAL), ("Medium", GOLD), ("Low", SLATE))
+
+
+# ------------------------------------------------------------- E. Coaching & Watch List (BI-02)
+def coaching_page() -> dict:
+    pid, key = COACH_P, "coaching"
+    v = header(pid, key, "COACHING & WATCH LIST · SNAPSHOT 2 NOV 2026 UNLESS LABELLED", "Coaching & Watch List",
+               note="Descriptive only: no causal claim · unrecorded attendance \u2260 absent")
+    z = 1100
+    kpis = [("kpiOpenWatch", "OPEN WATCH-LIST ENROLMENTS", WLC, "Open Watch-list Enrolments (Snapshot)",
+             "Distinct enrolments, open at the snapshot", "users", GOLD),
+            ("kpiWatchRate", "WATCH-LIST RATE (SNAPSHOT)", WLC, "Watch-list Rate (Snapshot)",
+             "Open active \u00f7 active trainees", "play", GOLD),
+            ("kpiCases", "WATCH-LIST CASES", WLC, "Watch-list Cases", "Episodes, not people \u00b7 to date", "doc", TEAL),
+            ("kpiCoverage", "COACHING COVERAGE", WLC, "Coaching Coverage", "Cases with an action \u00f7 all cases", "check", TEAL),
+            ("kpiUnactioned", "UNACTIONED CASES", WLC, "Unactioned Watch-list Cases", "No completed action \u00b7 see table", "info", CORAL)]
+    kv, frames, tiles, z = kpi_row(kpis, 196, 150, z)
+    v += kv
+    third = (SPAN - 32) // 3                          # 570
+    reason = (X0, 362, third, 330)
+    moves = (X0 + third + 16, 362, SPAN - third - 16, 330)
+    types = (X0, 708, third, 332)
+    first = (X0 + third + 16, 708, third, 332)
+    unact = (X0 + 2 * (third + 16), 708, SPAN - 2 * (third + 16), 332)
+
+    v.append(panel_title("reasonTitle", *reason[:3], "Cases by primary reason and severity",
+                         "Cases (episodes) to date \u00b7 a signal is a reason to look, not a prediction", z)); z += 1
+    v.append(container("chartReason", *body(*reason), z, {
+        "visualType": "barChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WLC, "primary_reason", "Reason")]},
+                                 "Series": {"projections": [proj("Column", WLC, "severity", "Severity")]},
+                                 "Y": {"projections": [proj("Measure", WLC, "Watch-list Cases", "Cases")]}}},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(c)}, "selector": value_selector(WLC, "severity", s)}
+                                  for s, c in SEVERITY_COLOURS],
+                    "labels": props(show=True, color=colour("#06111F"), fontSize=9), **axis_objects()}})); z += 1
+    v.append(panel_title("movesTitle", *moves[:3], "Watch-list movement by effective date",
+                         "Opened and Closed events (count of event rows) \u00b7 an event trend, NOT a snapshot measure", z)); z += 1
+    v.append(container("chartMoves", *body(*moves), z, {
+        "visualType": "columnChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WLE, "effective_date", "Effective date")]},
+                                 "Series": {"projections": [proj("Column", WLE, "event_type", "Event")]},
+                                 "Y": {"projections": [count_proj(WLE, "watchlist_event_id", "Events")]}},
+                  "sortDefinition": {"sort": [{"field": field("Column", WLE, "effective_date"), "direction": "Ascending"}]}},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(GOLD)}, "selector": value_selector(WLE, "event_type", "Opened")},
+                                  {"properties": {"fill": colour(TEAL)}, "selector": value_selector(WLE, "event_type", "Closed")}],
+                    **axis_objects()}})); z += 1
+    v.append(panel_title("typesTitle", *types[:3], "Coaching actions by type",
+                         "Count of completed actions (rows) \u00b7 a case can have several", z)); z += 1
+    v.append(container("chartActionTypes", *body(*types), z, {
+        "visualType": "clusteredBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", COACH, "action_type", "Action")]},
+                                 "Y": {"projections": [count_proj(COACH, "coaching_action_id", "Actions")]}}},
+        "objects": {"dataPoint": props(fill=colour(TEAL)),
+                    "labels": props(show=True, color=colour(CREAM), fontSize=9), **axis_objects()}})); z += 1
+    v.append(panel_title("firstTitle", *first[:3], "Days from opening to first action",
+                         "Actioned cases only; cases with no action are in the table, never counted as 0 days", z)); z += 1
+    v.append(container("chartFirstAction", *body(*first), z, {
+        "visualType": "columnChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", WLC, "days_to_first_action", "Days to first action")]},
+                                 "Y": {"projections": [proj("Measure", WLC, "Watch-list Cases", "Cases")]}},
+                  "sortDefinition": {"sort": [{"field": field("Column", WLC, "days_to_first_action"), "direction": "Ascending"}]}},
+        "objects": {"dataPoint": props(fill=colour(GOLD)),
+                    "labels": props(show=True, color=colour("#06111F"), fontSize=9),
+                    **axis_objects("Days", categorical=True)},
+    })); z += 1
+    v[-1]["filterConfig"] = {"filters": [number_filter("onlyActioned", WLC, "has_action", 1)]}
+    v.append(panel_title("unactTitle", *unact[:3], "Unactioned cases: age, state and closure",
+                         "has_action = 0 \u00b7 right-click a row \u2192 Drill through \u2192 Trainee 360", z)); z += 1
+    v.append(container("tableUnactioned", *body(*unact), z, {
+        "visualType": "tableEx",
+        "query": {"queryState": {"Values": {"projections": [
+            proj("Column", ENROL, "enrolment_id", "Enrolment"), proj("Column", WLC, "watchlist_case_id", "Case"),
+            proj("Column", COHORT, "cohort_name", "Cohort"), proj("Column", WLC, "days_open", "Days open"),
+            proj("Column", WLC, "case_status_as_of_snapshot", "State"), proj("Column", WLC, "closure_reason", "Closure")]}},
+            "sortDefinition": {"sort": [{"field": field("Column", WLC, "days_open"), "direction": "Descending"}]}},
+        "objects": {"columnHeaders": props(wordWrap=True)}})); z += 1
+    v[-1]["filterConfig"] = {"filters": [number_filter("onlyUnactioned", WLC, "has_action", 0)]}
+
+    v += nav_decor(key, 100) + nav_buttons(pid, 3000)
+    charts = ["chartReason", "chartMoves", "chartActionTypes", "chartFirstAction", "tableUnactioned"]
+    svg = page_svg(key, frames=frames + [reason, moves, types, first, unact], tiles=tiles, tracks=[(X0, 120, 540, 52)])
+    return {"id": pid, "key": key, "display": "Coaching & Watch List", "svg": svg, "visuals": v,
+            "interactions": no_filter_on(charts, [k[0] for k in kpis])}
+
+
+# ------------------------------------------------------------- F. Certification & Readiness (BI-02)
+def readiness_page() -> dict:
+    pid, key = READY_P, "readiness"
+    v = header(pid, key, "CERTIFICATION & READINESS · COMPLETED ENROLMENTS · SNAPSHOT 2 NOV 2026", "Certification & Readiness",
+               note="Readiness \u2260 deployment \u00b7 fictional internal certifications")
+    z = 1100
+    kpis = [("kpiAttempts", "ATTEMPTS", CATT, "Certification Attempts", "Attempt rows, incl. retakes", "doc", TEAL),
+            ("kpiCandidatePass", "CANDIDATE PASS RATE", CATT, "Certification Candidate Pass Rate",
+             "Passed pairs \u00f7 attempted pairs", "check", TEAL),
+            ("kpiFirstPass", "FIRST-ATTEMPT PASS", CATT, "First-Attempt Pass Rate", "Attempt 1 passed \u00f7 attempt 1", "star", TEAL),
+            ("kpiMandatoryMet", "BOTH MANDATORY MET", CATT, "Mandatory Certifications Met", "Completed enrolments", "cap", TEAL),
+            ("kpiApproved", "APPROVED (SNAPSHOT)", RREV, "Ready / Approved (Snapshot)", "Latest review = Approved", "readiness", GOLD),
+            ("kpiApprovalRate", "APPROVAL RATE", RREV, "Readiness Approval Rate", "Approved \u00f7 reviewed", "check", GOLD),
+            ("kpiReadyCoverage", "READINESS COVERAGE", RREV, "Readiness Coverage", "Approved \u00f7 all completed", "users", GOLD)]
+    kv, frames, tiles, z = kpi_row(kpis, 196, 150, z, gap=12)
+    v += kv
+    third = (SPAN - 32) // 3
+    certs = (X0, 362, third, 330)
+    tries = (X0 + third + 16, 362, third, 330)
+    pops = (X0 + 2 * (third + 16), 362, SPAN - 2 * (third + 16), 330)
+    decision = (X0, 708, third, 332)
+    reasons = (X0 + third + 16, 708, third, 332)
+    table = (X0 + 2 * (third + 16), 708, SPAN - 2 * (third + 16), 332)
+
+    v.append(panel_title("certsTitle", *certs[:3], "Candidate pass rate by certification",
+                         "Pairs that passed on any attempt \u00f7 pairs attempted; not-attempted excluded", z)); z += 1
+    v.append(container("chartCertPass", *body(*certs), z, {
+        "visualType": "clusteredBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", CERT, "certification_name", "Certification")]},
+                                 "Series": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Y": {"projections": [proj("Measure", CATT, "Certification Candidate Pass Rate", "Candidate pass rate")]}}},
+        "objects": {"dataPoint": cohort_colour_points(),
+                    "labels": props(show=True, color=colour(CREAM), fontSize=9, labelPrecision=1), **axis_objects()}})); z += 1
+    v.append(panel_title("triesTitle", *tries[:3], "Attempts by attempt number and result",
+                         "Attempts, not people \u00b7 attempt 2 = retake (maximum 2)", z)); z += 1
+    v.append(container("chartAttempts", *body(*tries), z, {
+        "visualType": "clusteredColumnChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", CATT, "attempt_number", "Attempt")]},
+                                 "Series": {"projections": [proj("Column", CATT, "result", "Result")]},
+                                 "Y": {"projections": [proj("Measure", CATT, "Certification Attempts", "Attempts")]}},
+                  "sortDefinition": {"sort": [{"field": field("Column", CATT, "attempt_number"), "direction": "Ascending"}]}},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(TEAL)}, "selector": value_selector(CATT, "result", "Passed")},
+                                  {"properties": {"fill": colour(CORAL)}, "selector": value_selector(CATT, "result", "Failed")}],
+                    "labels": props(show=True, color=colour(CREAM), fontSize=9), **axis_objects("Attempt", categorical=True)}})); z += 1
+    v.append(panel_title("popsTitle", *pops[:3], "Populations outside the rates",
+                         "Different populations: never add these together", z)); z += 1
+    v.append(container("cardPopulations", *body(*pops), z, {
+        "visualType": "multiRowCard",
+        "query": {"queryState": {"Values": {"projections": [
+            proj("Measure", CATT, "Completers With No Certification Attempt", "Completers with no certification attempt"),
+            proj("Measure", CATT, "Unattempted Certification Opportunities", "Mandatory certifications not attempted (completer \u00d7 certification)"),
+            proj("Measure", RREV, "Unreviewed Completers", "Completers not yet reviewed (not deferred, not failed)"),
+            proj("Measure", WLC, "Unactioned Watch-list Cases", "Watch-list cases with no completed action")]}}}})); z += 1
+    v.append(panel_title("decisionTitle", *decision[:3], "Latest readiness decision by cohort",
+                         "Latest review per enrolment (count of latest reviews) \u00b7 unreviewed completers are in the table", z)); z += 1
+    v.append(container("chartDecision", *body(*decision), z, {
+        "visualType": "barChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", COHORT, "cohort_name", "Cohort")]},
+                                 "Series": {"projections": [proj("Column", RREV, "decision", "Decision")]},
+                                 "Y": {"projections": [count_proj(RREV, "readiness_review_id", "Enrolments")]}},
+                  "sortDefinition": by_cohort_sort()},
+        "objects": {"dataPoint": [{"properties": {"fill": colour(TEAL)}, "selector": value_selector(RREV, "decision", "Approved")},
+                                  {"properties": {"fill": colour(GOLD)}, "selector": value_selector(RREV, "decision", "Deferred")}],
+                    "labels": props(show=True, color=colour("#06111F"), fontSize=9), **axis_objects()}})); z += 1
+    v[-1]["filterConfig"] = {"filters": [number_filter("onlyLatest", RREV, "is_latest_review", 1)]}
+    v.append(panel_title("reasonsTitle", *reasons[:3], "Why deferred (latest review)",
+                         "Deferred enrolments by reason \u00b7 evidence gates as they stood at that review", z)); z += 1
+    v.append(container("chartDeferral", *body(*reasons), z, {
+        "visualType": "clusteredBarChart",
+        "query": {"queryState": {"Category": {"projections": [proj("Column", RREV, "decision_reason_code", "Reason")]},
+                                 "Y": {"projections": [count_proj(RREV, "readiness_review_id", "Enrolments")]}}},
+        "objects": {"dataPoint": props(fill=colour(GOLD)),
+                    "labels": props(show=True, color=colour(CREAM), fontSize=9), **axis_objects()}})); z += 1
+    v[-1]["filterConfig"] = {"filters": [number_filter("onlyLatestR", RREV, "is_latest_review", 1),
+                                         category_filter("onlyDeferred", RREV, "decision", "Deferred")]}
+    v.append(panel_title("readyTableTitle", *table[:3], "Readiness by cohort: approval rate vs coverage",
+                         "Approval rate \u00f7 reviewed completers; coverage \u00f7 ALL completers. Blank = no completers.", z)); z += 1
+    v.append(container("tableReadiness", *body(*table), z, {
+        "visualType": "tableEx",
+        "query": {"queryState": {"Values": {"projections": [
+            proj("Column", COHORT, "cohort_name", "Cohort"),
+            proj("Measure", RREV, "Reviewed for Readiness", "Reviewed"),
+            proj("Measure", RREV, "Unreviewed Completers", "Not reviewed"),
+            proj("Measure", RREV, "Ready / Approved (Snapshot)", "Approved"),
+            proj("Measure", RREV, "Readiness Approval Rate", "Approval rate"),
+            proj("Measure", RREV, "Readiness Coverage", "Coverage")]}},
+            "sortDefinition": by_cohort_sort()},
+        "objects": {"total": props(totals=True), "columnHeaders": props(wordWrap=True)}})); z += 1
+
+    v += nav_decor(key, 100) + nav_buttons(pid, 3000)
+    charts = ["chartCertPass", "chartAttempts", "chartDecision", "chartDeferral", "tableReadiness"]
+    svg = page_svg(key, frames=frames + [certs, tries, pops, decision, reasons, table], tiles=tiles,
+                   tracks=[(X0, 120, 540, 52)])
+    return {"id": pid, "key": key, "display": "Certification & Readiness", "svg": svg, "visuals": v,
+            "interactions": no_filter_on(charts, [k[0] for k in kpis] + ["cardPopulations"])}
+
+
 def ux03_pages() -> list[dict]:
-    return [cohort_page(), skills_page(), attendance_page(), trainee_page()]
+    return [cohort_page(), skills_page(), attendance_page(), coaching_page(), readiness_page(), trainee_page()]
 
 
 def ux03_bookmarks() -> list[dict]:

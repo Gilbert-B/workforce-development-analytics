@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "traineeActions",
+  "position": {
+    "x": 1026,
+    "y": 1242,
+    "z": 1125,
+    "width": 840,
+    "height": 214,
+    "tabOrder": 1125
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_coaching_action"
+                    }
+                  },
+                  "Property": "action_date"
+                }
+              },
+              "queryRef": "rpt fact_coaching_action.action_date",
+              "nativeQueryRef": "action_date",
+              "displayName": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_coaching_action"
+                    }
+                  },
+                  "Property": "action_type"
+                }
+              },
+              "queryRef": "rpt fact_coaching_action.action_type",
+              "nativeQueryRef": "action_type",
+              "displayName": "Action"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_coaching_action"
+                    }
+                  },
+                  "Property": "staff_role"
+                }
+              },
+              "queryRef": "rpt fact_coaching_action.staff_role",
+              "nativeQueryRef": "staff_role",
+              "displayName": "By (role)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_coaching_action"
+                    }
+                  },
+                  "Property": "days_since_case_opened"
+                }
+              },
+              "queryRef": "rpt fact_coaching_action.days_since_case_opened",
+              "nativeQueryRef": "days_since_case_opened",
+              "displayName": "Days after opening"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_coaching_action"
+                    }
+                  },
+                  "Property": "watchlist_case_id"
+                }
+              },
+              "queryRef": "rpt fact_coaching_action.watchlist_case_id",
+              "nativeQueryRef": "watchlist_case_id",
+              "displayName": "Case"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_coaching_action"
+                  }
+                },
+                "Property": "action_date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

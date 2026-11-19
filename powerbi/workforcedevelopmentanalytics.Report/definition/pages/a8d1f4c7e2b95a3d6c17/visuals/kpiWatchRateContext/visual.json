@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "kpiWatchRateContext",
+  "position": {
+    "x": 498,
+    "y": 306,
+    "z": 1107,
+    "width": 316,
+    "height": 30,
+    "tabOrder": 1107
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Open active ÷ active trainees",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#8FA0B4"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

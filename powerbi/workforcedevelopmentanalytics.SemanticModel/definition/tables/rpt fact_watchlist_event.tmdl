@@ -1,0 +1,106 @@
+table 'rpt fact_watchlist_event'
+	lineageTag: ff4f2479-60de-4438-a509-ded72e92935f
+
+	column watchlist_event_id
+		dataType: string
+		lineageTag: 26eeb167-3baf-4751-a79c-c004734ba18e
+		summarizeBy: none
+		sourceColumn: watchlist_event_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column watchlist_case_id
+		dataType: string
+		lineageTag: 6988d96f-fc1e-43b1-bd81-15f2ebfae302
+		summarizeBy: none
+		sourceColumn: watchlist_case_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 2c8d865c-61a0-4958-93ca-154d993d3692
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: 647d8dc5-77ca-42b3-882f-fe8624f0cdbf
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: 1f63afda-d6ac-4086-8200-059694fdf51b
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_type
+		dataType: string
+		lineageTag: 7e1ff68c-558b-4d3c-a431-89a439393600
+		summarizeBy: none
+		sourceColumn: event_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column effective_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 48e8784d-9740-49ba-aeb4-df2e7dfdaf2c
+		summarizeBy: none
+		sourceColumn: effective_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column recorded_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: da9e1cb4-8d20-42aa-b23a-b74cf8b94ada
+		summarizeBy: none
+		sourceColumn: recorded_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column closure_reason
+		dataType: string
+		lineageTag: c9785404-37dd-47fb-b02d-91ecc45a9ee8
+		summarizeBy: none
+		sourceColumn: closure_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column recorded_by_role
+		dataType: string
+		lineageTag: a3cb130c-80ca-4340-bfef-c07ace1aa0f9
+		summarizeBy: none
+		sourceColumn: recorded_by_role
+
+		annotation SummarizationSetBy = Automatic
+
+	column open_count_change
+		dataType: int64
+		formatString: 0
+		lineageTag: c0f37f8f-ca8b-449b-bbb0-da531b1de959
+		summarizeBy: none
+		sourceColumn: open_count_change
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_watchlist_event' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_watchlist_event = WorkforceDevAnalytics{[Schema="rpt",Item="fact_watchlist_event"]}[Data]
+				in
+				    rpt_fact_watchlist_event
+
+	annotation PBI_ResultType = Table
+

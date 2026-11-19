@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance","rpt dim_snapshot"]
+annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance","rpt dim_snapshot","rpt dim_certification","rpt fact_watchlist_case","rpt fact_watchlist_event","rpt fact_coaching_action","rpt fact_certification_attempt","rpt fact_readiness_review"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -21,6 +21,12 @@ ref table 'rpt dim_programme_week'
 ref table 'rpt fact_assessment'
 ref table 'rpt fact_attendance'
 ref table 'rpt dim_snapshot'
+ref table 'rpt dim_certification'
+ref table 'rpt fact_watchlist_case'
+ref table 'rpt fact_watchlist_event'
+ref table 'rpt fact_coaching_action'
+ref table 'rpt fact_certification_attempt'
+ref table 'rpt fact_readiness_review'
 
 ref cultureInfo en-GB
 

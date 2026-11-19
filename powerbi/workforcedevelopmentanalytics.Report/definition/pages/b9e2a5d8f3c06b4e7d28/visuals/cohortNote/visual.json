@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "cohortNote",
+  "position": {
+    "x": 686,
+    "y": 132,
+    "z": 1007,
+    "width": 458,
+    "height": 30,
+    "tabOrder": 1007
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Readiness ≠ deployment · fictional internal certifications",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#7F8EA2"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

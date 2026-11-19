@@ -2,7 +2,11 @@
 
 **Branch:** `bi/02-coaching-certification-readiness`, from `main` at `216f056` (the Build 02 merge).
 
-**Status:** decisions D1–D4 and the six relationships were **approved by the owner and ChatGPT on 2026-11-19**, and the SQL reference values were accepted as the validation targets. The **exact DAX formulas below (revision 2) still await final sign-off.** No model, DAX or report file has been changed.
+**Status: APPROVED FOR IMPLEMENTATION (ChatGPT final review, 2026-11-19)**, with two corrections, both applied:
+1. `Completers With No Certification Attempt` now ignores certification selections, so "no attempt" always means no attempt at *any* certification.
+2. `sql/bi02_measure_reference.sql` uses an exclusive next-day boundary (`recorded_at < snapshot + 1 day`) instead of 23:59.
+
+Earlier status: decisions D1–D4 and the six relationships were **approved by the owner and ChatGPT on 2026-11-19**, and the SQL reference values were accepted as the validation targets. The **exact DAX formulas below (revision 2) still await final sign-off.** No model, DAX or report file has been changed.
 
 **Revision 2 (after the approval round):**
 - **Bug fixed in my revision 1 drafts.** They reused the existing `Active Trainees (Snapshot)` / `Completed Trainees (Snapshot)` as denominators. Those measures use a plain status filter, which **replaces** any status selection (they are left unchanged here). Under a status filter of "Withdrawn", revision 1 would have shown `Unreviewed Completers` = 127 and `Readiness Coverage` = 0.0%, instead of 0 and blank.
@@ -168,7 +172,11 @@ VAR CompletedEnrolments =
 RETURN
 COALESCE (
     COUNTROWS ( FILTER ( CompletedEnrolments,
-                         ISBLANK ( CALCULATE ( COUNTROWS ( 'rpt fact_certification_attempt' ) ) ) ) ),
+                         ISBLANK ( CALCULATE ( COUNTROWS ( 'rpt fact_certification_attempt' ),
+                                               -- "no attempt at ANY certification": a certification
+                                               -- selection must not change the meaning
+                                               REMOVEFILTERS ( 'rpt dim_certification' ),
+                                               REMOVEFILTERS ( 'rpt fact_certification_attempt'[certification_id] ) ) ) ) ),
     0
 )
 ```
@@ -373,4 +381,17 @@ Use a scratch page with one matrix: `rpt dim_cohort[cohort_name]` on rows, the m
 - **Drill through ENR-00025** (Cohort 1, withdrew): its watch-list case WLC-00025-1 appears.
 - **Drill through ENR-00143** (same person, Cohort 3): no Build 02 history.
 - The readiness label reads "Not yet eligible: training in progress".
+
+**6.8 Certification selection** (correction 1). Click a certification in the "Candidate pass rate by certification" chart, or filter `rpt dim_certification[certification_name]` on the scratch page:
+
+| Measure | Payments Exception Handling | Operational Controls & Reconciliation |
+|---|---|---|
+| Certification Attempts | 148 | 156 |
+| Certification Candidate Pass Rate | 86.7% (104/120) | 79.7% (94/118) |
+| First-Attempt Pass Rate | 71.7% | 62.7% |
+| Completers With No Certification Attempt | **4 (unchanged)** | **4 (unchanged)** |
+| Unattempted Certification Opportunities | **16 (unchanged)** | **16 (unchanged)** |
+| Mandatory Certifications Met | **81 (unchanged)** | **81 (unchanged)** |
+
+The bottom three rows are defined across **all** mandatory certifications, so a certification selection must not change them.
 
