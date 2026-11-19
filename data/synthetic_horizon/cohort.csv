@@ -1,0 +1,4 @@
+cohort_id,cohort_name,start_date,planned_end_date,planned_weeks,delivery_mode
+COH-2026-01,2026 Cohort 1,2026-05-04,2026-06-26,8,In person
+COH-2026-02,2026 Cohort 2,2026-07-06,2026-08-28,8,Virtual
+COH-2026-03,2026 Cohort 3,2026-09-21,2026-11-13,8,In person
