@@ -513,8 +513,17 @@ These are plain row counts on clearly stated grains, so they need no new semanti
 
 ---
 
-## D41 (PENDING APPROVAL): Workforce Intelligence Suite, three reports on one shared semantic model (2026-11-19)
-**Status:** proposed; awaiting owner and ChatGPT approval. **Nothing has been restructured yet.**
+## D41 (APPROVED 2026-11-19, simplified): Workforce Intelligence Suite, three reports on one shared semantic model
+**Status: approved by the owner and ChatGPT**, then **simplified by the owner (portfolio-first)**: build first, check what matters, document briefly.
+
+**Approved decisions:**
+- **E2:** reports share the local model through PBIP `byPath`. Report 01's structure is preserved. Desktop behaviour is validated rather than assumed, including whether separate Desktop sessions share a cache.
+- **E4:** keep the model folder name.
+- **E5:** MongoDB case documents → Python ETL → SQL Server, kept genuine but not enterprise-heavy.
+- **E1 (amended):** 2027-06-30 is a *forward-simulation horizon*, not an immediate replacement. The 2026-11-02 baseline and its reference values stay frozen. The later period is generated so that it has enough history for 30/60/90-day analysis, with no look-ahead, valid chronology and honest handling of incomplete windows. The new snapshot is promoted only once its key numbers and Report 01 still check out. Not done in ARCH-01, and without over-engineering.
+- **E3 (Model QA report):** made optional by the owner, and not built.
+
+**Original proposal:** kept below for the record.
 
 **Full proposal:** `docs/architecture_multi_report_proposal.md`.
 
@@ -541,3 +550,18 @@ These are plain row counts on clearly stated grains, so they need no new semanti
 - Cohort 3 is still in training.
 
 The proposal is to move the suite snapshot to 2027-06-30 once, at the start of Build 03, as a controlled re-baseline of the reference numbers.
+
+### D42: ARCH-01, the minimal suite foundation (2026-11-19, branch `arch/01-suite-foundation`)
+**BI-02 merge:** PR #9 merged as `a8996660dcb67579d1b6bd54ce8685832b2e60d7` (`a899666`). This is the Report 01 and shared-model baseline.
+
+The tags `report01-v1` and `model-v1` exist in Claude's environment only, because this environment's GitHub access refuses tag pushes (HTTP 403). The owner can create them locally (optional); the SHA is the record.
+
+**What was built:**
+- **Report 02 shell:** `powerbi/payment-operations.pbip` with `PaymentOperations.Report/`. Its `definition.pbir` points `byPath` at Report 01's model folder, so there is no second model. It has one light page showing existing shared measures to prove the link, and the light theme `themes/PaymentOperationsLight.json`.
+- **`powerbi/tools/pbir_lib.py`:** generic PBIR helpers moved out of the Report 01 builder. Report 01 still regenerates byte-for-byte.
+- **`powerbi/tools/check_model_additive.py`:** one optional command that confirms the shared model only grew (17 small tests). It was built before the simplification and kept because it is cheap.
+
+**Why `byPath`:** it is how Report 01 already connects, it works offline in Desktop, and every report uses one set of definitions.
+
+**The local limitation:** each report opens the full model, so edit the model from one Desktop window at a time.
+
