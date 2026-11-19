@@ -90,6 +90,16 @@
           "type": "Image"
         },
         {
+          "name": "coaching-background.png",
+          "path": "coaching-background.png",
+          "type": "Image"
+        },
+        {
+          "name": "readiness-background.png",
+          "path": "readiness-background.png",
+          "type": "Image"
+        },
+        {
           "name": "trainee-background.png",
           "path": "trainee-background.png",
           "type": "Image"
@@ -135,6 +145,21 @@
           "type": "Image"
         },
         {
+          "name": "icon-check-e3a640.svg",
+          "path": "icon-check-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-coaching-6f7d90.svg",
+          "path": "icon-coaching-6f7d90.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-coaching-e3a640.svg",
+          "path": "icon-coaching-e3a640.svg",
+          "type": "Image"
+        },
+        {
           "name": "icon-cohorts-6f7d90.svg",
           "path": "icon-cohorts-6f7d90.svg",
           "type": "Image"
@@ -145,6 +170,11 @@
           "type": "Image"
         },
         {
+          "name": "icon-doc-3fc1b0.svg",
+          "path": "icon-doc-3fc1b0.svg",
+          "type": "Image"
+        },
+        {
           "name": "icon-doc-5b6b80.svg",
           "path": "icon-doc-5b6b80.svg",
           "type": "Image"
@@ -152,6 +182,11 @@
         {
           "name": "icon-doc-e3a640.svg",
           "path": "icon-doc-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-info-e0705a.svg",
+          "path": "icon-info-e0705a.svg",
           "type": "Image"
         },
         {
@@ -167,6 +202,16 @@
         {
           "name": "icon-play-e3a640.svg",
           "path": "icon-play-e3a640.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-readiness-6f7d90.svg",
+          "path": "icon-readiness-6f7d90.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-readiness-e3a640.svg",
+          "path": "icon-readiness-e3a640.svg",
           "type": "Image"
         },
         {
@@ -202,6 +247,11 @@
         {
           "name": "icon-users-3fc1b0.svg",
           "path": "icon-users-3fc1b0.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-users-e3a640.svg",
+          "path": "icon-users-e3a640.svg",
           "type": "Image"
         }
       ]

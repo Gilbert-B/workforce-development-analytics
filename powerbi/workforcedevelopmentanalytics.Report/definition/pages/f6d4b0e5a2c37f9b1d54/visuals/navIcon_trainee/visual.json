@@ -3,11 +3,11 @@
   "name": "navIcon_trainee",
   "position": {
     "x": 35,
-    "y": 425,
-    "z": 109,
+    "y": 573,
+    "z": 113,
     "width": 26,
     "height": 26,
-    "tabOrder": 109
+    "tabOrder": 113
   },
   "visual": {
     "visualType": "image",

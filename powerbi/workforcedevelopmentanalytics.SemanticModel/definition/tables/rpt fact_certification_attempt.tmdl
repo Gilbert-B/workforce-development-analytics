@@ -1,0 +1,276 @@
+table 'rpt fact_certification_attempt'
+	lineageTag: 9f8175df-c423-4286-aaa1-f9737f17da22
+
+	measure 'Certification Attempts' = ```
+			-- attempts (rows), not people
+			COALESCE ( COUNTROWS ( 'rpt fact_certification_attempt' ), 0 )
+			```
+		formatString: 0
+		displayFolder: Certification
+		lineageTag: 76a22428-d09c-42b9-aecf-cca30f8a2ebb
+
+	measure 'Certification Candidate Pass Rate' = ```
+			VAR Pairs =                       -- one row per enrolment x certification ATTEMPTED
+			    SUMMARIZE ( 'rpt fact_certification_attempt', 'rpt fact_certification_attempt'[enrolment_id], 'rpt fact_certification_attempt'[certification_id] )
+			VAR PassedPairs =                 -- passed on ANY attempt: a retake counts once
+			    FILTER ( Pairs, CALCULATE ( MAX ( 'rpt fact_certification_attempt'[is_passed] ) ) = 1 )
+			RETURN
+			    DIVIDE ( COUNTROWS ( PassedPairs ), COUNTROWS ( Pairs ) )
+			```
+		formatString: 0.0%
+		displayFolder: Certification
+		lineageTag: 6bd36efe-8eb7-4efc-bf84-0acca7d9eea8
+
+	measure 'First-Attempt Pass Rate' = ```
+			DIVIDE (
+			    CALCULATE ( COUNTROWS ( 'rpt fact_certification_attempt' ), 'rpt fact_certification_attempt'[attempt_number] = 1, 'rpt fact_certification_attempt'[result] = "Passed" ),
+			    CALCULATE ( COUNTROWS ( 'rpt fact_certification_attempt' ), 'rpt fact_certification_attempt'[attempt_number] = 1 )
+			)
+			```
+		formatString: 0.0%
+		displayFolder: Certification
+		lineageTag: 3e081594-d680-4c04-9b72-b9d5c3ebfdb5
+
+	measure 'Mandatory Certifications Met' = ```
+			-- completed enrolments that passed EVERY mandatory certification
+			VAR MandatoryCount =
+			    CALCULATE ( COUNTROWS ( 'rpt dim_certification' ),
+			                REMOVEFILTERS ( 'rpt dim_certification' ),
+			                'rpt dim_certification'[mandatory_for_readiness] = TRUE () )
+			VAR CompletedEnrolments =
+			    CALCULATETABLE ( VALUES ( 'rpt dim_enrolment'[enrolment_id] ),
+			                     KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+			RETURN
+			COALESCE (
+			    COUNTROWS (
+			        FILTER ( CompletedEnrolments,
+			            CALCULATE ( DISTINCTCOUNT ( 'rpt fact_certification_attempt'[certification_id] ),
+			                        'rpt fact_certification_attempt'[is_passed] = 1,
+			                        REMOVEFILTERS ( 'rpt dim_certification' ),
+			                        'rpt dim_certification'[mandatory_for_readiness] = TRUE () )
+			                = MandatoryCount ) ),
+			    0
+			)
+			```
+		formatString: 0
+		displayFolder: Certification
+		lineageTag: 19403bf9-539a-4ccd-a3c3-6d7d58817cce
+
+	measure 'Unattempted Certification Opportunities' = ```
+			-- completed enrolment x mandatory certification pairs with NO attempt
+			VAR MandatoryCount =
+			    CALCULATE ( COUNTROWS ( 'rpt dim_certification' ),
+			                REMOVEFILTERS ( 'rpt dim_certification' ),
+			                'rpt dim_certification'[mandatory_for_readiness] = TRUE () )
+			VAR AttemptedPairs =
+			    CALCULATE (
+			        COUNTROWS ( SUMMARIZE ( 'rpt fact_certification_attempt', 'rpt fact_certification_attempt'[enrolment_id], 'rpt fact_certification_attempt'[certification_id] ) ),
+			        KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ),
+			        REMOVEFILTERS ( 'rpt dim_certification' ),
+			        'rpt dim_certification'[mandatory_for_readiness] = TRUE ()
+			    )
+			VAR CompletedInContext =
+			    CALCULATE ( COUNTROWS ( 'rpt dim_enrolment' ),
+			                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+			RETURN
+			    COALESCE ( CompletedInContext, 0 ) * MandatoryCount - COALESCE ( AttemptedPairs, 0 )
+			```
+		formatString: 0
+		displayFolder: Certification
+		lineageTag: 7c8e599f-b8a0-4339-9391-53b8f223c30f
+
+	measure 'Completers With No Certification Attempt' = ```
+			VAR CompletedEnrolments =
+			    CALCULATETABLE ( VALUES ( 'rpt dim_enrolment'[enrolment_id] ),
+			                     KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+			RETURN
+			COALESCE (
+			    COUNTROWS ( FILTER ( CompletedEnrolments,
+			                         ISBLANK ( CALCULATE ( COUNTROWS ( 'rpt fact_certification_attempt' ),
+			                                               -- "no attempt at ANY certification": a certification
+			                                               -- selection must not change the meaning
+			                                               REMOVEFILTERS ( 'rpt dim_certification' ),
+			                                               REMOVEFILTERS ( 'rpt fact_certification_attempt'[certification_id] ) ) ) ) ),
+			    0
+			)
+			```
+		formatString: 0
+		displayFolder: Certification
+		lineageTag: aa520a01-5e79-41ba-8254-2982d0cd46bb
+
+	column certification_attempt_id
+		dataType: string
+		lineageTag: 701c1d0e-8840-4a52-8dcb-be1d133fdfe6
+		summarizeBy: none
+		sourceColumn: certification_attempt_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 22370920-9dbe-4a53-9b2f-410fad2f9e11
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: 87413a25-22b7-4cfa-b385-d4402c1d37a6
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: 6094f597-3487-4e73-ab72-2af5b8bad4c3
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column certification_id
+		dataType: string
+		lineageTag: 37b553ca-a32e-4536-8fda-f42c67263962
+		summarizeBy: none
+		sourceColumn: certification_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column attempt_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c2367d2-6ff9-4fff-acf0-4c49ceec3ddc
+		summarizeBy: none
+		sourceColumn: attempt_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column attempt_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: faf9c361-49f0-4c5e-b153-2c34d567d07d
+		summarizeBy: none
+		sourceColumn: attempt_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column recorded_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 54e79eb7-5701-4d83-a5e9-6332f6891576
+		summarizeBy: none
+		sourceColumn: recorded_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column score
+		dataType: int64
+		formatString: 0
+		lineageTag: 277b5a47-dca2-4a29-8d8d-b8999441e4c7
+		summarizeBy: none
+		sourceColumn: score
+
+		annotation SummarizationSetBy = Automatic
+
+	column pass_mark
+		dataType: int64
+		formatString: 0
+		lineageTag: 9df001ac-a05b-4c4a-bfcb-48ae36100ee7
+		summarizeBy: none
+		sourceColumn: pass_mark
+
+		annotation SummarizationSetBy = Automatic
+
+	column result
+		dataType: string
+		lineageTag: 07104c7b-c196-41bd-8836-76eb517762f1
+		summarizeBy: none
+		sourceColumn: result
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_passed
+		dataType: int64
+		formatString: 0
+		lineageTag: 4847e55a-8f09-4d22-94f0-8f3eb3a69697
+		summarizeBy: none
+		sourceColumn: is_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_first_attempt
+		dataType: int64
+		formatString: 0
+		lineageTag: 21d26ce7-027b-433d-8b46-686b9cb16edc
+		summarizeBy: none
+		sourceColumn: is_first_attempt
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_retake
+		dataType: int64
+		formatString: 0
+		lineageTag: 424abcd2-6f23-4697-8e93-a556b7fcc187
+		summarizeBy: none
+		sourceColumn: is_retake
+
+		annotation SummarizationSetBy = Automatic
+
+	column pair_attempt_count
+		dataType: int64
+		formatString: 0
+		lineageTag: a679ad0f-2771-428b-b255-58eed61b268d
+		summarizeBy: none
+		sourceColumn: pair_attempt_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column pair_passed
+		dataType: int64
+		formatString: 0
+		lineageTag: a425f40e-6c03-414a-871f-abef02311103
+		summarizeBy: none
+		sourceColumn: pair_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_version
+		dataType: string
+		lineageTag: 9f340d76-fb24-4389-b54d-1baba1d96851
+		summarizeBy: none
+		sourceColumn: policy_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column completion_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3ac472e3-5cd7-4288-9a2a-267259df2136
+		summarizeBy: none
+		sourceColumn: completion_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_after_completion
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e0174f7-3863-4b6c-a4a2-0d8396f10cbd
+		summarizeBy: none
+		sourceColumn: days_after_completion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_certification_attempt' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_certification_attempt = WorkforceDevAnalytics{[Schema="rpt",Item="fact_certification_attempt"]}[Data]
+				in
+				    rpt_fact_certification_attempt
+
+	annotation PBI_ResultType = Table
+

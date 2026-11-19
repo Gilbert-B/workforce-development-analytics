@@ -1,0 +1,190 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "traineeReviews",
+  "position": {
+    "x": 1026,
+    "y": 1558,
+    "z": 1129,
+    "width": 840,
+    "height": 214,
+    "tabOrder": 1129
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "review_number"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.review_number",
+              "nativeQueryRef": "review_number",
+              "displayName": "Review"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "review_date"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.review_date",
+              "nativeQueryRef": "review_date",
+              "displayName": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "decision"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.decision",
+              "nativeQueryRef": "decision",
+              "displayName": "Decision"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "decision_reason_code"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.decision_reason_code",
+              "nativeQueryRef": "decision_reason_code",
+              "displayName": "Reason"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "certification_gate_passed"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.certification_gate_passed",
+              "nativeQueryRef": "certification_gate_passed",
+              "displayName": "Certified"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "competency_gate_passed"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.competency_gate_passed",
+              "nativeQueryRef": "competency_gate_passed",
+              "displayName": "Competency gate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "review_competency_score"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.review_competency_score",
+              "nativeQueryRef": "review_competency_score",
+              "displayName": "Score"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "signoff_recorded"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.signoff_recorded",
+              "nativeQueryRef": "signoff_recorded",
+              "displayName": "Signed off"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "is_latest_review"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.is_latest_review",
+              "nativeQueryRef": "is_latest_review",
+              "displayName": "Latest"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_readiness_review"
+                  }
+                },
+                "Property": "review_number"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -118,4 +118,10 @@ Re-run after the conditional-approval changes (D34–D37).
   - **`full_reset.py --confirm`:** all checks passed (Build 01 26 of 26, Build 02 49 of 49).
   - **`python -m pytest`:** **133 passed**.
 
-**Status:** owner-validated. Awaiting the owner and ChatGPT sign-off before PR #8 is merged.
+**Status:** owner-validated and signed off by the owner and ChatGPT (D34–D37 accepted).
+
+**Merged:** PR #8 into `main` on 2026-11-19 as merge commit **`216f0563db6056be110fac6ad157cf7eb8246ed3`**. Before merging, I checked that:
+- the PR head was exactly the owner-validated `ab0aba0`;
+- the PR held only its 8 reviewed commits;
+- `main` was unchanged since branching (`aa96600`);
+- `powerbi/` had no changes.

@@ -3,11 +3,11 @@
   "name": "navLabel_trainee",
   "position": {
     "x": 4,
-    "y": 460,
-    "z": 110,
+    "y": 608,
+    "z": 114,
     "width": 88,
     "height": 34,
-    "tabOrder": 110
+    "tabOrder": 114
   },
   "visual": {
     "visualType": "textbox",

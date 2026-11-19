@@ -461,3 +461,52 @@ The people outside each denominator are reported, not dropped:
 - **Validation:** four `population_…` error checks prove each split adds back up to its whole, and four new info rows give the counts: 15 unactioned cases, 4 completers with no attempt, 16 mandatory pairs not attempted, 8 not reviewed.
 - **Analysis:** `build02_analysis_examples.sql` query 9 lists all populations per cohort; `readiness_evidence.csv` gives them per enrolment.
 
+---
+
+## BI-02: Coaching, Certification & Readiness analytics (2026-11-19, branch `bi/02-coaching-certification-readiness`)
+
+The measures and relationships were approved by the owner and ChatGPT (`docs/bi02_measure_proposal.md`, including the two final corrections). D38–D40 record the implementation choices.
+
+### D38: An additive model extension, and the approved measures only
+**What:**
+- six tables (the Build 02 `rpt` views);
+- six relationships, all **many-to-one, single direction, active**: five facts → `dim_enrolment[enrolment_id]`, plus `fact_certification_attempt` → `dim_certification[certification_id]`;
+- 17 approved measures in three display folders.
+
+**Not added:** no `dim_date` relationships (D2), no direct `dim_cohort` links. No existing table, relationship or measure was edited.
+
+**Why:**
+- The cohort reaches every new fact through exactly one path (cohort → enrolment → fact), so selections can't be ambiguous.
+- With no date path, a date filter can't turn a snapshot card into a fake historical number.
+
+**Status-safe denominators:** four measures count their own denominators with `KEEPFILTERS` instead of reusing `Active/Completed Trainees (Snapshot)`, whose plain filter would override a status selection.
+
+**Trade-off:** a few lines of DAX are repeated (the "completed in context" count) rather than adding unapproved helper measures.
+
+### D39: Two pages, an extended Trainee 360, and three built-in counts
+**Pages:** *Coaching & Watch List* and *Certification & Readiness* use the existing design system (generator, dark theme, synced cohort tiles, their own Clear filters bookmark, and rail navigation).
+
+**KPI cards:** chart clicks never change the KPI cards (`NoFilter`), as on the Overview.
+
+**Built-in counts.** Three charts use Power BI's built-in *Count of* a column instead of a new DAX measure, each labelled on the chart:
+- events by effective date;
+- actions by type;
+- latest decisions by cohort and reason.
+
+These are plain row counts on clearly stated grains, so they need no new semantics review.
+
+**Trainee 360:** the page grows from 1080 to **1824 px tall** (Fit to width, scroll down) instead of squeezing the new history into the existing panels, which stay unchanged. It gains:
+- a readiness status banner, using `Readiness Status Label`, which never says "Failed";
+- watch-list episodes, coaching actions, certification attempts and the review timeline, all filtered by the drill-through `enrolment_id`.
+
+### D40: Validation evidence is split honestly
+**Claude's environment can prove:**
+- the model parses (Microsoft TMDL parser: 14 relationships, all many-to-one, single direction, active);
+- every column and measure referenced in the new DAX exists;
+- all 451 report files pass Microsoft's schemas;
+- the cross-file report checks pass;
+- the generator is deterministic;
+- the SQL reference values.
+
+**It cannot execute DAX**, because there is no Analysis Services engine here. Whether each measure returns the reference value is proven by the owner's Desktop run against `sql/bi02_measure_reference.sql` (validation plan in section 6 of the proposal). This is the same split used for D26.
+
