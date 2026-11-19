@@ -32,6 +32,15 @@ WITH latest_review AS (
     SELECT 'work_outside_employment_period', 'error',          -- no assignments before start or after exit
            (SELECT COUNT(*) FROM core.case_assignment AS ca JOIN core.ops_agent AS a ON a.agent_id = ca.agent_id
             WHERE CAST(ca.assigned_at AS DATE) < a.start_date OR CAST(ca.assigned_at AS DATE) >= a.exit_date)
+    UNION ALL
+    SELECT 'event_by_agent_outside_employment', 'error',      -- nobody acts on a case before starting or after leaving
+           (SELECT COUNT(*) FROM core.case_event AS e JOIN core.ops_agent AS a ON a.agent_id = e.agent_id
+            WHERE CAST(e.event_at AS DATE) < a.start_date OR CAST(e.event_at AS DATE) >= a.exit_date)
+    UNION ALL
+    SELECT 'agent_day_misses_cases', 'error',                  -- every received and resolved case lands on an agent-day
+           (SELECT ABS((SELECT COUNT(*) FROM core.payment_case) - (SELECT SUM(cases_received) FROM rpt.fact_agent_day))
+                 + ABS((SELECT COUNT(*) FROM core.payment_case WHERE final_resolved_at IS NOT NULL)
+                       - (SELECT SUM(cases_resolved) FROM rpt.fact_agent_day)))
     -- case chronology and history
     UNION ALL
     SELECT 'event_before_case_received', 'error',

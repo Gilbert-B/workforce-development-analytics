@@ -199,6 +199,35 @@ def active_days(a, days, ops_start):
     return [d for d in days if d >= start and (a["exit_date"] is None or d < a["exit_date"])]
 
 
+def hand_over_after_exit(events, assignments, agent, by_queue_day, horizon, seed, key):
+    """An agent who has left can't act on a case. If the case's next action falls on
+    or after the agent's exit date, a teammate on the same queue takes it over: a NEW
+    'assigned' event and assignment are added at 08:00 on the first working day from
+    the exit date (or just before that action, if earlier), and later actions are
+    theirs. Nothing is erased."""
+    if agent["exit_date"] is None:
+        return
+    late = [i for i, e in enumerate(events) if e[2] == agent["agent_id"] and e[1].date() >= agent["exit_date"]]
+    if not late:
+        return
+    i = late[0]
+    day = agent["exit_date"]
+    while day.weekday() >= 5:
+        day += timedelta(days=1)
+    team = [o for o in by_queue_day.get((agent["primary_queue_id"], day), []) if o["agent_id"] != agent["agent_id"]]
+    if not team:
+        return                               # nobody to hand over to; the validation check would flag it
+    successor = team[int(stream(seed, "handover", key).random() * len(team))]
+    at = minute(max(events[i - 1][1] + timedelta(minutes=1),
+                    min(datetime.combine(day, time(8)), events[i][1] - timedelta(minutes=1))))
+    at = max(at, datetime.combine(agent["exit_date"], time(0)))
+    for j in range(i, len(events)):
+        if events[j][2] == agent["agent_id"]:
+            events[j] = (events[j][0], max(events[j][1], at + timedelta(minutes=1)), successor["agent_id"])
+    events.insert(i, ("assigned", at, successor["agent_id"]))
+    assignments.append((successor["agent_id"], at))
+
+
 def simulate_cases(cfg, agents, horizon, seed):
     ops_start = date.fromisoformat(cfg["run"]["ops_start"])
     days = business_days(ops_start, horizon)
@@ -287,6 +316,8 @@ def simulate_cases(cfg, agents, horizon, seed):
                 events.append(("reopened", reopen, None))
                 fix = reopen + timedelta(hours=cr.lognormvariate(math.log(c["resolution_median_hours"][prio]), 0.5))
                 events.append(("resolved", minute(fix), agent["agent_id"]))
+            hand_over_after_exit(events, assignments, agent, by_queue_day, horizon, seed,
+                                 f"{a['agent_id']}|{d.isoformat()}|{k}")
             cases.append({"received": received, "agent": a["agent_id"], "case_type": ctype, "priority": prio,
                           "channel": c["channels"][int(cr.random() * len(c["channels"]))],
                           "amount_band": c["amount_bands"][int(cr.random() * len(c["amount_bands"]))],

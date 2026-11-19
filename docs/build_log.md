@@ -386,3 +386,14 @@ How to run it: `docs/build03_walkthrough.md`.
 
 **Owner result (2026-11-19, Windows, SQL Server 2022 + MongoDB):** all checks OK.
 
+
+## BI-03 step 1: Report 02 measures (proposal) and data-layer fixes (2026-11-19)
+- **Proposal:** `docs/bi03_measure_proposal.md` (relationships, 15 DAX drafts, decisions B0–B2).
+- **Reference values:** `sql/bi03_measure_reference.sql`, computed from the core tables. They match the `rpt` views exactly (e.g. SLA Met 82.6%, First-Time-Right 97.9%, QA Pass 96.5%, 249 open, 19 overdue).
+- **Data layer:**
+  - `fact_agent_day` rebuilt (minutes → about 1 s; weekend resolutions included);
+  - exited agents hand cases over;
+  - `tenure_band_order` added.
+- **Checks:** Build 03 now has **26 of 26**.
+- **Evidence (Claude's environment):** `pytest` gives **170 passed**; the reconciliation is OK.
+- **Owner result:** *pending.*
