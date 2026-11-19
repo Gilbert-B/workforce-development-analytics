@@ -366,3 +366,23 @@ Report 01 and the model are untouched: identical to `main`.
 - `git status` is clean after Desktop.
 - Whether the two reports share one data cache was not recorded; it is not needed for the suite.
 
+## Build 03: Payment operations data (2026-11-19, branch `build/03-payment-operations`)
+**Built:**
+- the horizon dataset;
+- the Build 03 generator (agents, deployments, case documents);
+- MongoDB seeding;
+- the Python ETL (incremental, recoverable, idempotent, with rejection logging);
+- 13 `core` tables plus `stg` and `etl`;
+- 6 `rpt` views;
+- the essential checks and a reconciliation script.
+
+How to run it: `docs/build03_walkthrough.md`.
+
+**Evidence (Claude's environment: real MongoDB 7.0.48 in Docker, SQL Server 2025 on Linux):**
+- **Horizon dataset:** every baseline row is present and unchanged; Build 01 26/26 and Build 02 49/49 at the horizon; the baseline still reproduces its frozen numbers.
+- **ETL:** the initial load reads 44,166 → 44,066 loaded + 100 rejected; a repeat reads 0; the incremental run reads 6,211 (exactly the changed or new documents).
+- **Checks:** 24/24 pass; MongoDB 50,135 = SQL 50,035 + 100 rejected, with 0 nested-array mismatches.
+- **Tests:** `pytest` gives **170 passed**, including the crash-and-resume test (batch boundaries inside tied timestamps) and an idempotent full reload.
+
+**Owner result:** *pending.*
+

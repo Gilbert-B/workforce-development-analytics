@@ -565,3 +565,20 @@ The tags `report01-v1` and `model-v1` exist in Claude's environment only, becaus
 
 **The local limitation:** each report opens the full model, so edit the model from one Desktop window at a time.
 
+
+### D43: Build 03, MongoDB → Python ETL → SQL Server (2026-11-19, branch `build/03-payment-operations`)
+**Why:**
+- Payment-exception cases are document-shaped (events, assignments, QA checklist and rework nested in each case), so they live in MongoDB.
+- Reporting needs a relational, validated model, so a Python ETL flattens the documents into SQL Server (`stg` → `core` → `rpt`).
+- The ETL is incremental on a **(updated_at, _id)** checkpoint, so ties are safe. It **replaces each case whole**, so changed nested arrays leave nothing stale, and it commits rows and checkpoint together, so it recovers after a crash.
+- **At scale:** this would be change streams or CDC, plus set-based `MERGE`.
+
+**Data:**
+- The horizon dataset (Builds 01–02 at 2027-06-30) sits beside the frozen baseline. Every baseline row is unchanged; only snapshot-derived values differ.
+- 50k cases (configurable).
+- The learning curve follows the review amendments: accuracy 86–92% rising to 95–98%, individual, noisy, with some plateaus.
+- 40 tenured agents (no enrolment); one agent per employee; exits with no work afterwards.
+- First and final resolution are both kept; SLA = final resolution vs the original target, with no pauses. Open cases are judged as overdue, not as missed SLA.
+- QA is a six-item weighted checklist (pass at 85) on sampled cases only.
+
+**Kept simple on purpose:** no orchestration tool, no change streams, no MERGE. Plain Python plus transactions are enough for 50k documents, and easy to read.
