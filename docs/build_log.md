@@ -317,5 +317,13 @@ FROM per_enrol GROUP BY cohort_id, programme_week ORDER BY cohort_id, programme_
    ENR-00143 shows "Not yet eligible: training in progress", with empty history tables and no red "Failed" anywhere.
 8. **Close Desktop.** Save only if you intend to keep layout changes; otherwise choose **Don't save** so `git status` stays clean.
 
-**Owner validation result:** *pending.*
+**Owner validation result (2026-11-19, Windows, Power BI Desktop + SQL Server 2022):** the owner reports that **everything checks out**. Checked:
+- refresh and the six relationships;
+- every measure against `sql/bi02_measure_reference.sql`, overall and per cohort;
+- multiple cohort selections, certification retakes, blank denominators and the date slicer;
+- status filtering and certification selection;
+- both new pages and navigation;
+- the Trainee 360 drill-through, including the repeat enrolments ENR-00025 / ENR-00143.
+
+**Next:** ChatGPT sign-off, then the PR and merge.
 
