@@ -1,0 +1,41 @@
+{
+  "generator_version": "build03-1.0",
+  "seed": 20261125,
+  "horizon": "2027-06-30",
+  "incremental_cutoff": "2027-05-31",
+  "files": {
+    "ops_team.csv": {
+      "rows": 3,
+      "sha256": "6a94a11763bad3716274cfaad4378c69f7b99f72ee9ca98d61c0f6639fcbb746"
+    },
+    "ops_queue.csv": {
+      "rows": 5,
+      "sha256": "223a3cbe3b065e8d3fb439eb390347840d6c8fa0de2ae03adca60cfc25dbc301"
+    },
+    "case_type.csv": {
+      "rows": 5,
+      "sha256": "6bf794c133a154e1e359d36f0cf0d12081ebe96773a77fcedc797f2a141f6373"
+    },
+    "sla_policy.csv": {
+      "rows": 15,
+      "sha256": "923882de0d5c75c5616aa1b0e0b115c7a086649e78332d30927fe99c87e2783f"
+    },
+    "ops_agent.csv": {
+      "rows": 149,
+      "sha256": "e796a724b7d9ace7ffb85fb10acfaddf7b4d7371f2b314c59052c558cd5d71f0"
+    },
+    "deployment.csv": {
+      "rows": 109,
+      "sha256": "3f48f9ac6a717c436b9e7374ecccc27a1f817f5e666fcdb9a7895583949c1e1f"
+    },
+    "payment_cases_phase1.jsonl": {
+      "rows": 44166,
+      "sha256": "abc316bbb55c3451c4675b6ce5a91e540f481f672c2d0fbaf2b83ee4571d65b8"
+    },
+    "payment_cases_phase2.jsonl": {
+      "rows": 50035,
+      "sha256": "7bb55ab458bf8b7c7ac412771434ca40e7130abc9d26191c7caa0de263688d37"
+    }
+  },
+  "phase2_changed_or_new": 6211
+}

@@ -288,7 +288,8 @@ checks AS (
                              WHERE a.decision = 'Approved' AND d.decision = 'Deferred') THEN 0 ELSE 1 END
     UNION ALL
     SELECT 'story_in_progress_cohort_has_open_cases', 'story',
-           CASE WHEN EXISTS (SELECT 1 FROM rpt.fact_watchlist_case AS c JOIN rpt.dim_cohort AS dc
+           CASE WHEN NOT EXISTS (SELECT 1 FROM rpt.dim_cohort WHERE schedule_status = 'In progress') THEN 0  -- no cohort in training at this snapshot (e.g. the 2027 horizon)
+                WHEN EXISTS (SELECT 1 FROM rpt.fact_watchlist_case AS c JOIN rpt.dim_cohort AS dc
                                ON dc.cohort_id = c.cohort_id
                              WHERE dc.schedule_status = 'In progress' AND c.is_open_at_snapshot = 1) THEN 0 ELSE 1 END
 
