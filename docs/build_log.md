@@ -384,5 +384,5 @@ How to run it: `docs/build03_walkthrough.md`.
 - **Checks:** 24/24 pass; MongoDB 50,135 = SQL 50,035 + 100 rejected, with 0 nested-array mismatches.
 - **Tests:** `pytest` gives **170 passed**, including the crash-and-resume test (batch boundaries inside tied timestamps) and an idempotent full reload.
 
-**Owner result:** *pending.*
+**Owner result (2026-11-19, Windows, SQL Server 2022 + MongoDB):** all checks OK.
 
