@@ -1,0 +1,223 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "tbAgCases",
+  "position": {
+    "x": 60,
+    "y": 802,
+    "z": 61,
+    "width": 1800,
+    "height": 248,
+    "tabOrder": 61
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "case_id"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.case_id",
+              "nativeQueryRef": "case_id",
+              "displayName": "Case"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "received_at"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.received_at",
+              "nativeQueryRef": "received_at",
+              "displayName": "Received"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "case_type_code"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.case_type_code",
+              "nativeQueryRef": "case_type_code",
+              "displayName": "Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "priority"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.priority",
+              "nativeQueryRef": "priority",
+              "displayName": "Priority"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "status"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.status",
+              "nativeQueryRef": "status",
+              "displayName": "Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "final_resolution_hours"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.final_resolution_hours",
+              "nativeQueryRef": "final_resolution_hours",
+              "displayName": "Hours to final"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "sla_met"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.sla_met",
+              "nativeQueryRef": "sla_met",
+              "displayName": "SLA met (1/0)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "rework_count"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.rework_count",
+              "nativeQueryRef": "rework_count",
+              "displayName": "Rework"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_payment_case"
+                    }
+                  },
+                  "Property": "qa_passed"
+                }
+              },
+              "queryRef": "rpt fact_payment_case.qa_passed",
+              "nativeQueryRef": "qa_passed",
+              "displayName": "QA passed (1/0, blank = not sampled)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_payment_case"
+                  }
+                },
+                "Property": "received_at"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

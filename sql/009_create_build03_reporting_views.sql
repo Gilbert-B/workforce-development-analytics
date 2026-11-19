@@ -54,6 +54,7 @@ WITH snap AS (
 SELECT
     c.case_id, c.agent_id, c.queue_id, c.case_type_code, c.priority, c.channel, c.amount_band,
     c.received_at, CAST(c.received_at AS DATE) AS received_date,
+    DATEFROMPARTS(YEAR(c.received_at), MONTH(c.received_at), 1) AS received_month,   -- trend axis
     c.status, c.resolution_code, c.first_resolved_at, c.final_resolved_at,
     CAST(c.final_resolved_at AS DATE) AS final_resolved_date,
     c.sla_target_hours, c.due_at,
@@ -96,12 +97,24 @@ CREATE OR ALTER VIEW rpt.fact_qa_review AS
 SELECT
     qa.case_id, f.agent_id, f.queue_id, f.case_type_code, f.tenure_band, f.tenure_band_order,
     qa.reviewed_at, CAST(qa.reviewed_at AS DATE) AS reviewed_date,
+    DATEFROMPARTS(YEAR(qa.reviewed_at), MONTH(qa.reviewed_at), 1) AS reviewed_month,
     qa.score, CAST(qa.passed AS INT) AS passed,
     (SELECT COUNT(*) FROM core.qa_error AS e WHERE e.case_id = qa.case_id) AS error_count,
     CASE WHEN EXISTS (SELECT 1 FROM core.qa_error AS e WHERE e.case_id = qa.case_id AND e.severity = 'critical')
          THEN 1 ELSE 0 END AS has_critical_error
 FROM core.qa_review AS qa
 JOIN rpt.fact_payment_case AS f ON f.case_id = qa.case_id;
+GO
+
+/* ===== fact_qa_check: one row per sampled case x checklist item (6 per review) ===== */
+CREATE OR ALTER VIEW rpt.fact_qa_check AS
+SELECT
+    k.case_id, k.item_code,
+    REPLACE(UPPER(LEFT(k.item_code, 1)) + SUBSTRING(k.item_code, 2, 40), '_', ' ') AS item_name,
+    k.weight, CAST(k.passed AS INT) AS passed,
+    r.agent_id, r.queue_id, r.tenure_band, r.tenure_band_order, r.reviewed_date
+FROM core.qa_check AS k
+JOIN rpt.fact_qa_review AS r ON r.case_id = k.case_id;
 GO
 
 /* ===== fact_agent_day: one row per agent x day WORKED =====
@@ -158,6 +171,17 @@ WITH last_res AS (          -- latest 'resolved' event per case: the final resol
 )
 SELECT
     d.agent_id, d.work_date,
+    DATEFROMPARTS(YEAR(d.work_date), MONTH(d.work_date), 1) AS work_month,
+    CASE WHEN ag.agent_type = 'Tenured' THEN 'Tenured'
+         WHEN DATEDIFF(DAY, ag.start_date, d.work_date) < 30 THEN '0-30 days'
+         WHEN DATEDIFF(DAY, ag.start_date, d.work_date) < 60 THEN '31-60 days'
+         WHEN DATEDIFF(DAY, ag.start_date, d.work_date) < 90 THEN '61-90 days'
+         ELSE '90+ days' END AS tenure_band,
+    CASE WHEN ag.agent_type = 'Tenured' THEN 5
+         WHEN DATEDIFF(DAY, ag.start_date, d.work_date) < 30 THEN 1
+         WHEN DATEDIFF(DAY, ag.start_date, d.work_date) < 60 THEN 2
+         WHEN DATEDIFF(DAY, ag.start_date, d.work_date) < 90 THEN 3
+         ELSE 4 END AS tenure_band_order,
     CASE WHEN sc.agent_id IS NULL THEN 0 ELSE 1 END AS is_scheduled_day,  -- 0 = extra day worked (weekend cover)
     CASE WHEN ag.agent_type = 'Tenured' THEN NULL ELSE DATEDIFF(DAY, ag.start_date, d.work_date) END AS days_since_start,
     ISNULL(r.cases_received, 0) AS cases_received,

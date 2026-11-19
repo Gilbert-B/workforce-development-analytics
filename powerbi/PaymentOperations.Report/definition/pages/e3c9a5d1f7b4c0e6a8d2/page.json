@@ -1,0 +1,180 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "e3c9a5d1f7b4c0e6a8d2",
+  "displayName": "Quality",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F5F7FA'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#E9EEF4'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "chItems",
+      "target": "kpiReviews",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chItems",
+      "target": "kpiSample",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chItems",
+      "target": "kpiPass",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chItems",
+      "target": "kpiScore",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chItems",
+      "target": "kpiCritical",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chItems",
+      "target": "kpiRework",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHeat",
+      "target": "kpiReviews",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHeat",
+      "target": "kpiSample",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHeat",
+      "target": "kpiPass",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHeat",
+      "target": "kpiScore",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHeat",
+      "target": "kpiCritical",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHeat",
+      "target": "kpiRework",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chQaTrend",
+      "target": "kpiReviews",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chQaTrend",
+      "target": "kpiSample",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chQaTrend",
+      "target": "kpiPass",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chQaTrend",
+      "target": "kpiScore",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chQaTrend",
+      "target": "kpiCritical",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chQaTrend",
+      "target": "kpiRework",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrQueue",
+      "target": "kpiReviews",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrQueue",
+      "target": "kpiSample",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrQueue",
+      "target": "kpiPass",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrQueue",
+      "target": "kpiScore",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrQueue",
+      "target": "kpiCritical",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrQueue",
+      "target": "kpiRework",
+      "type": "NoFilter"
+    }
+  ]
+}

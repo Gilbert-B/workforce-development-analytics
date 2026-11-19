@@ -1,0 +1,62 @@
+table 'rpt dim_ops_queue'
+	lineageTag: 6a79ac64-53d3-5aa5-99f2-ba5965a956a1
+
+	column queue_id
+		dataType: string
+		lineageTag: be9b4847-7724-5d70-bc12-2ab6395e575c
+		summarizeBy: none
+		sourceColumn: queue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column queue_name
+		dataType: string
+		lineageTag: 95ab00bb-71ea-5052-a329-8260770cc018
+		summarizeBy: none
+		sourceColumn: queue_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_id
+		dataType: string
+		lineageTag: 4f59c76e-3361-5ee4-b706-6aa0c967b516
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_name
+		dataType: string
+		lineageTag: 5848f2ea-87b7-5903-9031-b4b7f0e1dd04
+		summarizeBy: none
+		sourceColumn: team_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column case_type_code
+		dataType: string
+		lineageTag: 49b27d39-0ea2-5172-814a-14de93e46ff6
+		summarizeBy: none
+		sourceColumn: case_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column case_type_name
+		dataType: string
+		lineageTag: 4424311d-1618-5581-ae06-6392de4ded6f
+		summarizeBy: none
+		sourceColumn: case_type_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_ops_queue' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_ops_queue = WorkforceDevAnalytics{[Schema="rpt",Item="dim_ops_queue"]}[Data]
+				in
+				    rpt_dim_ops_queue
+
+	annotation PBI_ResultType = Table

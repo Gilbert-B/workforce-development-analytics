@@ -1,0 +1,154 @@
+table 'rpt fact_agent_day'
+	lineageTag: c9008c3f-70a2-5360-abe9-1eb115c3182f
+
+	measure 'Agent-Days Worked' = COALESCE ( COUNTROWS ( 'rpt fact_agent_day' ), 0 )
+		formatString: #,0
+		displayFolder: Agents
+		lineageTag: 14b75d9d-e2e7-558a-acce-c956920dbf3a
+
+	measure 'Resolved per Agent-Day' = DIVIDE ( SUM ( 'rpt fact_agent_day'[cases_resolved] ), COUNTROWS ( 'rpt fact_agent_day' ) )
+		formatString: 0.00
+		displayFolder: Agents
+		lineageTag: 093ae826-6ac1-507a-8832-5a2472511a61
+
+	column agent_id
+		dataType: string
+		lineageTag: 343cb513-4fb4-5ef0-a26b-9463bfa9c0b8
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column work_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 95240607-4a5b-570f-8ea3-cd87618b99bc
+		summarizeBy: none
+		sourceColumn: work_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column work_month
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: d6243d0e-5b38-5462-a745-2e41935eb778
+		summarizeBy: none
+		sourceColumn: work_month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column tenure_band
+		dataType: string
+		lineageTag: bb274250-6fe9-5308-b591-d03941a07940
+		summarizeBy: none
+		sourceColumn: tenure_band
+		sortByColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dfc6e9f6-db57-598f-a4c8-aac070ad0acb
+		summarizeBy: none
+		sourceColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_scheduled_day
+		dataType: int64
+		formatString: 0
+		lineageTag: 3395b10e-457e-5fd4-9e40-d0ec2330b27a
+		summarizeBy: none
+		sourceColumn: is_scheduled_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_since_start
+		dataType: int64
+		formatString: 0
+		lineageTag: 75b9de70-6c95-51fa-ba19-115f29a9ea26
+		summarizeBy: none
+		sourceColumn: days_since_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases_received
+		dataType: int64
+		formatString: 0
+		lineageTag: 93dbdc59-6335-5934-bc92-ca20a9e933be
+		summarizeBy: none
+		sourceColumn: cases_received
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases_resolved
+		dataType: int64
+		formatString: 0
+		lineageTag: 8c308817-cca1-586e-9fb8-661c748e3ad7
+		summarizeBy: none
+		sourceColumn: cases_resolved
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases_sla_met
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a051b53-703c-5cb2-9482-09a6a873d317
+		summarizeBy: none
+		sourceColumn: cases_sla_met
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_resolution_hours
+		dataType: double
+		formatString: 0.00
+		lineageTag: 582d0e7c-2dc7-5b63-ae9a-76dc496b53f2
+		summarizeBy: none
+		sourceColumn: avg_resolution_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_reviews
+		dataType: int64
+		formatString: 0
+		lineageTag: 10d0d7a5-662f-5b1c-99f9-23a6c91054a9
+		summarizeBy: none
+		sourceColumn: qa_reviews
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_passed
+		dataType: int64
+		formatString: 0
+		lineageTag: 9182b4f4-c483-5d1d-a532-bb9416068c50
+		summarizeBy: none
+		sourceColumn: qa_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_avg_score
+		dataType: double
+		formatString: 0.00
+		lineageTag: 0ad71da6-0cb7-5136-9d47-1548131de71b
+		summarizeBy: none
+		sourceColumn: qa_avg_score
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_agent_day' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_agent_day = WorkforceDevAnalytics{[Schema="rpt",Item="fact_agent_day"]}[Data]
+				in
+				    rpt_fact_agent_day
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,210 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "b6f2d8a4c0e7b3f9d5a1",
+  "displayName": "Outcomes overview",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F6F5FA'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#E9EEF4'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "chSla",
+      "target": "kpiDeployed",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSla",
+      "target": "kpiRetention",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSla",
+      "target": "kpiProficient",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSla",
+      "target": "kpiDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSla",
+      "target": "kpiSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSla",
+      "target": "kpiGap",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtr",
+      "target": "kpiDeployed",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtr",
+      "target": "kpiRetention",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtr",
+      "target": "kpiProficient",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtr",
+      "target": "kpiDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtr",
+      "target": "kpiSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtr",
+      "target": "kpiGap",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chStatus",
+      "target": "kpiDeployed",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chStatus",
+      "target": "kpiRetention",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chStatus",
+      "target": "kpiProficient",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chStatus",
+      "target": "kpiDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chStatus",
+      "target": "kpiSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chStatus",
+      "target": "kpiGap",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chCohorts",
+      "target": "kpiDeployed",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chCohorts",
+      "target": "kpiRetention",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chCohorts",
+      "target": "kpiProficient",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chCohorts",
+      "target": "kpiDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chCohorts",
+      "target": "kpiSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chCohorts",
+      "target": "kpiGap",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbCohorts",
+      "target": "kpiDeployed",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbCohorts",
+      "target": "kpiRetention",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbCohorts",
+      "target": "kpiProficient",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbCohorts",
+      "target": "kpiDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbCohorts",
+      "target": "kpiSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbCohorts",
+      "target": "kpiGap",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -2,54 +2,152 @@ relationship AutoDetected_e8724649-c566-458d-aae0-8ce2bb7cd8c9
 	fromColumn: 'rpt fact_assessment'.competency_id
 	toColumn: 'rpt dim_competency'.competency_id
 
+
+
+
 relationship AutoDetected_fe221163-1a99-4004-9920-7c23aaf26814
 	fromColumn: 'rpt fact_assessment'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
+
+
+
 
 relationship AutoDetected_f1c78544-4388-4fba-8cef-69158266f245
 	fromColumn: 'rpt fact_attendance'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
 
+
+
+
 relationship AutoDetected_92b6be14-44c2-42d9-aaa7-c60481405af4
 	fromColumn: 'rpt fact_assessment'.programme_week
 	toColumn: 'rpt dim_programme_week'.programme_week
+
+
+
 
 relationship AutoDetected_76c873f0-b04f-42ff-9761-224dc49f897b
 	fromColumn: 'rpt fact_attendance'.programme_week
 	toColumn: 'rpt dim_programme_week'.programme_week
 
+
+
+
 relationship f8d426ca-02d7-d7ff-2b05-51164aee9370
 	fromColumn: 'rpt dim_enrolment'.cohort_id
 	toColumn: 'rpt dim_cohort'.cohort_id
+
+
+
 
 relationship 7adb7c15-7bbe-93cc-59ae-49bbfe89fde6
 	fromColumn: 'rpt fact_attendance'.session_date
 	toColumn: 'rpt dim_date'.date
 
+
+
+
 relationship 3590734e-7bd7-cc88-bd65-84002e8b8868
 	fromColumn: 'rpt fact_assessment'.assessment_date
 	toColumn: 'rpt dim_date'.date
+
+
+
 
 relationship e02383e3-725e-4c20-b47c-ac8442492716
 	fromColumn: 'rpt fact_watchlist_case'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
 
+
+
+
 relationship 4a56bdaa-7ecb-4201-a3ef-1f5ab5992883
 	fromColumn: 'rpt fact_watchlist_event'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
+
+
+
 
 relationship 75ed47fd-6270-46cb-9f70-901a2fd8b06c
 	fromColumn: 'rpt fact_coaching_action'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
 
+
+
+
 relationship f9692785-f9d9-453b-b669-635fb8d47759
 	fromColumn: 'rpt fact_certification_attempt'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
+
+
+
 
 relationship 65378a3b-b95d-4800-87df-af29dfc252e9
 	fromColumn: 'rpt fact_readiness_review'.enrolment_id
 	toColumn: 'rpt dim_enrolment'.enrolment_id
 
+
+
+
 relationship 3cf02a8d-eeac-41a3-a642-8a01c17bdc1a
 	fromColumn: 'rpt fact_certification_attempt'.certification_id
 	toColumn: 'rpt dim_certification'.certification_id
+
+
+
+relationship 57f76c61-6cd9-5e09-b75a-71360a40b2a4
+	fromColumn: 'rpt fact_payment_case'.agent_id
+	toColumn: 'rpt dim_agent'.agent_id
+
+relationship 3d635470-6926-5bce-ba62-a8d686fca1fb
+	fromColumn: 'rpt fact_qa_review'.agent_id
+	toColumn: 'rpt dim_agent'.agent_id
+
+relationship 297ce476-94a9-5782-b285-761c25127d08
+	fromColumn: 'rpt fact_qa_check'.agent_id
+	toColumn: 'rpt dim_agent'.agent_id
+
+relationship 661bf736-8fff-5eb1-94b8-26a55073d3cd
+	fromColumn: 'rpt fact_agent_day'.agent_id
+	toColumn: 'rpt dim_agent'.agent_id
+
+relationship 40bc5314-f60f-56c5-9c9a-1784c3036371
+	fromColumn: 'rpt fact_payment_case'.queue_id
+	toColumn: 'rpt dim_ops_queue'.queue_id
+
+relationship d5893965-8e9d-542e-a47e-8545c0c6c85a
+	fromColumn: 'rpt fact_qa_review'.queue_id
+	toColumn: 'rpt dim_ops_queue'.queue_id
+
+relationship 2d2284e2-d5f7-5bd2-bab8-4da6bfaf0e31
+	fromColumn: 'rpt fact_qa_check'.queue_id
+	toColumn: 'rpt dim_ops_queue'.queue_id
+
+relationship ae6c42f5-865c-534b-a8fc-f9b17a9d82a7
+	fromColumn: 'rpt fact_payment_case'.received_date
+	toColumn: 'rpt dim_date'.date
+
+relationship 6b40c0b4-79da-5256-8b82-38018d308384
+	fromColumn: 'rpt fact_qa_review'.reviewed_date
+	toColumn: 'rpt dim_date'.date
+
+relationship 87978e8c-4b68-560a-8805-9735c57d15ac
+	fromColumn: 'rpt fact_qa_check'.reviewed_date
+	toColumn: 'rpt dim_date'.date
+
+relationship ad209d71-b7c5-5fb7-a6f8-b0264b3f40e9
+	fromColumn: 'rpt fact_agent_day'.work_date
+	toColumn: 'rpt dim_date'.date
+
+relationship 3b3e04f6-67e6-53cf-a1e4-5bd9f7e32c2a
+	fromColumn: 'rpt fact_outcome_window'.agent_id
+	toColumn: 'rpt dim_graduate'.agent_id
+
+relationship ff343840-5efb-5fea-845a-6a23a7f7bbf9
+	fromColumn: 'rpt fact_payment_case'.agent_id
+	toColumn: 'rpt dim_graduate'.agent_id
+
+relationship 82af1d70-2998-5982-82f1-a20cd4fd468e
+	fromColumn: 'rpt fact_agent_day'.agent_id
+	toColumn: 'rpt dim_graduate'.agent_id
+

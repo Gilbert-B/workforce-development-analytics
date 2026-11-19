@@ -1,4 +1,4 @@
-# BI-03 measure and relationship proposal (FOR REVIEW: not implemented)
+# BI-03 measure and relationship proposal (IMPLEMENTED in D45; numbers below are from before the D46 data change)
 
 **Branch:** `bi/03-payment-operations`, from `main` at `ec62743` (the Build 03 merge).
 **Scope:** Report 02 (Payment Operations) on the shared semantic model. No model, DAX or report file has changed yet.

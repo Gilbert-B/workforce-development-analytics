@@ -1,0 +1,107 @@
+table 'rpt fact_qa_check'
+	lineageTag: 1cb533f1-9d91-55e8-a23e-89470513060b
+
+	measure 'Checklist Item Fail %' = DIVIDE ( CALCULATE ( COUNTROWS ( 'rpt fact_qa_check' ), KEEPFILTERS ( 'rpt fact_qa_check'[passed] = 0 ) ), COUNTROWS ( 'rpt fact_qa_check' ) )
+		formatString: 0.00%
+		displayFolder: Quality
+		lineageTag: a9c33031-8e81-5aab-b1be-4bdb118e71d3
+
+	column case_id
+		dataType: string
+		lineageTag: 41d375a9-4b8e-56c1-9969-7785c338faa7
+		summarizeBy: none
+		sourceColumn: case_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_code
+		dataType: string
+		lineageTag: 457313c3-5b73-559c-bfec-85031253da2a
+		summarizeBy: none
+		sourceColumn: item_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_name
+		dataType: string
+		lineageTag: db0569f3-654f-5f94-9980-79ab7de65018
+		summarizeBy: none
+		sourceColumn: item_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight
+		dataType: int64
+		formatString: 0
+		lineageTag: e5f6c3c4-f82d-552d-9630-9507232f9f2c
+		summarizeBy: none
+		sourceColumn: weight
+
+		annotation SummarizationSetBy = Automatic
+
+	column passed
+		dataType: int64
+		formatString: 0
+		lineageTag: 49f014df-3143-589a-b556-3242770d82ad
+		summarizeBy: none
+		sourceColumn: passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_id
+		dataType: string
+		lineageTag: 8c558467-314b-5a25-9306-8a07f8daba73
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column queue_id
+		dataType: string
+		lineageTag: 3319dbb4-7219-5796-aa86-f25ebf687609
+		summarizeBy: none
+		sourceColumn: queue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band
+		dataType: string
+		lineageTag: 162a9161-92f3-5333-850e-a0028137b2f9
+		summarizeBy: none
+		sourceColumn: tenure_band
+		sortByColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9862dc14-4eb0-53ce-b27f-8b0453ff9ead
+		summarizeBy: none
+		sourceColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column reviewed_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5c333617-5ff3-5e09-9e86-e56956eae5c2
+		summarizeBy: none
+		sourceColumn: reviewed_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'rpt fact_qa_check' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_qa_check = WorkforceDevAnalytics{[Schema="rpt",Item="fact_qa_check"]}[Data]
+				in
+				    rpt_fact_qa_check
+
+	annotation PBI_ResultType = Table

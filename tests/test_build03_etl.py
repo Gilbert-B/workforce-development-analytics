@@ -13,6 +13,10 @@ from conftest import REPO_ROOT
 
 pytestmark = pytest.mark.skipif(not os.environ.get("WDA_SQL_SERVER"), reason="set WDA_SQL_SERVER")
 SQL = REPO_ROOT / "sql"
+import json as _json  # noqa: E402
+MANIFEST = _json.loads((REPO_ROOT / "data/synthetic_horizon/build03/generation_manifest.json").read_text())
+P1_DOCS = MANIFEST["files"]["payment_cases_phase1.jsonl"]["rows"]      # includes the malformed documents
+BAD = 100
 
 
 def mongo_up() -> bool:
@@ -67,9 +71,9 @@ def test_1_interrupted_initial_load_resumes_without_loss(env):
     partial = scalar(env["conn"], "SELECT COUNT(*) FROM core.payment_case")
     assert 0 < partial <= 3 * 37
     r = env["etl"].run(env["server"], batch_size=37)               # incremental: resumes from the checkpoint
-    assert scalar(env["conn"], "SELECT COUNT(*) FROM core.payment_case") == 44066
+    assert scalar(env["conn"], "SELECT COUNT(*) FROM core.payment_case") == P1_DOCS - BAD
     assert scalar(env["conn"], "SELECT COUNT(DISTINCT case_id) FROM stg.rejected_record") == 100
-    assert partial + r["read"] == 44166                              # nothing skipped, nothing read twice
+    assert partial + r["read"] == P1_DOCS                              # nothing skipped, nothing read twice
     assert env["rec"].reconcile(env["server"])["unaccounted"] == 0
 
 
@@ -81,7 +85,7 @@ def test_2_repeat_run_reads_nothing(env):
 def test_3_full_reload_is_idempotent(env):
     before = scalar(env["conn"], "SELECT CHECKSUM_AGG(CHECKSUM(case_id, status, final_resolved_at)) FROM core.payment_case")
     r = env["etl"].run(env["server"], full=True)
-    assert (r["read"], r["loaded"], r["rejected"]) == (44166, 44066, 100)
+    assert (r["read"], r["loaded"], r["rejected"]) == (P1_DOCS, P1_DOCS - BAD, BAD)
     after = scalar(env["conn"], "SELECT CHECKSUM_AGG(CHECKSUM(case_id, status, final_resolved_at)) FROM core.payment_case")
     assert before == after
 
@@ -124,3 +128,18 @@ def test_7_reporting_views_and_sla_rules(env):
     early = scalar(c, "SELECT AVG(CAST(qa_passed AS FLOAT)) FROM rpt.fact_payment_case WHERE tenure_band = '0-30 days' AND qa_sampled = 1")
     mature = scalar(c, "SELECT AVG(CAST(qa_passed AS FLOAT)) FROM rpt.fact_payment_case WHERE tenure_band = '90+ days' AND qa_sampled = 1")
     assert early < mature
+
+
+def test_8_build04_outcome_windows(env):
+    """Build 04: 30/60/90-day windows are honest (NULL when not measurable) and its checks pass."""
+    import load_to_sql as b01
+    c = env["conn"]
+    b01.run_sql_file(c, SQL / "011_create_build04_outcome_views.sql")
+    cur = c.cursor().execute((SQL / "build04_validation_queries.sql").read_text(encoding="utf-8"))
+    while cur.description is None:
+        cur.nextset()
+    assert [r.check_name for r in cur.fetchall() if r.result == "FAIL"] == []
+    assert scalar(c, "SELECT COUNT(*) FROM rpt.dim_graduate") == scalar(
+        c, "SELECT COUNT(*) FROM core.ops_agent WHERE agent_type = 'Graduate'")
+    # an exit never becomes a zero-performance window
+    assert scalar(c, "SELECT COUNT(*) FROM rpt.fact_outcome_window WHERE is_complete = 0 AND cases_received = 0") == 0

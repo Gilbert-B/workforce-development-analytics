@@ -1151,7 +1151,7 @@ SEVERITY_COLOURS = (("High", CORAL), ("Medium", GOLD), ("Low", SLATE))
 # ------------------------------------------------------------- E. Coaching & Watch List (BI-02)
 def coaching_page() -> dict:
     pid, key = COACH_P, "coaching"
-    v = header(pid, key, "COACHING & WATCH LIST · SNAPSHOT 2 NOV 2026 UNLESS LABELLED", "Coaching & Watch List",
+    v = header(pid, key, "COACHING & WATCH LIST · AT THE DATA SNAPSHOT UNLESS LABELLED", "Coaching & Watch List",
                note="Descriptive only: no causal claim · unrecorded attendance \u2260 absent")
     z = 1100
     kpis = [("kpiOpenWatch", "OPEN WATCH-LIST ENROLMENTS", WLC, "Open Watch-list Enrolments (Snapshot)",
@@ -1233,7 +1233,7 @@ def coaching_page() -> dict:
 # ------------------------------------------------------------- F. Certification & Readiness (BI-02)
 def readiness_page() -> dict:
     pid, key = READY_P, "readiness"
-    v = header(pid, key, "CERTIFICATION & READINESS · COMPLETED ENROLMENTS · SNAPSHOT 2 NOV 2026", "Certification & Readiness",
+    v = header(pid, key, "CERTIFICATION & READINESS · COMPLETED ENROLMENTS · AT THE DATA SNAPSHOT", "Certification & Readiness",
                note="Readiness \u2260 deployment \u00b7 fictional internal certifications")
     z = 1100
     kpis = [("kpiAttempts", "ATTEMPTS", CATT, "Certification Attempts", "Attempt rows, incl. retakes", "doc", TEAL),
