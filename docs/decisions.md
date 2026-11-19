@@ -320,3 +320,144 @@ RETURN
 **Unchanged:** SQL, source data, relationships and every existing measure.
 
 
+
+---
+
+## Build 02: coaching, certification and readiness (2026-11-18, branch `build/02-coaching-certification-readiness`)
+
+Implements the approved specification (`BUILD02_COACHING_CERTIFICATION_READINESS_SPEC`, policy `B02-R1`). All thresholds are fictional and live in `config/build02_synthetic.toml`.
+
+### D27: Build 02 is generated from the committed Build 01 CSVs, and decisions only see what was recorded by then
+**Why:**
+- Build 01 is frozen and validated, so Build 02 *reads* its CSVs and never regenerates or edits them. A test proves the files' checksums are untouched.
+- Every simulated decision has a moment: a weekly review at 10:00, an exam, a readiness review. It only sees Build 01 records whose `recorded_at` is on or before that moment, which is a stronger guarantee than "nothing after the snapshot".
+- **Proof:** Build 02 generated from Build 01 *as it stood* on 10 June, 20 August and 12 October matches the full run observed on those dates. Same cases, attempts and reviews.
+
+**How it stays reproducible:**
+- **Own seed:** Build 02 uses seed 20261118, separate from Build 01's.
+- **One random stream per record**, seeded with text such as `seed|certification|ENR-00044|OCR`. One trainee's results therefore never depend on how many records were generated before them.
+- **Stable IDs:** IDs come from the enrolment number (`WLC-00044-1`), so they are the same at every as-of date.
+
+**Trade-off:** the "what was known when" lookups are simple linear scans. That's fine at 208 enrolments; with 100k+ enrolments, pre-index by date.
+
+### D28 (SUPERSEDED by D34): `sql/001_create_schema.sql` drops the Build 02 tables first
+**Why:**
+- The Build 02 tables have real foreign keys to `core.enrolment`, and SQL Server refuses to drop a table that other tables reference. Without this change, re-running Build 01's schema script would fail as soon as Build 02 exists.
+- The six added lines are `DROP TABLE IF EXISTS`. No Build 01 table, column, constraint, view, CSV or result changes.
+
+**Consequence:** reloading Build 01 removes the Build 02 tables; reload Build 02 afterwards. This is documented in the walkthrough.
+
+**Alternative rejected:** dropping the foreign keys, so 001 needed no edit. That would have weakened integrity, which the spec asks us to enforce.
+
+### D29: Rules within a row are CHECK constraints; rules across tables are validated twice, independently
+**Why:**
+- **Same-row rules → CHECK constraints.** Examples: Approved needs all gates plus sign-off; a closure reason only on Closed events; a manual referral has no trigger week. The database itself then refuses bad rows.
+- **Cross-table rules → validation in two places.** Examples: an attempt strictly after completion, no overlapping cases, gates matching the evidence actually on record. These are checked by the Python `validate()` **and**, independently, by `sql/build02_validation_queries.sql`, so a bug in one is caught by the other.
+- **The competency threshold (65) is not repeated in SQL,** because policy values live in config. The SQL instead checks that the gate was applied *consistently*: every passing score is above every failing one.
+
+### D30: Watch-list signals compare like with like; cases close on evidence, not on coaching
+**Signals.** Signals are reasons to *look*, not predictions, and they aren't stored; only the staff decision is. There are three:
+- **Low recorded attendance:** the last two weeks, Present ÷ (Present + Absent). Unrecorded marks are ignored, and at least 4 known marks are needed.
+- **Low competency:** at least 9 points below the cohort's **same-week** average.
+- **Declining scores:** a drop of at least 2.5 points from the previous week.
+
+**Opening a case.** Not every signal becomes a case (85%), and occasional manual referrals happen without any signal.
+
+**Closing a case:**
+- **Improved:** two consecutive signal-free reviews.
+- **Withdrawn / Programme ended:** an administrative closure once the exit is *recorded*.
+- **Administrative:** a resolved manual referral.
+
+Coaching actions are generated *after* each case's lifecycle and never influence closure, so the data can't "prove" that coaching works.
+
+**Change after coaching** is measured as the change in the trainee's gap to the cohort, because raw scores rise for almost everyone during training. With that measure, coached trainees go both ways: one gap narrowed by 3.2 points, another widened by 4.8.
+
+**One honest edge case (info check):** one case was opened a few days after a withdrawal that had happened but wasn't yet recorded. It closes as Withdrawn once the withdrawal is entered.
+
+### D31: Readiness gates use evidence on record before the review day; re-review only when something can change
+**Gates.** Gates are computed at review time from records entered before the review:
+- **completion** must be on record;
+- **certification:** each mandatory certification has a recorded pass;
+- **competency:** the latest week with **all five** competencies scored, average at least 65.
+
+**Approval.** Approval also needs manager sign-off (85% when every gate passes). Otherwise the review is Deferred with `SIGNOFF_PENDING`.
+
+**Deferral reason priority:** certification, then evidence, then competency, then sign-off.
+
+**Re-review.** A Deferred enrolment is reviewed again (up to 3 times) only when the cause can still change: a certification pending, or sign-off pending. A certification failed at the maximum number of attempts, or a competency score below threshold after training has ended, is final within Build 02.
+
+**History.** Every review keeps its own evidence, so a later approval never rewrites an earlier deferral.
+
+### D32: Reporting views carry the "pick one row" flags, so KPIs can't double-count
+**Flags added to the views:**
+- `fact_readiness_review.is_latest_review`, for "Approved now";
+- `fact_certification_attempt.pair_passed` and `is_first_attempt`, for the candidate and first-attempt pass rates;
+- `fact_watchlist_case.is_open_at_snapshot`, `action_count` and `days_to_first_action`, for coverage and timeliness at case grain.
+
+**Validation** reconciles the views with the core tables: open = total − closed; every action counted exactly once; one latest review per reviewed enrolment.
+
+**Keys and labels.** Facts carry `cohort_id` and `employee_id` only as labels. Power BI should relate on `enrolment_id` only (proposal in `docs/build02_data_dictionary.md`).
+
+**No seventh view.** There is no extra "readiness status per enrolment" view: "Not reviewed" is derived from `dim_enrolment` plus the latest review, as in `build02_analysis_examples.sql` query 7.
+
+### D33: Tuned synthetic parameters (fictional)
+The first run produced only 59% first-attempt passes, and most readiness reviews fell before trainees had sat their exams. The exam score was tuned to "latest training average − 1 ± 7", and the first review moved to 28–45 working days after completion.
+
+**Result:**
+- **First attempts:** 67% pass.
+- **Readiness outcomes:** a realistic mix of approvals, deferrals pending a retake, final deferrals and unreviewed completers.
+
+The policy values (70 pass mark, 2 attempts, 65 competency, sign-off required) were **not** changed.
+
+---
+
+## Build 02 conditional-approval changes (2026-11-18, same branch, PR #8)
+
+The owner and ChatGPT conditionally approved Build 02, with five requirements. D34–D37 implement them.
+
+### D34: Build 01's `001` is restored unchanged; Build 02 adds a guard and an explicit full reset (supersedes D28)
+**Why:**
+- Build 01 scripts must not know about later builds, so `001_create_schema.sql` is byte-identical to `main` again.
+- But with Build 02's foreign keys in place, the unchanged 001 would drop *some* Build 01 tables and then fail on `core.enrolment`. That was tested: it left Build 01 half-deleted.
+
+**What was built:**
+- **The guard.** `004` installs a database-level DDL trigger, `trg_protect_build01_from_partial_drop`. While Build 02 tables exist, it cancels any `DROP` of a Build 01 core table before anything is removed, with a message naming the reset procedure.
+- **The reset.** `sql/007_reset_build02_objects.sql` removes everything Build 02 added (6 views, 6 tables, the guard).
+- **One command.** `python/full_reset.py --confirm` runs 007 → Build 01 → Build 02 and both validations. It refuses to run without `--confirm`.
+
+**Lesson recorded.** A trigger keeps the `QUOTED_IDENTIFIER` setting it was created with. Created from `sqlcmd` (default OFF), its `EVENTDATA()` XML call failed and blocked every `DROP TABLE`. `004` now sets it ON explicitly, and `007` drops the trigger first, so the reset can always clean up. A test covers it.
+
+**Trade-off:** the trigger is a database object you can't see in the table list (find it under *Programmability → Database Triggers* in SSMS). In exchange, a wrong-order rebuild can no longer damage Build 01. At scale this is normally handled by migration tooling instead.
+
+### D35: Audit outputs for signals, evidence completeness and missing-attendance data quality (no new table)
+**Why:** the signals behind each watch-list decision, and the evidence behind each readiness status, must be inspectable and reproducible without adding a seventh core table.
+
+**What was built:**
+- **Two audit files from the generator** (in its manifest):
+  - `data/synthetic/build02/audit/review_signals.csv`: one row per weekly review, with eligible / recorded / present / **unrecorded** sessions, the rate, the `VERIFY_UNRECORDED_MARKS` data-quality flag, competency evidence, the gap to the cohort, signals, outcome and case ID.
+  - `audit/readiness_evidence.csv`: one row per completed enrolment, with competency evidence, certification status and populations.
+- **An independent SQL twin.** `sql/build02_audit_queries.sql` recomputes both from the database, and a test compares them value by value.
+
+**Thresholds stay in config.** The SQL reproduces the evidence *inputs*; its few schedule settings are declared at the top, and a test checks they equal the config.
+
+**No look-ahead.** A decision taken on the snapshot day but entered later is shown as "(entered after snapshot)" with its ID hidden, so the audit never reveals a record the dataset doesn't hold. Building this exposed exactly that issue: a first version listed 4 case IDs that weren't in the dataset yet.
+
+### D36: Snapshot flags are documented as snapshot-only; a time-aware pattern is provided
+`is_open_at_snapshot`, `case_status_as_of_snapshot`, `days_open` and `is_latest_review` describe the state at `core.data_snapshot.as_of_date`, using records entered by then. They are **not** "as of any date". This is documented in the view header, the data dictionary and the walkthrough.
+
+`build02_analysis_examples.sql` query 10 shows the correct pattern for any earlier date: filter on the effective **and** recorded dates, then take the latest row. Example on 2026-10-20: Cohort 3 had 13 open watch-list enrolments, and Cohort 2 stood at 18 Approved / 14 Deferred.
+
+### D37: Unactioned, unattempted and unreviewed populations are reported separately and reconciled
+**Grains are unchanged:**
+
+| KPI | Grain |
+|---|---|
+| Coverage | cases |
+| Candidate pass rate | enrolment × certification pairs |
+| First-attempt pass rate | attempts |
+| Readiness | completed enrolments, latest review |
+
+The people outside each denominator are reported, not dropped:
+- **Validation:** four `population_…` error checks prove each split adds back up to its whole, and four new info rows give the counts: 15 unactioned cases, 4 completers with no attempt, 16 mandatory pairs not attempted, 8 not reviewed.
+- **Analysis:** `build02_analysis_examples.sql` query 9 lists all populations per cohort; `readiness_evidence.csv` gives them per enrolment.
+
