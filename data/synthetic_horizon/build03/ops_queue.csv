@@ -1,0 +1,6 @@
+queue_id,queue_name,team_id,case_type_code
+Q-RETURNS,Returned payments,TM-RET,returned_payment
+Q-DUPLICATE,Duplicate payments,TM-RET,duplicate_payment
+Q-VALIDATE,Failed validation,TM-VAL,failed_validation
+Q-MISSING,Missing beneficiary info,TM-VAL,missing_beneficiary
+Q-SCREEN,Screening hits,TM-SCR,screening_hit

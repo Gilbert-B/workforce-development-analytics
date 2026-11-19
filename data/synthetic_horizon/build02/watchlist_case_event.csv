@@ -1,0 +1,137 @@
+watchlist_event_id,watchlist_case_id,event_type,effective_date,recorded_at,closure_reason,recorded_by_role
+WLE-00001-1-O,WLC-00001-1,Opened,2026-05-18,2026-05-18 11:00:00,,Training lead
+WLE-00001-1-C,WLC-00001-1,Closed,2026-06-01,2026-06-02 16:00:00,Improved,Programme coordinator
+WLE-00002-1-O,WLC-00002-1,Opened,2026-05-18,2026-05-19 11:00:00,,Training lead
+WLE-00002-1-C,WLC-00002-1,Closed,2026-06-26,2026-07-01 17:00:00,Programme ended,Programme coordinator
+WLE-00004-1-O,WLC-00004-1,Opened,2026-06-15,2026-06-17 11:00:00,,Training lead
+WLE-00004-1-C,WLC-00004-1,Closed,2026-06-26,2026-07-01 17:00:00,Programme ended,Programme coordinator
+WLE-00007-1-O,WLC-00007-1,Opened,2026-05-18,2026-05-20 11:00:00,,Training lead
+WLE-00007-1-C,WLC-00007-1,Closed,2026-06-15,2026-06-15 16:00:00,Improved,Programme coordinator
+WLE-00008-1-O,WLC-00008-1,Opened,2026-05-25,2026-05-26 11:00:00,,Training lead
+WLE-00008-1-C,WLC-00008-1,Closed,2026-06-26,2026-06-30 17:00:00,Programme ended,Programme coordinator
+WLE-00009-1-O,WLC-00009-1,Opened,2026-06-01,2026-06-03 11:00:00,,Training lead
+WLE-00009-1-C,WLC-00009-1,Closed,2026-06-15,2026-06-15 16:00:00,Improved,Programme coordinator
+WLE-00012-1-O,WLC-00012-1,Opened,2026-06-08,2026-06-10 11:00:00,,Training lead
+WLE-00012-1-C,WLC-00012-1,Closed,2026-06-26,2026-07-01 17:00:00,Programme ended,Programme coordinator
+WLE-00018-1-O,WLC-00018-1,Opened,2026-05-18,2026-05-20 11:00:00,,Training lead
+WLE-00018-1-C,WLC-00018-1,Closed,2026-06-26,2026-07-01 17:00:00,Programme ended,Programme coordinator
+WLE-00025-1-O,WLC-00025-1,Opened,2026-06-15,2026-06-17 11:00:00,,Training lead
+WLE-00025-1-C,WLC-00025-1,Closed,2026-06-17,2026-06-23 17:00:00,Withdrawn,Programme coordinator
+WLE-00032-1-O,WLC-00032-1,Opened,2026-06-22,2026-06-24 11:00:00,,Training lead
+WLE-00032-1-C,WLC-00032-1,Closed,2026-06-26,2026-06-29 17:00:00,Programme ended,Programme coordinator
+WLE-00033-1-O,WLC-00033-1,Opened,2026-05-18,2026-05-18 11:00:00,,Training lead
+WLE-00033-1-C,WLC-00033-1,Closed,2026-06-26,2026-07-02 17:00:00,Programme ended,Programme coordinator
+WLE-00040-1-O,WLC-00040-1,Opened,2026-06-08,2026-06-10 11:00:00,,Training lead
+WLE-00040-1-C,WLC-00040-1,Closed,2026-06-26,2026-07-01 17:00:00,Programme ended,Programme coordinator
+WLE-00042-1-O,WLC-00042-1,Opened,2026-06-01,2026-06-03 11:00:00,,Training lead
+WLE-00042-1-C,WLC-00042-1,Closed,2026-06-26,2026-06-29 17:00:00,Programme ended,Programme coordinator
+WLE-00043-1-O,WLC-00043-1,Opened,2026-05-25,2026-05-25 11:00:00,,Training lead
+WLE-00043-1-C,WLC-00043-1,Closed,2026-06-08,2026-06-10 16:00:00,Administrative,Programme coordinator
+WLE-00044-1-O,WLC-00044-1,Opened,2026-06-01,2026-06-01 11:00:00,,Training lead
+WLE-00044-1-C,WLC-00044-1,Closed,2026-06-22,2026-06-24 16:00:00,Improved,Programme coordinator
+WLE-00047-1-O,WLC-00047-1,Opened,2026-06-08,2026-06-10 11:00:00,,Training lead
+WLE-00047-1-C,WLC-00047-1,Closed,2026-06-22,2026-06-22 16:00:00,Administrative,Programme coordinator
+WLE-00049-1-O,WLC-00049-1,Opened,2026-06-01,2026-06-02 11:00:00,,Training lead
+WLE-00049-1-C,WLC-00049-1,Closed,2026-06-26,2026-06-30 17:00:00,Programme ended,Programme coordinator
+WLE-00053-1-O,WLC-00053-1,Opened,2026-06-01,2026-06-01 11:00:00,,Training lead
+WLE-00053-1-C,WLC-00053-1,Closed,2026-06-26,2026-06-30 17:00:00,Programme ended,Programme coordinator
+WLE-00057-1-O,WLC-00057-1,Opened,2026-06-08,2026-06-08 11:00:00,,Training lead
+WLE-00057-1-C,WLC-00057-1,Closed,2026-06-26,2026-07-01 17:00:00,Programme ended,Programme coordinator
+WLE-00061-1-O,WLC-00061-1,Opened,2026-05-18,2026-05-20 11:00:00,,Training lead
+WLE-00061-1-C,WLC-00061-1,Closed,2026-06-01,2026-06-02 16:00:00,Improved,Programme coordinator
+WLE-00061-2-O,WLC-00061-2,Opened,2026-06-22,2026-06-24 11:00:00,,Training lead
+WLE-00061-2-C,WLC-00061-2,Closed,2026-06-26,2026-06-29 17:00:00,Programme ended,Programme coordinator
+WLE-00064-1-O,WLC-00064-1,Opened,2026-05-18,2026-05-19 11:00:00,,Training lead
+WLE-00064-1-C,WLC-00064-1,Closed,2026-06-26,2026-06-29 17:00:00,Programme ended,Programme coordinator
+WLE-00066-1-O,WLC-00066-1,Opened,2026-05-18,2026-05-19 11:00:00,,Training lead
+WLE-00066-1-C,WLC-00066-1,Closed,2026-06-26,2026-06-30 17:00:00,Programme ended,Programme coordinator
+WLE-00073-1-O,WLC-00073-1,Opened,2026-08-24,2026-08-25 11:00:00,,Training lead
+WLE-00073-1-C,WLC-00073-1,Closed,2026-08-28,2026-09-02 17:00:00,Programme ended,Programme coordinator
+WLE-00077-1-O,WLC-00077-1,Opened,2026-07-27,2026-07-29 11:00:00,,Training lead
+WLE-00077-1-C,WLC-00077-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00085-1-O,WLC-00085-1,Opened,2026-08-10,2026-08-12 11:00:00,,Training lead
+WLE-00085-1-C,WLC-00085-1,Closed,2026-08-28,2026-09-02 17:00:00,Programme ended,Programme coordinator
+WLE-00089-1-O,WLC-00089-1,Opened,2026-07-27,2026-07-29 11:00:00,,Training lead
+WLE-00089-1-C,WLC-00089-1,Closed,2026-08-28,2026-08-31 17:00:00,Programme ended,Programme coordinator
+WLE-00094-1-O,WLC-00094-1,Opened,2026-08-24,2026-08-25 11:00:00,,Training lead
+WLE-00094-1-C,WLC-00094-1,Closed,2026-08-28,2026-08-31 17:00:00,Programme ended,Programme coordinator
+WLE-00097-1-O,WLC-00097-1,Opened,2026-08-17,2026-08-18 11:00:00,,Training lead
+WLE-00097-1-C,WLC-00097-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00100-1-O,WLC-00100-1,Opened,2026-08-03,2026-08-04 11:00:00,,Training lead
+WLE-00100-1-C,WLC-00100-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00102-1-O,WLC-00102-1,Opened,2026-08-17,2026-08-18 11:00:00,,Training lead
+WLE-00102-1-C,WLC-00102-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00104-1-O,WLC-00104-1,Opened,2026-08-03,2026-08-05 11:00:00,,Training lead
+WLE-00104-1-C,WLC-00104-1,Closed,2026-08-17,2026-08-18 16:00:00,Improved,Programme coordinator
+WLE-00107-1-O,WLC-00107-1,Opened,2026-08-03,2026-08-04 11:00:00,,Training lead
+WLE-00107-1-C,WLC-00107-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00111-1-O,WLC-00111-1,Opened,2026-08-03,2026-08-03 11:00:00,,Training lead
+WLE-00111-1-C,WLC-00111-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00112-1-O,WLC-00112-1,Opened,2026-08-10,2026-08-10 11:00:00,,Training lead
+WLE-00112-1-C,WLC-00112-1,Closed,2026-08-28,2026-09-02 17:00:00,Programme ended,Programme coordinator
+WLE-00117-1-O,WLC-00117-1,Opened,2026-08-10,2026-08-11 11:00:00,,Training lead
+WLE-00117-1-C,WLC-00117-1,Closed,2026-08-24,2026-08-26 16:00:00,Improved,Programme coordinator
+WLE-00119-1-O,WLC-00119-1,Opened,2026-08-24,2026-08-25 11:00:00,,Training lead
+WLE-00119-1-C,WLC-00119-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00126-1-O,WLC-00126-1,Opened,2026-07-20,2026-07-20 11:00:00,,Training lead
+WLE-00126-1-C,WLC-00126-1,Closed,2026-08-03,2026-08-05 16:00:00,Improved,Programme coordinator
+WLE-00127-1-O,WLC-00127-1,Opened,2026-08-03,2026-08-05 11:00:00,,Training lead
+WLE-00127-1-C,WLC-00127-1,Closed,2026-08-03,2026-08-10 17:00:00,Withdrawn,Programme coordinator
+WLE-00131-1-O,WLC-00131-1,Opened,2026-07-20,2026-07-20 11:00:00,,Training lead
+WLE-00131-1-C,WLC-00131-1,Closed,2026-08-17,2026-08-21 17:00:00,Withdrawn,Programme coordinator
+WLE-00132-1-O,WLC-00132-1,Opened,2026-07-27,2026-07-27 11:00:00,,Training lead
+WLE-00132-1-C,WLC-00132-1,Closed,2026-08-10,2026-08-11 16:00:00,Improved,Programme coordinator
+WLE-00138-1-O,WLC-00138-1,Opened,2026-08-03,2026-08-05 11:00:00,,Training lead
+WLE-00138-1-C,WLC-00138-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00139-1-O,WLC-00139-1,Opened,2026-08-24,2026-08-25 11:00:00,,Training lead
+WLE-00139-1-C,WLC-00139-1,Closed,2026-08-28,2026-09-01 17:00:00,Programme ended,Programme coordinator
+WLE-00145-1-O,WLC-00145-1,Opened,2026-10-19,2026-10-21 11:00:00,,Training lead
+WLE-00145-1-C,WLC-00145-1,Closed,2026-11-09,2026-11-10 16:00:00,Improved,Programme coordinator
+WLE-00150-1-O,WLC-00150-1,Opened,2026-10-05,2026-10-06 11:00:00,,Training lead
+WLE-00150-1-C,WLC-00150-1,Closed,2026-11-13,2026-11-18 17:00:00,Programme ended,Programme coordinator
+WLE-00154-1-O,WLC-00154-1,Opened,2026-10-19,2026-10-19 11:00:00,,Training lead
+WLE-00154-1-C,WLC-00154-1,Closed,2026-10-26,2026-10-28 17:00:00,Withdrawn,Programme coordinator
+WLE-00155-1-O,WLC-00155-1,Opened,2026-10-05,2026-10-06 11:00:00,,Training lead
+WLE-00155-1-C,WLC-00155-1,Closed,2026-11-13,2026-11-17 17:00:00,Programme ended,Programme coordinator
+WLE-00160-1-O,WLC-00160-1,Opened,2026-10-19,2026-10-21 11:00:00,,Training lead
+WLE-00160-1-C,WLC-00160-1,Closed,2026-11-13,2026-11-17 17:00:00,Programme ended,Programme coordinator
+WLE-00169-1-O,WLC-00169-1,Opened,2026-10-12,2026-10-14 11:00:00,,Training lead
+WLE-00169-1-C,WLC-00169-1,Closed,2026-11-13,2026-11-17 17:00:00,Programme ended,Programme coordinator
+WLE-00172-1-O,WLC-00172-1,Opened,2026-10-12,2026-10-13 11:00:00,,Training lead
+WLE-00172-1-C,WLC-00172-1,Closed,2026-10-26,2026-10-26 16:00:00,Administrative,Programme coordinator
+WLE-00175-1-O,WLC-00175-1,Opened,2026-11-02,2026-11-04 11:00:00,,Training lead
+WLE-00175-1-C,WLC-00175-1,Closed,2026-11-13,2026-11-19 17:00:00,Programme ended,Programme coordinator
+WLE-00176-1-O,WLC-00176-1,Opened,2026-11-02,2026-11-02 11:00:00,,Training lead
+WLE-00176-1-C,WLC-00176-1,Closed,2026-11-13,2026-11-18 17:00:00,Programme ended,Programme coordinator
+WLE-00177-1-O,WLC-00177-1,Opened,2026-10-26,2026-10-26 11:00:00,,Training lead
+WLE-00177-1-C,WLC-00177-1,Closed,2026-11-13,2026-11-19 17:00:00,Withdrawn,Programme coordinator
+WLE-00179-1-O,WLC-00179-1,Opened,2026-10-12,2026-10-13 11:00:00,,Training lead
+WLE-00179-1-C,WLC-00179-1,Closed,2026-11-02,2026-11-04 16:00:00,Improved,Programme coordinator
+WLE-00182-1-O,WLC-00182-1,Opened,2026-10-05,2026-10-06 11:00:00,,Training lead
+WLE-00182-1-C,WLC-00182-1,Closed,2026-10-19,2026-10-20 16:00:00,Administrative,Programme coordinator
+WLE-00183-1-O,WLC-00183-1,Opened,2026-10-05,2026-10-06 11:00:00,,Training lead
+WLE-00183-1-C,WLC-00183-1,Closed,2026-11-13,2026-11-16 17:00:00,Programme ended,Programme coordinator
+WLE-00184-1-O,WLC-00184-1,Opened,2026-10-12,2026-10-13 11:00:00,,Training lead
+WLE-00184-1-C,WLC-00184-1,Closed,2026-11-13,2026-11-18 17:00:00,Programme ended,Programme coordinator
+WLE-00185-1-O,WLC-00185-1,Opened,2026-11-02,2026-11-03 11:00:00,,Training lead
+WLE-00185-1-C,WLC-00185-1,Closed,2026-11-13,2026-11-16 17:00:00,Programme ended,Programme coordinator
+WLE-00187-1-O,WLC-00187-1,Opened,2026-10-05,2026-10-06 11:00:00,,Training lead
+WLE-00187-1-C,WLC-00187-1,Closed,2026-10-19,2026-10-21 16:00:00,Improved,Programme coordinator
+WLE-00188-1-O,WLC-00188-1,Opened,2026-11-02,2026-11-04 11:00:00,,Training lead
+WLE-00188-1-C,WLC-00188-1,Closed,2026-11-13,2026-11-17 17:00:00,Programme ended,Programme coordinator
+WLE-00192-1-O,WLC-00192-1,Opened,2026-10-05,2026-10-07 11:00:00,,Training lead
+WLE-00192-1-C,WLC-00192-1,Closed,2026-11-02,2026-11-04 16:00:00,Improved,Programme coordinator
+WLE-00196-1-O,WLC-00196-1,Opened,2026-10-19,2026-10-21 11:00:00,,Training lead
+WLE-00196-1-C,WLC-00196-1,Closed,2026-11-13,2026-11-18 17:00:00,Programme ended,Programme coordinator
+WLE-00198-1-O,WLC-00198-1,Opened,2026-10-26,2026-10-26 11:00:00,,Training lead
+WLE-00198-1-C,WLC-00198-1,Closed,2026-11-13,2026-11-18 17:00:00,Programme ended,Programme coordinator
+WLE-00201-1-O,WLC-00201-1,Opened,2026-10-12,2026-10-14 11:00:00,,Training lead
+WLE-00201-1-C,WLC-00201-1,Closed,2026-10-26,2026-10-26 16:00:00,Improved,Programme coordinator
+WLE-00206-1-O,WLC-00206-1,Opened,2026-10-05,2026-10-06 11:00:00,,Training lead
+WLE-00206-1-C,WLC-00206-1,Closed,2026-11-13,2026-11-17 17:00:00,Programme ended,Programme coordinator
+WLE-00207-1-O,WLC-00207-1,Opened,2026-10-05,2026-10-07 11:00:00,,Training lead
+WLE-00207-1-C,WLC-00207-1,Closed,2026-11-13,2026-11-19 17:00:00,Programme ended,Programme coordinator
+WLE-00208-1-O,WLC-00208-1,Opened,2026-10-05,2026-10-05 11:00:00,,Training lead
+WLE-00208-1-C,WLC-00208-1,Closed,2026-10-19,2026-10-19 16:00:00,Improved,Programme coordinator
+WLE-00208-2-O,WLC-00208-2,Opened,2026-11-02,2026-11-04 11:00:00,,Training lead
+WLE-00208-2-C,WLC-00208-2,Closed,2026-11-13,2026-11-17 17:00:00,Programme ended,Programme coordinator

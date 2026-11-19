@@ -1,0 +1,6 @@
+case_type_code,case_type_name
+returned_payment,Returned payment
+duplicate_payment,Duplicate payment
+failed_validation,Failed validation
+missing_beneficiary,Missing beneficiary details
+screening_hit,Screening hit (manual review)

@@ -1,0 +1,93 @@
+# Build 03 synthetic assumptions: payment operations (FICTIONAL policy and behaviour).
+# Change values here, not in the code, then re-run python/generate_build03_data.py.
+# Inputs: the horizon dataset (data/synthetic_horizon/, Builds 01-02 to 2027-06-30).
+
+[run]
+seed = 20261125
+policy_version = "B03-R1"
+ops_start = "2026-08-03"          # first operations day covered by the data (a Monday)
+incremental_cutoff = "2027-05-31" # phase 1 = documents as known on this date; phase 2 = horizon
+
+[agents]
+tenured_count = 40                # experienced agents (no training enrolment): the benchmark group
+tenured_start_years = [2021, 2025]
+deploy_lag_business_days = [5, 15]   # after the readiness approval is RECORDED
+teams = [
+  { team_id = "TM-RET", team_name = "Returns & Recalls" },
+  { team_id = "TM-VAL", team_name = "Validation & Repair" },
+  { team_id = "TM-SCR", team_name = "Screening Review" },
+]
+# One queue per case type; weight = share of agents (and so of cases).
+queues = [
+  { queue_id = "Q-RETURNS",   queue_name = "Returned payments",       team_id = "TM-RET", case_type = "returned_payment",     case_type_name = "Returned payment",             weight = 0.30 },
+  { queue_id = "Q-DUPLICATE", queue_name = "Duplicate payments",      team_id = "TM-RET", case_type = "duplicate_payment",    case_type_name = "Duplicate payment",            weight = 0.15 },
+  { queue_id = "Q-VALIDATE",  queue_name = "Failed validation",       team_id = "TM-VAL", case_type = "failed_validation",    case_type_name = "Failed validation",            weight = 0.25 },
+  { queue_id = "Q-MISSING",   queue_name = "Missing beneficiary info", team_id = "TM-VAL", case_type = "missing_beneficiary",  case_type_name = "Missing beneficiary details",  weight = 0.20 },
+  { queue_id = "Q-SCREEN",    queue_name = "Screening hits",          team_id = "TM-SCR", case_type = "screening_hit",        case_type_name = "Screening hit (manual review)", weight = 0.10 },
+]
+
+[exits]
+graduate_exit_probability = 0.08  # leave within the first 180 days of deployment
+graduate_exit_window_days = [20, 180]
+tenured_annual_exit_probability = 0.05
+
+[volume]
+target_cases = 50000              # start here; benchmark before scaling to 100k-250k
+
+[productivity]
+# Throughput (cases per day, relative to a tenured agent)
+graduate_throughput_start = 0.60
+graduate_throughput_mature = [0.90, 1.05]
+tenured_throughput = [0.90, 1.10]
+ramp_days = [25, 55]              # learning-curve time constant, business days (individual)
+# Accuracy = chance a case is handled without error (realistic, imperfect improvement)
+graduate_initial_accuracy = [0.86, 0.92]
+graduate_mature_accuracy = [0.95, 0.98]
+tenured_accuracy = [0.955, 0.985]
+plateau_probability = 0.15        # some graduates only get half-way to their mature level
+daily_accuracy_noise = 0.01
+training_effect = 0.006           # +0.6 accuracy points per SD of final training competency
+certification_ramp_speedup = 0.20 # first-attempt pass on both certifications: 20% faster ramp
+new_agent_slowdown = 1.4          # resolution time multiplier on day 0, easing to 1.0 with the ramp
+
+[cases]
+priority_mix = { P1 = 0.10, P2 = 0.50, P3 = 0.40 }
+channels = ["bank_portal", "swift_message", "branch_referral", "customer_email"]
+amount_bands = ["<1k", "1k-10k", "10k-100k", ">100k"]
+resolution_median_hours = { P1 = 2.0, P2 = 9.0, P3 = 28.0 }
+resolution_sigma = 0.65
+pending_info_probability = 0.12   # waiting for information (adds time; NO SLA pause)
+pending_info_hours = [4, 48]
+reassignment_probability = 0.05
+undetected_error_reopen_probability = 0.50   # an error not caught by QA comes back
+reopen_after_days = [1, 10]
+
+# SLA targets (hours, received -> FINAL resolution, no pauses), by priority.
+# screening hits have a stricter P1 target.
+[sla.targets]
+P1 = 4
+P2 = 24
+P3 = 72
+[sla.overrides]
+screening_hit_P1 = 2
+
+[qa]
+sample_rate_first_30_days = 0.25
+sample_rate_after = 0.10
+review_after_business_days = [1, 3]
+review_hour = 14                  # QA reviews are batched at 14:00 (realistic, and creates tied timestamps)
+pass_mark = 85
+random_minor_miss_probability = 0.03
+# Six weighted checklist items (weights sum to 100)
+checklist = [
+  { item = "beneficiary_verified",    weight = 20 },
+  { item = "correct_resolution_code", weight = 15 },
+  { item = "funds_movement_correct",  weight = 25 },
+  { item = "customer_communication",  weight = 10 },
+  { item = "documentation_complete",  weight = 15 },
+  { item = "screening_controls",      weight = 15 },
+]
+error_category_mix = { procedural = 0.50, financial = 0.30, compliance = 0.20 }
+
+[data_quality]
+malformed_documents = 100         # ~0.2%: deliberately broken documents the ETL must reject
