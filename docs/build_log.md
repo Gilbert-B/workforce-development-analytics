@@ -327,3 +327,38 @@ FROM per_enrol GROUP BY cohort_id, programme_week ORDER BY cohort_id, programme_
 
 **Next:** ChatGPT sign-off, then the PR and merge.
 
+## ARCH-01: Suite foundation (2026-11-19, branch `arch/01-suite-foundation`)
+**Built:**
+- the Report 02 shell (light theme) on the **shared** model;
+- `pbir_lib.py` (shared helpers);
+- `check_model_additive.py` (optional).
+
+Report 01 and the model are untouched: identical to `main`.
+
+**Evidence (Claude's environment):**
+- Report 01 regenerates byte-identically after the helper extraction.
+- Report 02 passes Microsoft's PBIR schemas (29 files), and its 4 field references all exist in the shared model.
+- The model check passes: OK against `a899666`, and it finds BI-02's 29 additions against the pre-BI-02 model.
+- `python -m pytest` gives **150 passed** (133 + 17 checker tests).
+- The full reset is all OK.
+
+### Owner Desktop test
+1. **Get the branch and rebuild the database:**
+   ```powershell
+   git fetch origin
+   git checkout arch/01-suite-foundation
+   git pull
+   python python\full_reset.py --server localhost --confirm
+   ```
+2. **Open `powerbi\payment-operations.pbip` and click Refresh.**
+   - **Cards:** Approved for readiness **71**, Completed trainees **127**, Total enrolments **208**; the pill shows "Data as of 2 Nov 2026 | Synthetic data".
+   - **The Data pane** lists every shared table (`rpt dim_enrolment`, `rpt fact_readiness_review`, …), proving Report 02 uses the shared model.
+3. **Close with "Don't save".** Open `powerbi\workforcedevelopmentanalytics.pbip`: Report 01 works exactly as before. Close with "Don't save".
+4. **Run `git status`:** it should be clean. If Desktop rewrote any file, note which.
+5. **Tell me what you saw about refresh:** after refreshing in Report 02, did Report 01 open with data straight away, or did it need its own refresh? That shows whether the two reports share one local data cache.
+6. **Optional:**
+   - `python powerbi\tools\check_model_additive.py --base a899666` should print `OK - additive only`;
+   - to create the baseline tags: `git tag -a report01-v1 a899666 -m "Report 01 baseline"`, `git tag -a model-v1 a899666 -m "Model baseline"`, then `git push origin --tags`.
+
+**Owner result:** *pending.*
+
