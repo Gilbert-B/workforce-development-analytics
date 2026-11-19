@@ -582,3 +582,9 @@ The tags `report01-v1` and `model-v1` exist in Claude's environment only, becaus
 - QA is a six-item weighted checklist (pass at 85) on sampled cases only.
 
 **Kept simple on purpose:** no orchestration tool, no change streams, no MERGE. Plain Python plus transactions are enough for 50k documents, and easy to read.
+
+### D44: BI-03 preparation, data-layer fixes and the horizon promotion (2026-11-19, branch `bi/03-payment-operations`)
+**Why:** Report 02 imports `rpt.fact_agent_day`, and that view took minutes because it was stacked on two other views. It's now rebuilt in one pass from the core tables (seconds). It also missed weekend resolutions, and 24 resolutions were credited to agents after they had left. Exited agents now hand their cases over to a teammate, with a new assignment event, so the history is kept. The agent-day grid adds the extra days actually worked. Two new checks guard both rules.
+**Trade-off:** weekend cover is modelled as unscheduled extra days, not a shift rota. That's enough for the productivity measures.
+**At scale:** materialise `fact_agent_day` as a table during the ETL, instead of a view.
+**Pending review:** B0 (promote the horizon as the suite default; required because Reports 01 and 02 share one model and one database), B1 (date roles) and B2 (15 measures). See `docs/bi03_measure_proposal.md`.

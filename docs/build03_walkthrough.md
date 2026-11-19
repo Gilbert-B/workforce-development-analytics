@@ -37,7 +37,7 @@ python python\etl\reconcile.py --server localhost
 | 4 | `Phase 1: 44166 new documents` |
 | 5 | `read 44166, loaded 44066, rejected 100`, then the repeat run: `read 0, loaded 0, rejected 0` |
 | 6 | `Phase 2: 5969 new documents; collection now holds 50135`, then `read 6211, loaded 6211, rejected 0` |
-| 7 | `24 of 24 checks OK` (50,035 cases, 249 open at the horizon, 19 of them overdue, 11 agents exited); then `MongoDB 50135 = SQL cases 50035 + rejected 100 … OK` |
+| 7 | `26 of 26 checks OK` (50,035 cases, 249 open at the horizon, 19 of them overdue, 11 agents exited); then `MongoDB 50135 = SQL cases 50035 + rejected 100 … OK` |
 
 **Tests:** `python -m pytest`, with `$env:WDA_SQL_SERVER = "localhost"` set and MongoDB running, gives **170 passed**. The 7 pipeline tests are skipped if MongoDB isn't running.
 
@@ -56,10 +56,12 @@ FROM rpt.fact_payment_case GROUP BY tenure_band;
 | tenure_band | cases | SLA met | first-time right | QA pass (sampled) |
 |---|---|---|---|---|
 | 0-30 days | 3,370 | 74.5% | 95.6% | 92.7% |
-| 31-60 days | 3,829 | 79.6% | 96.8% | 96.7% |
+| 31-60 days | 3,824 | 79.6% | 96.8% | 96.7% |
 | 61-90 days | 3,974 | 80.7% | 97.6% | 97.3% |
-| 90+ days | 19,845 | 83.3% | 97.1% | 96.9% |
-| Tenured | 19,017 | 84.2% | 98.0% | 97.6% |
+| 90+ days | 19,843 | 83.3% | 97.1% | 96.9% |
+| Tenured | 19,024 | 84.2% | 98.0% | 97.6% |
+
+(This quick query averages first-time-right over *all* cases, open ones included. Report 02's measure uses resolved cases only: see `docs/bi03_measure_proposal.md`.)
 
 ```sql
 SELECT reason, COUNT(*) FROM stg.rejected_record GROUP BY reason;   -- 5 fault types x 20
