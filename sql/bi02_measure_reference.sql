@@ -15,7 +15,9 @@ USE WorkforceDevAnalytics;
 SET NOCOUNT ON;
 
 DECLARE @snap DATE = (SELECT as_of_date FROM core.data_snapshot);
-DECLARE @cutoff DATETIME2(0) = DATEADD(MINUTE, 23 * 60 + 59, CAST(@snap AS DATETIME2(0)));
+-- Records entered on the snapshot day count; the boundary is EXCLUSIVE at the next
+-- midnight (recorded_at < next day), so no time of day on 2 Nov can fall through.
+DECLARE @next_day DATETIME2(0) = DATEADD(DAY, 1, CAST(@snap AS DATETIME2(0)));
 
 WITH
 -- status at the snapshot from the raw lifecycle events (no rpt function)
@@ -67,7 +69,7 @@ completed AS (
             WHERE p.enrolment_id = s.enrolment_id AND p.passed = 1) AS mandatory_passed,
            -- latest review ENTERED by the snapshot (highest review_number)
            (SELECT TOP (1) r.decision FROM core.readiness_review AS r
-            WHERE r.enrolment_id = s.enrolment_id AND r.recorded_at <= @cutoff
+            WHERE r.enrolment_id = s.enrolment_id AND r.recorded_at < @next_day
             ORDER BY r.review_number DESC) AS latest_decision
     FROM status AS s
     WHERE s.status = 'Completed'
@@ -142,3 +144,25 @@ SELECT measure, cohort_id, numerator, denominator,
        END AS expected_in_power_bi
 FROM m
 ORDER BY n, CASE cohort_id WHEN 'ALL' THEN 'Z' ELSE cohort_id END;
+
+/* ---- Certification selection (pick one certification in a slicer/filter) ----
+   Rates and attempts follow the selection. The "outside the rates" populations
+   are defined across ALL mandatory certifications, so they must NOT change:
+   Completers With No Certification Attempt stays 4, Unattempted Certification
+   Opportunities stays 16 and Mandatory Certifications Met stays 81. */
+WITH attempts AS (
+    SELECT a.*, ct.certification_name FROM core.certification_attempt AS a
+    JOIN core.certification_type AS ct ON ct.certification_id = a.certification_id
+), pairs AS (
+    SELECT enrolment_id, certification_name, MAX(CASE WHEN result = 'Passed' THEN 1 ELSE 0 END) AS passed
+    FROM attempts GROUP BY enrolment_id, certification_name
+)
+SELECT p.certification_name,
+       (SELECT COUNT(*) FROM attempts AS a WHERE a.certification_name = p.certification_name) AS certification_attempts,
+       CAST(100.0 * SUM(p.passed) / COUNT(*) AS DECIMAL(5,1)) AS candidate_pass_rate_pct,
+       CONCAT(SUM(p.passed), '/', COUNT(*)) AS passed_pairs_of_attempted,
+       (SELECT CAST(100.0 * SUM(CASE WHEN a.result = 'Passed' THEN 1 ELSE 0 END) / COUNT(*) AS DECIMAL(5,1))
+        FROM attempts AS a WHERE a.certification_name = p.certification_name AND a.attempt_number = 1) AS first_attempt_pass_pct
+FROM pairs AS p
+GROUP BY p.certification_name
+ORDER BY p.certification_name;

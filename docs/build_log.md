@@ -255,3 +255,67 @@ FROM per_enrol GROUP BY cohort_id, programme_week ORDER BY cohort_id, programme_
 - **Skills strip:** Cohort 2 shows +5.2 at Week 3 and +4.7 at Week 4. Week 1 alone is empty. With all weeks, Cohort 1 shows +2.8 and Cohort 3 shows +3.9.
 - **Trainee 360:** ENR-00143 at Week 3 shows trainee 63.6 against Cohort 3's 63.2.
 
+## BI-02: Coaching, Certification & Readiness analytics (2026-11-19, branch `bi/02-coaching-certification-readiness`)
+**Built on:** `main` at `216f056` (Build 02 merge).
+
+**Approved contract:** `docs/bi02_measure_proposal.md`.
+
+**Independent reference values:** `sql/bi02_measure_reference.sql`.
+
+**What changed:**
+
+| Area | Change |
+|---|---|
+| Semantic model | +6 tables (`rpt dim_certification`, `fact_watchlist_case`, `fact_watchlist_event`, `fact_coaching_action`, `fact_certification_attempt`, `fact_readiness_review`); +6 relationships; +17 measures (folders *Watch-list & Coaching*, *Certification*, *Readiness*) |
+| New pages | **Coaching & Watch List**, **Certification & Readiness** (rail items *Coaching*, *Readiness*) |
+| Trainee 360 | readiness banner + watch-list episodes, coaching actions, certification attempts, review timeline. The page is now 1824 px tall; scroll down |
+| Existing pages | rail only: two new items, and Trainee 360's rail item moved down. No data visual changed |
+| Unchanged | all SQL, Python, data, existing tables, relationships and measures; the D26 measures |
+
+**Evidence (Claude's environment):**
+- **Model:** the Microsoft TMDL parser loads it: 14 tables, 14 relationships (8 existing + 6 new), all many-to-one, single direction, active.
+- **DAX references:** every column and measure the new DAX refers to exists.
+- **Report:** 451 report files pass Microsoft's schemas; the cross-file checks pass on 8 pages, 426 visuals, 13 bookmarks and 86 fields.
+- **Generator:** output is identical across runs, and the existing pages differ from `main` only in rail visuals.
+- **Data layer:** `python -m pytest` gives 133 passed, and the full reset gives all checks OK.
+- **Reference values:** `sql/bi02_measure_reference.sql` was run, and it reproduces 15 / 4 / 16 / 8.
+- **Not run here:** DAX execution (no Power BI engine). That is the owner's Desktop check.
+
+### Owner validation in Power BI Desktop (steps)
+1. **Get the branch** (PowerShell):
+   ```powershell
+   git fetch origin
+   git checkout bi/02-coaching-certification-readiness
+   git pull
+   python python\full_reset.py --server localhost --confirm
+   ```
+2. **Open the report and refresh.** Close Desktop first if it's open. Open `powerbi\workforcedevelopmentanalytics.pbip` and click **Refresh**. The six new tables load with no errors: in **Model view**, check the six new relationship lines (one to many, single arrow).
+3. **SQL targets.** In SSMS, run `sql\bi02_measure_reference.sql`: 64 rows plus 2 certification rows.
+4. **Scratch-page matrix:** `rpt dim_cohort[cohort_name]` on rows, the 17 measures as values. Every cell must match proposal section 3.
+5. **The validation plan, proposal section 6:**
+   - 6.2 multiple cohort selections;
+   - 6.3 retakes (304 attempts vs 238 pairs);
+   - 6.4 blank denominators (Cohort 3 percentages blank);
+   - 6.5 a date slicer changes nothing;
+   - 6.6 status filtering (the Withdrawn column: 0 and blank);
+   - 6.7 repeat enrolments (ENR-00025 has the case; ENR-00143 has none);
+   - 6.8 certification selection (4 / 16 / 81 unchanged).
+
+   Delete the scratch page afterwards.
+6. **Pages:**
+   - the rail opens Coaching and Readiness;
+   - the cohort tiles stay in sync across pages;
+   - Clear filters works;
+   - chart clicks don't change the KPI cards;
+   - the unactioned table shows **15** rows, and drill-through on a row opens Trainee 360.
+7. **Trainee 360:** drill through ENR-00044 (Cohort 1). Scroll down:
+   - banner "Approved for readiness (not deployment)";
+   - case WLC-00044-1 (Improved, 2 actions);
+   - OCR 69 Failed → 89 Passed;
+   - reviews Deferred (CERTIFICATION_PENDING) → Approved.
+
+   ENR-00143 shows "Not yet eligible: training in progress", with empty history tables and no red "Failed" anywhere.
+8. **Close Desktop.** Save only if you intend to keep layout changes; otherwise choose **Don't save** so `git status` stays clean.
+
+**Owner validation result:** *pending.*
+

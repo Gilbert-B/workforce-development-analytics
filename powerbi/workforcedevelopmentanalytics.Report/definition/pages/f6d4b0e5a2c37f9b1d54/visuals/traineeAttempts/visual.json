@@ -1,0 +1,145 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "traineeAttempts",
+  "position": {
+    "x": 150,
+    "y": 1558,
+    "z": 1127,
+    "width": 832,
+    "height": 214,
+    "tabOrder": 1127
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_certification"
+                    }
+                  },
+                  "Property": "certification_name"
+                }
+              },
+              "queryRef": "rpt dim_certification.certification_name",
+              "nativeQueryRef": "certification_name",
+              "displayName": "Certification"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "attempt_number"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.attempt_number",
+              "nativeQueryRef": "attempt_number",
+              "displayName": "Attempt"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "attempt_date"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.attempt_date",
+              "nativeQueryRef": "attempt_date",
+              "displayName": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "score"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.score",
+              "nativeQueryRef": "score",
+              "displayName": "Score"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "pass_mark"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.pass_mark",
+              "nativeQueryRef": "pass_mark",
+              "displayName": "Pass mark"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "result"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.result",
+              "nativeQueryRef": "result",
+              "displayName": "Result"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_certification_attempt"
+                  }
+                },
+                "Property": "attempt_date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

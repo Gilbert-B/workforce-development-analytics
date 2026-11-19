@@ -1,0 +1,263 @@
+table 'rpt fact_readiness_review'
+	lineageTag: 35be8527-5770-467a-aa60-baaee6e07d4e
+
+	measure 'Reviewed for Readiness' = ```
+			-- completed enrolments with >= 1 review
+			COALESCE (
+			    CALCULATE ( DISTINCTCOUNT ( 'rpt fact_readiness_review'[enrolment_id] ),
+			                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) ),
+			    0
+			)
+			```
+		formatString: 0
+		displayFolder: Readiness
+		lineageTag: 1e2c4b96-855c-4ade-9022-fcc8314769d7
+
+	measure 'Unreviewed Completers' = ```
+			-- completed, no review yet: NOT deferred, NOT failed
+			VAR CompletedInContext =
+			    CALCULATE ( COUNTROWS ( 'rpt dim_enrolment' ),
+			                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+			RETURN
+			    COALESCE ( CompletedInContext, 0 ) - [Reviewed for Readiness]
+			```
+		formatString: 0
+		displayFolder: Readiness
+		lineageTag: b421ab84-aec3-4fe6-80e2-1c9e0508988a
+
+	measure 'Ready / Approved (Snapshot)' = ```
+			-- LATEST review per enrolment = Approved (a superseded approval never counts)
+			COALESCE (
+			    CALCULATE ( DISTINCTCOUNT ( 'rpt fact_readiness_review'[enrolment_id] ),
+			                'rpt fact_readiness_review'[is_latest_review] = 1,
+			                'rpt fact_readiness_review'[decision] = "Approved",
+			                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) ),
+			    0
+			)
+			```
+		formatString: 0
+		displayFolder: Readiness
+		lineageTag: 2e44d0fc-c95d-475a-a98b-798f28961199
+
+	measure 'Readiness Approval Rate' = ```
+			-- approved / latest-reviewed completers
+			DIVIDE ( [Ready / Approved (Snapshot)], [Reviewed for Readiness] )
+			```
+		formatString: 0.0%
+		displayFolder: Readiness
+		lineageTag: 7ab4ed59-12f0-4cd4-b1e0-fed8f8bedfa8
+
+	measure 'Readiness Coverage' = ```
+			-- approved / ALL completers in the current filter
+			DIVIDE (
+			    [Ready / Approved (Snapshot)],
+			    CALCULATE ( COUNTROWS ( 'rpt dim_enrolment' ),
+			                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+			)
+			```
+		formatString: 0.0%
+		displayFolder: Readiness
+		lineageTag: b301470c-8c7e-4fe6-b506-7255180c5d6b
+
+	measure 'Readiness Status Label' = ```
+			-- Trainee 360 badge for ONE enrolment; never says "Failed"
+			IF (
+			    HASONEVALUE ( 'rpt dim_enrolment'[enrolment_id] ),
+			    VAR Status = SELECTEDVALUE ( 'rpt dim_enrolment'[status_as_of_snapshot] )
+			    VAR Latest =
+			        CALCULATE ( SELECTEDVALUE ( 'rpt fact_readiness_review'[decision] ), 'rpt fact_readiness_review'[is_latest_review] = 1 )
+			    VAR Reason =
+			        CALCULATE ( SELECTEDVALUE ( 'rpt fact_readiness_review'[decision_reason_code] ), 'rpt fact_readiness_review'[is_latest_review] = 1 )
+			    RETURN
+			        SWITCH ( TRUE (),
+			            Status = "Active", "Not yet eligible: training in progress",
+			            Status <> "Completed", "Not eligible: enrolment ended (" & Status & ")",
+			            ISBLANK ( Latest ), "Completed: not yet reviewed",
+			            Latest = "Approved", "Approved for readiness (not deployment)",
+			            "Deferred: " & Reason ),
+			    ""
+			)
+			```
+		displayFolder: Readiness
+		lineageTag: ecd69508-b049-4171-9c85-552bcc59d063
+
+	column readiness_review_id
+		dataType: string
+		lineageTag: 561c3fdc-aba8-47ab-9a11-e3ce559a9ff3
+		summarizeBy: none
+		sourceColumn: readiness_review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 2d138d23-53c4-4966-92dd-4f5f8d7b71dc
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: dbf9711a-5cba-43f3-8ff4-2c388a666d14
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: f9337a70-b2cf-4477-92b6-058e40094956
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 46081579-ade4-4c6d-8a6e-64d0f15bf655
+		summarizeBy: none
+		sourceColumn: review_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: be68852e-bdbb-4992-bc90-72035888e7c1
+		summarizeBy: none
+		sourceColumn: review_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column recorded_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5b152be9-1cfd-41ba-90d8-e648a5427840
+		summarizeBy: none
+		sourceColumn: recorded_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision
+		dataType: string
+		lineageTag: f47226d4-1506-4dc3-8ed4-10eea9f2b35d
+		summarizeBy: none
+		sourceColumn: decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision_reason_code
+		dataType: string
+		lineageTag: e54f854e-baf5-4564-9971-82bd6a8c02e5
+		summarizeBy: none
+		sourceColumn: decision_reason_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column reviewer_role
+		dataType: string
+		lineageTag: a8f4fdbf-4ba3-422e-8fc2-56fe0b5b92b1
+		summarizeBy: none
+		sourceColumn: reviewer_role
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_version
+		dataType: string
+		lineageTag: e8c638bd-34ff-4156-b8bf-bde4622982ec
+		summarizeBy: none
+		sourceColumn: policy_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column completion_gate_passed
+		dataType: boolean
+		lineageTag: 6f49e0a9-86e9-4af9-8d27-8c098bd2dcfc
+		summarizeBy: none
+		sourceColumn: completion_gate_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column certification_gate_passed
+		dataType: boolean
+		lineageTag: 2a26d751-56c0-4fac-8cc7-b1f0ad149c62
+		summarizeBy: none
+		sourceColumn: certification_gate_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column competency_gate_passed
+		dataType: boolean
+		lineageTag: 6a1db4aa-8b22-4d2c-a777-07dd7c9d5f05
+		summarizeBy: none
+		sourceColumn: competency_gate_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_competency_score
+		dataType: double
+		formatString: 0.0
+		lineageTag: 58b24042-c254-481b-bde4-3909b65f43a2
+		summarizeBy: none
+		sourceColumn: review_competency_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column signoff_recorded
+		dataType: boolean
+		lineageTag: 4620425f-20eb-45e8-b4ac-a79721c82680
+		summarizeBy: none
+		sourceColumn: signoff_recorded
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_approved
+		dataType: int64
+		formatString: 0
+		lineageTag: c6e3bd1c-8287-46eb-9533-2791c28978ba
+		summarizeBy: none
+		sourceColumn: is_approved
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_latest_review
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e6be1ab-405c-4d8d-9aec-aacb64a62c7f
+		summarizeBy: none
+		sourceColumn: is_latest_review
+
+		annotation SummarizationSetBy = Automatic
+
+	column completion_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c009504f-7f0c-4477-9820-c9cd4b20742b
+		summarizeBy: none
+		sourceColumn: completion_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_from_completion
+		dataType: int64
+		formatString: 0
+		lineageTag: 37643886-4b18-4826-ad0f-452852f4e9f2
+		summarizeBy: none
+		sourceColumn: days_from_completion
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_readiness_review' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_readiness_review = WorkforceDevAnalytics{[Schema="rpt",Item="fact_readiness_review"]}[Data]
+				in
+				    rpt_fact_readiness_review
+
+	annotation PBI_ResultType = Table
+

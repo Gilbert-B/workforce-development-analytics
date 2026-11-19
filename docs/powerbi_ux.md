@@ -95,3 +95,17 @@ The page uses **two layers**:
 - **Skills header strip:** `Paired WoW Competency Change` sits next to the week selector and follows both selectors. It answers "how much did the *same* trainees improve on their previous week?", which the trend chart can't, because its weekly means mix different trainees.
 - **Trainee 360 benchmark:** the lower-right panel plots `Average Competency Score` (*This trainee*, teal) against `Cohort Same-Week Average` (*Cohort, same week*, gold) by programme week.
 
+## BI-02 pages (Coaching & Watch List, Certification & Readiness, Trainee 360 extension)
+**Builders:** `coaching_page()`, `readiness_page()` and the extended `trainee_page()` in `tools/build_overview_page.py`. They share `kpi_row()` (equal KPI tiles) and `no_filter_on()` (chart clicks never change KPI numbers).
+
+**Snapshot vs trend:**
+- Every KPI card is "at the snapshot (2 Nov 2026)".
+- The only time-based chart is *Watch-list movement by effective date*, labelled as an event trend.
+- There are no date relationships, so a date filter can't change a snapshot number.
+
+**Populations are never summed.** The *Populations outside the rates* card lists unactioned cases, completers with no attempt, unattempted certifications and unreviewed completers as **separate** lines.
+
+**Trainee 360 is taller** (1824 px, *Fit to width*): scroll down for the readiness banner and four history tables. An empty table means *no record*, not a failure.
+
+**Built-in counts:** three charts use Power BI's *Count of* a column (row counts). Select the chart → **Build visual** to see the aggregation.
+

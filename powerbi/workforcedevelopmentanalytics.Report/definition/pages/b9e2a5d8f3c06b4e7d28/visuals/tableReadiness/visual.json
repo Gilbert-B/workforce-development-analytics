@@ -1,0 +1,158 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "tableReadiness",
+  "position": {
+    "x": 1322,
+    "y": 782,
+    "z": 1139,
+    "width": 544,
+    "height": 246,
+    "tabOrder": 1139
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_cohort"
+                    }
+                  },
+                  "Property": "cohort_name"
+                }
+              },
+              "queryRef": "rpt dim_cohort.cohort_name",
+              "nativeQueryRef": "cohort_name",
+              "displayName": "Cohort"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "Reviewed for Readiness"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.Reviewed for Readiness",
+              "nativeQueryRef": "Reviewed for Readiness",
+              "displayName": "Reviewed"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "Unreviewed Completers"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.Unreviewed Completers",
+              "nativeQueryRef": "Unreviewed Completers",
+              "displayName": "Not reviewed"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "Ready / Approved (Snapshot)"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.Ready / Approved (Snapshot)",
+              "nativeQueryRef": "Ready / Approved (Snapshot)",
+              "displayName": "Approved"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "Readiness Approval Rate"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.Readiness Approval Rate",
+              "nativeQueryRef": "Readiness Approval Rate",
+              "displayName": "Approval rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "Readiness Coverage"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.Readiness Coverage",
+              "nativeQueryRef": "Readiness Coverage",
+              "displayName": "Coverage"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt dim_cohort"
+                  }
+                },
+                "Property": "cohort_name"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

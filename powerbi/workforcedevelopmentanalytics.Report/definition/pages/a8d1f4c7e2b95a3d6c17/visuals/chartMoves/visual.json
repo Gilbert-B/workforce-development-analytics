@@ -1,0 +1,210 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "chartMoves",
+  "position": {
+    "x": 736,
+    "y": 436,
+    "z": 1123,
+    "width": 1130,
+    "height": 244,
+    "tabOrder": 1123
+  },
+  "visual": {
+    "visualType": "columnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_event"
+                    }
+                  },
+                  "Property": "effective_date"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_event.effective_date",
+              "nativeQueryRef": "effective_date",
+              "displayName": "Effective date"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_event"
+                    }
+                  },
+                  "Property": "event_type"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_event.event_type",
+              "nativeQueryRef": "event_type",
+              "displayName": "Event"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "rpt fact_watchlist_event"
+                        }
+                      },
+                      "Property": "watchlist_event_id"
+                    }
+                  },
+                  "Function": 5
+                }
+              },
+              "queryRef": "Count(rpt fact_watchlist_event.watchlist_event_id)",
+              "nativeQueryRef": "Count of watchlist_event_id",
+              "displayName": "Events"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_watchlist_event"
+                  }
+                },
+                "Property": "effective_date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E3A640'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "rpt fact_watchlist_event"
+                          }
+                        },
+                        "Property": "event_type"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Opened'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#3FC1B0'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "rpt fact_watchlist_event"
+                          }
+                        },
+                        "Property": "event_type"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Closed'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

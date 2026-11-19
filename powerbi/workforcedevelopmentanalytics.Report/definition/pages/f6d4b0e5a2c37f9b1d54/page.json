@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "f6d4b0e5a2c37f9b1d54",
   "displayName": "Trainee 360 — Training",
-  "displayOption": "FitToPage",
-  "height": 1080,
+  "displayOption": "FitToWidth",
+  "height": 1824,
   "width": 1920,
   "objects": {
     "background": [

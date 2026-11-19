@@ -1,0 +1,123 @@
+table 'rpt fact_coaching_action'
+	lineageTag: fe59843a-deb0-4b99-ac6e-9d6be8579c01
+
+	column coaching_action_id
+		dataType: string
+		lineageTag: 46708e74-ac58-46dc-9fc4-e649a511a789
+		summarizeBy: none
+		sourceColumn: coaching_action_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column watchlist_case_id
+		dataType: string
+		lineageTag: c8ea8f51-02d5-4b30-84da-529ad8d9c693
+		summarizeBy: none
+		sourceColumn: watchlist_case_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 4f61c021-4efd-43b4-980a-bb8370f826bd
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: ea86cbce-8e58-4731-8623-3f293d8ef063
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: a0bbca5a-697f-48f5-b89d-a42c2df3c39a
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column action_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 38326522-9696-4a47-8621-7cca770d0981
+		summarizeBy: none
+		sourceColumn: action_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column recorded_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 02fff37b-3144-46c2-b3b6-d5b90e9ffd0b
+		summarizeBy: none
+		sourceColumn: recorded_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column action_type
+		dataType: string
+		lineageTag: bc49279b-3cbd-4119-b3a7-b5a681456215
+		summarizeBy: none
+		sourceColumn: action_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column staff_role
+		dataType: string
+		lineageTag: 419a726e-a5eb-4e83-bfb7-3d2afab2149f
+		summarizeBy: none
+		sourceColumn: staff_role
+
+		annotation SummarizationSetBy = Automatic
+
+	column followup_recommended
+		dataType: boolean
+		lineageTag: 29c45454-e2c5-4e1b-ad12-1f848003f906
+		summarizeBy: none
+		sourceColumn: followup_recommended
+
+		annotation SummarizationSetBy = Automatic
+
+	column action_note_code
+		dataType: string
+		lineageTag: 0f78f0f1-d719-480d-b640-fae2a0357fa1
+		summarizeBy: none
+		sourceColumn: action_note_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column action_sequence
+		dataType: int64
+		formatString: 0
+		lineageTag: 742c44f4-214a-451d-95f1-516cbc87b9f5
+		summarizeBy: none
+		sourceColumn: action_sequence
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_since_case_opened
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a81ecb6-632b-447c-93ef-838a5e09d618
+		summarizeBy: none
+		sourceColumn: days_since_case_opened
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_coaching_action' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_coaching_action = WorkforceDevAnalytics{[Schema="rpt",Item="fact_coaching_action"]}[Data]
+				in
+				    rpt_fact_coaching_action
+
+	annotation PBI_ResultType = Table
+

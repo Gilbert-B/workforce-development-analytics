@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "readinessStatusNote",
+  "position": {
+    "x": 1076,
+    "y": 1086,
+    "z": 1121,
+    "width": 784,
+    "height": 52,
+    "tabOrder": 1121
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Readiness is a dated management decision, not deployment. A trainee still in training is “not yet eligible”; a completer without a review is “not reviewed”. Neither is a failure.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#8FA0B4"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
