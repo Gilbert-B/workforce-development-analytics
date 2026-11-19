@@ -95,3 +95,7 @@ data/tmp/
 powerbi/**/.pbi/
 powerbi/**/*.abf
 powerbi/*.pbix
+
+# Build 03 MongoDB documents: ~40-50 MB each, regenerated deterministically by
+# python/generate_build03_data.py (their checksums are in generation_manifest.json).
+data/synthetic_horizon/build03/*.jsonl
