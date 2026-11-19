@@ -11,3 +11,9 @@ powerbi/** text=auto eol=lf
 # reach into sub-folders).
 data/synthetic/build02/* text eol=lf
 data/synthetic/build02/audit/* text eol=lf
+
+# Horizon dataset (forward simulation to 2027-06-30) and Build 03 data: same LF rule.
+data/synthetic_horizon/* text eol=lf
+data/synthetic_horizon/build02/* text eol=lf
+data/synthetic_horizon/build02/audit/* text eol=lf
+data/synthetic_horizon/build03/* text eol=lf

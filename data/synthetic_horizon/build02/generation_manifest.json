@@ -1,0 +1,42 @@
+{
+  "generator_version": "build02-1.0",
+  "seed": 20261118,
+  "as_of_date": "2027-06-30",
+  "policy_version": "B02-R1",
+  "config_sha256": "7b2619908fbc2a7cf902307d20d0bb406b704fc719eb2a5d21ceb8a6d19a811f",
+  "build01_manifest_sha256": "a1fa0144a4cd01b3eb6287c9483711ee46399b0d91ab31fbe080caf41e7de0c3",
+  "files": {
+    "certification_type.csv": {
+      "rows": 2,
+      "sha256": "e01a7a9cd6fd4c4cd4312970fdf804c16f45b4cc9ffb05e501e7b5d8fa583fc8"
+    },
+    "watchlist_case.csv": {
+      "rows": 68,
+      "sha256": "8d63638bd636138bf65d7dec476fefd88f5f4ce733f95d2eae3626752bd26706"
+    },
+    "watchlist_case_event.csv": {
+      "rows": 136,
+      "sha256": "cbf89a931973a6038922064a3a15504d75e7c9bdd5b200cc9a8803bb39dc6249"
+    },
+    "coaching_action.csv": {
+      "rows": 125,
+      "sha256": "1f02e23f7e57fdb3f8b71895b8152c8a7aa2887a76cb4d44c84a3daf8ae3a255"
+    },
+    "certification_attempt.csv": {
+      "rows": 454,
+      "sha256": "a3558fa52be0a39f08896eebc01c539903ea6621eded089c43f96d3342222ede"
+    },
+    "readiness_review.csv": {
+      "rows": 283,
+      "sha256": "ff156751fb881dc03321f55abd8b7901718392d8b1e69c827c4330f7fb8f552f"
+    },
+    "audit/review_signals.csv": {
+      "rows": 1171,
+      "sha256": "b6f4363fb260a51e5a1a6f697ad0e450830cb7aa116aa2e8331491aabff80a4b"
+    },
+    "audit/readiness_evidence.csv": {
+      "rows": 189,
+      "sha256": "ae83e3c5c3b14fd89dd10ed967cc4ae4c2fb46688b071a6b765971b2bd34f538"
+    }
+  }
+}
