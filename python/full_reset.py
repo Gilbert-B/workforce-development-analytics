@@ -40,6 +40,8 @@ def full_reset(server: str, dataset: str = "baseline") -> bool:
     b01.run_sql_file(master, b01.SQL_DIR / "000_create_database.sql")
     conn = b01.connect(server, b01.DATABASE)
 
+    print("0. Removing Build 03 objects (they depend on Builds 01-02)")
+    b01.run_sql_file(conn, b01.SQL_DIR / "010_reset_build03_objects.sql")
     print("1. Removing Build 02 objects")
     b01.run_sql_file(conn, b01.SQL_DIR / "007_reset_build02_objects.sql")
 
