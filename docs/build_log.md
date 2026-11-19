@@ -360,5 +360,9 @@ Report 01 and the model are untouched: identical to `main`.
    - `python powerbi\tools\check_model_additive.py --base a899666` should print `OK - additive only`;
    - to create the baseline tags: `git tag -a report01-v1 a899666 -m "Report 01 baseline"`, `git tag -a model-v1 a899666 -m "Model baseline"`, then `git push origin --tags`.
 
-**Owner result:** *pending.*
+**Owner result (2026-11-19, Windows, Power BI Desktop):** all checks passed.
+- Report 02 opened on the shared model, refreshed, and shows **71 / 127 / 208**.
+- Report 01 works as before.
+- `git status` is clean after Desktop.
+- Whether the two reports share one data cache was not recorded; it is not needed for the suite.
 
