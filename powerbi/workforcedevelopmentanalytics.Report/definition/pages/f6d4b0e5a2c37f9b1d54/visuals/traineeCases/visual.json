@@ -1,0 +1,160 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "traineeCases",
+  "position": {
+    "x": 150,
+    "y": 1242,
+    "z": 1123,
+    "width": 832,
+    "height": 214,
+    "tabOrder": 1123
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "watchlist_case_id"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.watchlist_case_id",
+              "nativeQueryRef": "watchlist_case_id",
+              "displayName": "Case"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "opened_effective_date"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.opened_effective_date",
+              "nativeQueryRef": "opened_effective_date",
+              "displayName": "Opened"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "primary_reason"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.primary_reason",
+              "nativeQueryRef": "primary_reason",
+              "displayName": "Reason"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "severity"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.severity",
+              "nativeQueryRef": "severity",
+              "displayName": "Severity"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "case_status_as_of_snapshot"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.case_status_as_of_snapshot",
+              "nativeQueryRef": "case_status_as_of_snapshot",
+              "displayName": "Status (snapshot)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "closure_reason"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.closure_reason",
+              "nativeQueryRef": "closure_reason",
+              "displayName": "Closure reason"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "action_count"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.action_count",
+              "nativeQueryRef": "action_count",
+              "displayName": "Actions"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_watchlist_case"
+                  }
+                },
+                "Property": "opened_effective_date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

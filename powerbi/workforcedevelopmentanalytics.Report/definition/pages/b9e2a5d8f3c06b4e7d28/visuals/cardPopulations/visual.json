@@ -1,0 +1,83 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "cardPopulations",
+  "position": {
+    "x": 1322,
+    "y": 436,
+    "z": 1133,
+    "width": 544,
+    "height": 244,
+    "tabOrder": 1133
+  },
+  "visual": {
+    "visualType": "multiRowCard",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "Completers With No Certification Attempt"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.Completers With No Certification Attempt",
+              "nativeQueryRef": "Completers With No Certification Attempt",
+              "displayName": "Completers with no certification attempt"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_certification_attempt"
+                    }
+                  },
+                  "Property": "Unattempted Certification Opportunities"
+                }
+              },
+              "queryRef": "rpt fact_certification_attempt.Unattempted Certification Opportunities",
+              "nativeQueryRef": "Unattempted Certification Opportunities",
+              "displayName": "Mandatory certifications not attempted (completer × certification)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_readiness_review"
+                    }
+                  },
+                  "Property": "Unreviewed Completers"
+                }
+              },
+              "queryRef": "rpt fact_readiness_review.Unreviewed Completers",
+              "nativeQueryRef": "Unreviewed Completers",
+              "displayName": "Completers not yet reviewed (not deferred, not failed)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_watchlist_case"
+                    }
+                  },
+                  "Property": "Unactioned Watch-list Cases"
+                }
+              },
+              "queryRef": "rpt fact_watchlist_case.Unactioned Watch-list Cases",
+              "nativeQueryRef": "Unactioned Watch-list Cases",
+              "displayName": "Watch-list cases with no completed action"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

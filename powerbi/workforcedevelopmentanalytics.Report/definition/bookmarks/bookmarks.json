@@ -33,6 +33,12 @@
     },
     {
       "name": "bmClearFilters_attendance"
+    },
+    {
+      "name": "bmClearFilters_coaching"
+    },
+    {
+      "name": "bmClearFilters_readiness"
     }
   ]
 }

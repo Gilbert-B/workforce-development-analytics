@@ -1,0 +1,73 @@
+table 'rpt dim_certification'
+	lineageTag: 87c0e43b-5636-407c-b509-c35661179bbf
+
+	column certification_id
+		dataType: string
+		lineageTag: 684c559a-8378-483e-a104-fd714fdbd3b6
+		summarizeBy: none
+		sourceColumn: certification_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column certification_code
+		dataType: string
+		lineageTag: 1a44cdfc-07b6-4077-8ba7-56edce372750
+		summarizeBy: none
+		sourceColumn: certification_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column certification_name
+		dataType: string
+		lineageTag: 4a9232a7-9819-4e4c-b664-a067c5db0677
+		summarizeBy: none
+		sourceColumn: certification_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mandatory_for_readiness
+		dataType: boolean
+		lineageTag: 77d13cf6-7207-45c8-b41a-659ed7009590
+		summarizeBy: none
+		sourceColumn: mandatory_for_readiness
+
+		annotation SummarizationSetBy = Automatic
+
+	column pass_mark
+		dataType: int64
+		formatString: 0
+		lineageTag: 76e1fab6-937e-455d-ae20-7381f5895d0c
+		summarizeBy: none
+		sourceColumn: pass_mark
+
+		annotation SummarizationSetBy = Automatic
+
+	column max_attempts
+		dataType: int64
+		formatString: 0
+		lineageTag: 57f096f2-331a-483c-9199-e86088c8e37d
+		summarizeBy: none
+		sourceColumn: max_attempts
+
+		annotation SummarizationSetBy = Automatic
+
+	column policy_version
+		dataType: string
+		lineageTag: f3a144c7-ed83-4446-b83e-fc2c68ff4201
+		summarizeBy: none
+		sourceColumn: policy_version
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_certification' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_certification = WorkforceDevAnalytics{[Schema="rpt",Item="dim_certification"]}[Data]
+				in
+				    rpt_dim_certification
+
+	annotation PBI_ResultType = Table
+
