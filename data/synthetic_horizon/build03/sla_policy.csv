@@ -1,0 +1,16 @@
+policy_version,case_type_code,priority,target_hours
+B03-R1,returned_payment,P1,4
+B03-R1,returned_payment,P2,24
+B03-R1,returned_payment,P3,72
+B03-R1,duplicate_payment,P1,4
+B03-R1,duplicate_payment,P2,24
+B03-R1,duplicate_payment,P3,72
+B03-R1,failed_validation,P1,4
+B03-R1,failed_validation,P2,24
+B03-R1,failed_validation,P3,72
+B03-R1,missing_beneficiary,P1,4
+B03-R1,missing_beneficiary,P2,24
+B03-R1,missing_beneficiary,P3,72
+B03-R1,screening_hit,P1,2
+B03-R1,screening_hit,P2,24
+B03-R1,screening_hit,P3,72
