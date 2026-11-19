@@ -2,7 +2,12 @@
 
 **Branch:** `bi/02-coaching-certification-readiness`, from `main` at `216f056` (the Build 02 merge).
 
-**Status:** a draft for owner and ChatGPT review. **No model, DAX or report file has been changed.**
+**Status:** decisions D1–D4 and the six relationships were **approved by the owner and ChatGPT on 2026-11-19**, and the SQL reference values were accepted as the validation targets. The **exact DAX formulas below (revision 2) still await final sign-off.** No model, DAX or report file has been changed.
+
+**Revision 2 (after the approval round):**
+- **Bug fixed in my revision 1 drafts.** They reused the existing `Active Trainees (Snapshot)` / `Completed Trainees (Snapshot)` as denominators. Those measures use a plain status filter, which **replaces** any status selection (they are left unchanged here). Under a status filter of "Withdrawn", revision 1 would have shown `Unreviewed Completers` = 127 and `Readiness Coverage` = 0.0%, instead of 0 and blank.
+- **The fix.** Four measures now count their own denominator with `KEEPFILTERS`, which respects any status filter: `Watch-list Rate (Snapshot)`, `Unattempted Certification Opportunities`, `Unreviewed Completers` and `Readiness Coverage`.
+- **Added:** the unactioned-case breakdown (D1) and the full validation plan (section 6).
 
 **Built from:** the merged `sql/006_create_build02_reporting_views.sql` and `docs/build02_data_dictionary.md`, checked against a fresh load of the merged code (Claude's environment).
 
@@ -68,7 +73,10 @@ DIVIDE (
         [Open Watch-list Enrolments (Snapshot)],
         KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Active" )   -- active only
     ),
-    [Active Trainees (Snapshot)]                    -- existing measure, reused
+    CALCULATE (                                     -- active enrolments IN THE CURRENT FILTER
+        COUNTROWS ( 'rpt dim_enrolment' ),          -- (KEEPFILTERS: a status selection is respected;
+        KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Active" )   -- the existing
+    )                                               -- [Active Trainees (Snapshot)] would override it)
 )
 
 Watch-list Cases =                                  -- format 0; cases, not people
@@ -147,8 +155,11 @@ VAR AttemptedPairs =
         REMOVEFILTERS ( 'rpt dim_certification' ),
         'rpt dim_certification'[mandatory_for_readiness] = TRUE ()
     )
+VAR CompletedInContext =
+    CALCULATE ( COUNTROWS ( 'rpt dim_enrolment' ),
+                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
 RETURN
-    COALESCE ( [Completed Trainees (Snapshot)], 0 ) * MandatoryCount - COALESCE ( AttemptedPairs, 0 )
+    COALESCE ( CompletedInContext, 0 ) * MandatoryCount - COALESCE ( AttemptedPairs, 0 )
 
 Completers With No Certification Attempt =          -- format 0; extra QA count for the "4" population
 VAR CompletedEnrolments =
@@ -172,7 +183,11 @@ COALESCE (
 )
 
 Unreviewed Completers =                             -- format 0; NOT deferred, NOT failed
-COALESCE ( [Completed Trainees (Snapshot)], 0 ) - [Reviewed for Readiness]
+VAR CompletedInContext =
+    CALCULATE ( COUNTROWS ( 'rpt dim_enrolment' ),
+                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+RETURN
+    COALESCE ( CompletedInContext, 0 ) - [Reviewed for Readiness]
 
 Ready / Approved (Snapshot) =                       -- format 0; LATEST review only
 COALESCE (
@@ -186,8 +201,12 @@ COALESCE (
 Readiness Approval Rate =                           -- format 0.0%; approved / latest-reviewed completers
 DIVIDE ( [Ready / Approved (Snapshot)], [Reviewed for Readiness] )
 
-Readiness Coverage =                                -- format 0.0%; approved / ALL completers
-DIVIDE ( [Ready / Approved (Snapshot)], [Completed Trainees (Snapshot)] )
+Readiness Coverage =                                -- format 0.0%; approved / ALL completers in context
+DIVIDE (
+    [Ready / Approved (Snapshot)],
+    CALCULATE ( COUNTROWS ( 'rpt dim_enrolment' ),
+                KEEPFILTERS ( 'rpt dim_enrolment'[status_as_of_snapshot] = "Completed" ) )
+)
 ```
 
 ### Trainee 360 display measure (text, one enrolment)
@@ -243,7 +262,7 @@ All four D37 reference populations are reproduced independently: 15 / 4 / 16 / 8
 
 ---
 
-## 4. Decisions for owner and ChatGPT
+## 4. Decisions (APPROVED 2026-11-19; options kept for the record)
 
 **D1. Coaching Coverage denominator: which cases are "eligible, requiring action"?**
 
@@ -263,15 +282,27 @@ Option A is simple and already reconciled. Pair it with a tooltip that splits th
 
 Option B is fairer to staff, but it adds a policy constant (7 days) that would need to live in `config/` and in DAX.
 
-**D2. Date relationships:** none in BI-02 (recommended, see section 1).
+**Approved: option A.** No 7-day eligibility policy is introduced. The unactioned cases get a **breakdown visual** instead (a table using existing columns only, so no new DAX):
 
-**D3. Zero handling:**
+| State at snapshot | Closure reason | Unactioned cases | Days open (min–max) |
+|---|---|---|---|
+| Open | (still open) | 3 | 0–28 |
+| Closed | Programme ended | 8 | 4–39 |
+| Closed | Withdrawn | 2 | 0–2 |
+| Closed | Improved | 2 | 14 |
+| **Total** | | **15** | |
+
+The table rows are `fact_watchlist_case` filtered to `has_action = 0` (a visual-level filter). Columns: `watchlist_case_id`, `cohort_id`, `opened_effective_date`, `days_open`, `case_status_as_of_snapshot`, `closure_reason`. A small bar chart shows the same 15 cases by `closure_reason` and state.
+
+**D2. Date relationships:** none in BI-02. **Approved.**
+
+**D3. Zero handling (approved):**
 - counts return 0 (via `COALESCE`), so cards never show "(Blank)";
 - percentages with a zero denominator return blank, as the spec requires.
 
 Note: `COALESCE(…, 0)` measures make *every* row appear in a table visual. Those measures will therefore only be used on cards, never as table values.
 
-**D4. Extra measures beyond the spec's batch 1:**
+**D4. Extra measures beyond the spec's batch 1 (approved):**
 - `Watch-list Cases`, needed as the coverage context count;
 - `Completers With No Certification Attempt`, for the "4" QA population;
 - `Readiness Status Label`, needed for the Trainee 360 rule "never a red Failed badge".
@@ -289,3 +320,57 @@ Note: `COALESCE(…, 0)` measures make *every* row appear in a table visual. Tho
    ```
    **Why 304 ≠ 238:** the 66 retakes add rows but no new candidate × certification pairs. Dividing by 304 would penalise people for retaking.
 3. **After implementation (Power BI):** put the measures in a matrix with `cohort_name` on rows and compare each cell with section 3.
+
+---
+
+## 6. Validation plan (owner, in Power BI Desktop) with expected values
+
+Use a scratch page with one matrix: `rpt dim_cohort[cohort_name]` on rows, the measures as values. Delete the scratch page afterwards.
+
+**6.1 Overall and per cohort:** section 3, every cell.
+
+**6.2 Multiple cohort selections** (tick two cohort tiles):
+
+| Measure | Cohort 1 + Cohort 3 | Cohort 1 + Cohort 2 |
+|---|---|---|
+| Coaching Coverage | 77.3% (34/44) | 74.4% (32/43) |
+| Unactioned Watch-list Cases | 10 | 11 |
+| Open Watch-list Enrolments (Snapshot) | 15 | 0 |
+| Watch-list Rate (Snapshot) | 23.8% (15/63) | blank (no active trainees) |
+| Certification Candidate Pass Rate | 75.4% (92/122) | 83.2% (198/238) |
+| Readiness Approval Rate | 51.6% (32/62) | 59.7% (71/119) |
+| Readiness Coverage | 49.2% (32/65) | 55.9% (71/127) |
+
+**6.3 Certification retakes:**
+- `Certification Attempts` = **304**, while the Candidate Pass Rate denominator is **238 pairs**.
+- On Trainee 360 for ENR-00044, OCR shows 2 attempts (Failed 69, then Passed 89) but counts as **one** passed pair.
+
+**6.4 Blank denominators:** select Cohort 3 only.
+- Candidate Pass Rate, First-Attempt Pass Rate, Readiness Approval Rate and Readiness Coverage are all **blank**, not 0%.
+- The counts show **0**.
+
+**6.5 Historical date behaviour:** temporarily add a `rpt dim_date[date]` slicer to the scratch page and pick any range, for example 1–30 Sep 2026.
+- **Every BI-02 measure stays exactly the same**, because no date path exists.
+- The only date-based visual is the trend chart, which uses `fact_watchlist_event[effective_date]` and is labelled "by effective date".
+- Snapshot cards stay labelled "(Snapshot)".
+
+**6.6 Readiness status filtering:** add `rpt dim_enrolment[status_as_of_snapshot]` as a slicer on the scratch page.
+
+| Measure | Active | Completed | Withdrawn |
+|---|---|---|---|
+| Open Watch-list Enrolments (Snapshot) | 15 | 0 | 0 |
+| Watch-list Rate (Snapshot) | 23.8% | blank | blank |
+| Certification Attempts | 0 | 304 | 0 |
+| Reviewed for Readiness | 0 | 119 | 0 |
+| Unreviewed Completers | 0 | 8 | **0** (revision 1 would have shown 127) |
+| Ready / Approved (Snapshot) | 0 | 71 | 0 |
+| Readiness Approval Rate | blank | 59.7% | blank |
+| Readiness Coverage | blank | 55.9% | **blank** (revision 1 would have shown 0.0%) |
+| Unattempted Certification Opportunities | 0 | 16 | 0 |
+| Mandatory Certifications Met | 0 | 81 | 0 |
+
+**6.7 Repeat employees:**
+- **Drill through ENR-00025** (Cohort 1, withdrew): its watch-list case WLC-00025-1 appears.
+- **Drill through ENR-00143** (same person, Cohort 3): no Build 02 history.
+- The readiness label reads "Not yet eligible: training in progress".
+
