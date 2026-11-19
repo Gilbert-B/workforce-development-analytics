@@ -1,0 +1,231 @@
+table 'rpt fact_outcome_window'
+	lineageTag: aaa09b73-4d43-5c8a-9027-26f97b78c958
+
+	measure 'Complete Windows' = COALESCE ( SUM ( 'rpt fact_outcome_window'[is_complete] ), 0 )
+		formatString: #,0
+		displayFolder: Outcomes
+		lineageTag: 9c9a71f3-5b7a-5cfe-ba9a-28f3e13528ee
+
+	measure 'Window SLA Met %' = ```
+			-- complete windows only: metrics of incomplete windows are blank by design
+			DIVIDE ( SUM ( 'rpt fact_outcome_window'[sla_met_cases] ), SUM ( 'rpt fact_outcome_window'[cases_resolved] ) )
+			```
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: 9d20cd5d-e86d-5060-9f1d-52090d4404cf
+
+	measure 'Window First-Time-Right %' = DIVIDE ( SUM ( 'rpt fact_outcome_window'[first_time_right_cases] ), SUM ( 'rpt fact_outcome_window'[cases_resolved] ) )
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: d5e5aea0-183e-5c74-ad94-f04bd8d10ede
+
+	measure 'Window QA Pass %' = DIVIDE ( SUM ( 'rpt fact_outcome_window'[qa_passed] ), SUM ( 'rpt fact_outcome_window'[qa_reviews] ) )
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: db235a4e-c3d1-5e2e-abdd-0914da61b3fa
+
+	measure 'Window Resolved per Agent-Day' = DIVIDE ( SUM ( 'rpt fact_outcome_window'[resolved_on_agent_days] ), SUM ( 'rpt fact_outcome_window'[agent_days] ) )
+		formatString: 0.00
+		displayFolder: Outcomes
+		lineageTag: 4fe2585f-dd09-5bc3-b6d9-f8a1b9c09c0b
+
+	measure 'Window Proficient %' = DIVIDE ( SUM ( 'rpt fact_outcome_window'[is_proficient] ), COUNT ( 'rpt fact_outcome_window'[is_proficient] ) )
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: ea62ddc1-7513-5c2f-b1e4-05c3bb25bc3f
+
+	measure 'Window SLA Gap vs Tenured (pts)' = ([Window SLA Met %] - [SLA Met % (Tenured Benchmark)]) * 100
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Outcomes
+		lineageTag: 15dcca15-8b0e-583c-83f9-007c006dfa9f
+
+	measure 'Window FTR Gap vs Tenured (pts)' = ([Window First-Time-Right %] - [First-Time-Right % (Tenured Benchmark)]) * 100
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Outcomes
+		lineageTag: 0f8b8410-189c-547f-a562-20cafef45038
+
+	column agent_id
+		dataType: string
+		lineageTag: c9e51068-a07c-5e85-b0e8-5b79619b1c35
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column window_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 021cc32e-3e90-5482-b543-ff95e0ea4f5a
+		summarizeBy: none
+		sourceColumn: window_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column window_label
+		dataType: string
+		lineageTag: 730f9d79-4977-5741-a519-edc4daf4c28d
+		summarizeBy: none
+		sourceColumn: window_label
+		sortByColumn: window_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column window_start
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ca5eda8c-0443-5332-bd94-ae40dd00480d
+		summarizeBy: none
+		sourceColumn: window_start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column window_end
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2743750e-c215-50b6-b58e-7d78979d2f67
+		summarizeBy: none
+		sourceColumn: window_end
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column window_status
+		dataType: string
+		lineageTag: 04459272-afad-5c24-8bb7-bc509d408afb
+		summarizeBy: none
+		sourceColumn: window_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_complete
+		dataType: int64
+		formatString: 0
+		lineageTag: 1301dba2-26de-5612-b302-8cd56fe40bdf
+		summarizeBy: none
+		sourceColumn: is_complete
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases_received
+		dataType: int64
+		formatString: 0
+		lineageTag: 627b4c07-09b0-5c6c-aa8e-42085d08f194
+		summarizeBy: none
+		sourceColumn: cases_received
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases_resolved
+		dataType: int64
+		formatString: 0
+		lineageTag: 02c65580-8dd0-5571-becf-f98fb473bbac
+		summarizeBy: none
+		sourceColumn: cases_resolved
+
+		annotation SummarizationSetBy = Automatic
+
+	column sla_met_cases
+		dataType: int64
+		formatString: 0
+		lineageTag: 26c655a9-5547-5bf4-a15d-8b199ae1effa
+		summarizeBy: none
+		sourceColumn: sla_met_cases
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_time_right_cases
+		dataType: int64
+		formatString: 0
+		lineageTag: 65959c19-5359-56ba-826b-20a099f57da1
+		summarizeBy: none
+		sourceColumn: first_time_right_cases
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_reviews
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a432296-ef86-5ac9-8c1b-bbd85c8972e8
+		summarizeBy: none
+		sourceColumn: qa_reviews
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_passed
+		dataType: int64
+		formatString: 0
+		lineageTag: 707038d0-3164-5d35-824c-b6f1c51a2d5c
+		summarizeBy: none
+		sourceColumn: qa_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_resolution_hours
+		dataType: double
+		formatString: 0.00
+		lineageTag: 1b62d627-951a-52cf-9584-2b1e75f9f293
+		summarizeBy: none
+		sourceColumn: avg_resolution_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 8d780ab2-0af1-571a-be85-3c1f69da9eb9
+		summarizeBy: none
+		sourceColumn: agent_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolved_on_agent_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c907006-10b9-577f-8427-ebb9f8301241
+		summarizeBy: none
+		sourceColumn: resolved_on_agent_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column sla_met_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: 37a96f80-0807-557d-a797-964d23e2f7e8
+		summarizeBy: none
+		sourceColumn: sla_met_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_time_right_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: 5c3053b2-f0be-5ce0-a68c-5af8f21ed2c4
+		summarizeBy: none
+		sourceColumn: first_time_right_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_proficient
+		dataType: int64
+		formatString: 0
+		lineageTag: 22e7e849-2d21-5888-8273-25a19d1e9144
+		summarizeBy: none
+		sourceColumn: is_proficient
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_outcome_window' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_outcome_window = WorkforceDevAnalytics{[Schema="rpt",Item="fact_outcome_window"]}[Data]
+				in
+				    rpt_fact_outcome_window
+
+	annotation PBI_ResultType = Table

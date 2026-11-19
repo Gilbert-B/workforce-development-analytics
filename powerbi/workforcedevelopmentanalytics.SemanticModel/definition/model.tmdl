@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance","rpt dim_snapshot","rpt dim_certification","rpt fact_watchlist_case","rpt fact_watchlist_event","rpt fact_coaching_action","rpt fact_certification_attempt","rpt fact_readiness_review"]
+annotation PBI_QueryOrder = ["rpt dim_cohort","rpt dim_competency","rpt dim_date","rpt dim_enrolment","rpt dim_programme_week","rpt fact_assessment","rpt fact_attendance","rpt dim_snapshot","rpt dim_certification","rpt fact_watchlist_case","rpt fact_watchlist_event","rpt fact_coaching_action","rpt fact_certification_attempt","rpt fact_readiness_review","rpt dim_agent","rpt dim_ops_queue","rpt fact_payment_case","rpt fact_qa_review","rpt fact_qa_check","rpt fact_agent_day","rpt dim_graduate","rpt fact_outcome_window"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -27,6 +27,14 @@ ref table 'rpt fact_watchlist_event'
 ref table 'rpt fact_coaching_action'
 ref table 'rpt fact_certification_attempt'
 ref table 'rpt fact_readiness_review'
+ref table 'rpt dim_agent'
+ref table 'rpt dim_ops_queue'
+ref table 'rpt fact_payment_case'
+ref table 'rpt fact_qa_review'
+ref table 'rpt fact_qa_check'
+ref table 'rpt fact_agent_day'
+ref table 'rpt dim_graduate'
+ref table 'rpt fact_outcome_window'
 
 ref cultureInfo en-GB
 

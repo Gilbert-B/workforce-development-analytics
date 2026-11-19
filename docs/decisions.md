@@ -588,3 +588,43 @@ The tags `report01-v1` and `model-v1` exist in Claude's environment only, becaus
 **Trade-off:** weekend cover is modelled as unscheduled extra days, not a shift rota. That's enough for the productivity measures.
 **At scale:** materialise `fact_agent_day` as a table during the ETL, instead of a view.
 **Pending review:** B0 (promote the horizon as the suite default; required because Reports 01 and 02 share one model and one database), B1 (date roles) and B2 (15 measures). See `docs/bi03_measure_proposal.md`.
+
+### D45: Horizon promoted; BI-03 model and Report 02 (2026-11-19, branch `bi/03-payment-operations`)
+**Why:** Reports 01 and 02 share one model and one database, so they must read the same dataset. The 2027-06-30 horizon is now the default (`full_reset.py`, `build_all.py`); the 2026-11-02 baseline is still available with `--dataset baseline`. Report 01's structure is unchanged, but its numbers move to the horizon (Active 0, Completed 189). Two page headers that named "2 Nov 2026" now say "at the data snapshot".
+**How:**
+- The operations tables, relationships and measures are generated into TMDL by `powerbi/tools/build_model.py`, from the SQL views' own column lists. Only its own tables are written; `check_model_additive.py` passes against `ec62743`.
+- Report 02 is built by `build_payment_operations.py`, on shared helpers in `suite_light.py`.
+- Every panel is a real shape, with no background images, so all of it can be edited in Desktop.
+**Choices:**
+- **Date roles:** cases by received date, QA by review date, productivity by day worked.
+- **Benchmarks:** the tenured benchmark removes agent, graduate and tenure filters, but keeps queue, team, priority and date.
+- **Interactions:** chart clicks never filter the KPI cards.
+- **Drill-through:** Agent 360, on `dim_agent[agent_id]`.
+**At scale:** use field parameters for metric switching, and row-level security by team.
+
+### D46: Build 04, outcome windows and the training link (2026-11-19)
+**Why:** Report 03 needs each graduate's first 30/60/90 days joined to their training record. That's a SQL layer (`sql/011`) over existing data, with no new source.
+**Honest-window rule (amendment 8):** a window counts only if it ended by the snapshot and the graduate was still employed at its end. Otherwise its metrics are NULL, never zero. Retention uses observed periods only.
+**Proficiency standard:** in a complete window, SLA met ≥ 80% **and** first-time right ≥ 97%. That's tenured agents' 84% / 98% less a small tolerance. The flag uses the rounded percentages that people see.
+**Training link strengthened (generator):** the original effect, +0.6 accuracy points per SD of competency, vanished in case-level noise, so the training-effectiveness report would have shown nothing. It is now a *moderate* effect, in line with typical real-world findings:
+- **Competency:** +2 accuracy points per SD (halved once mature), and a ±12% ramp time per SD.
+- **First-attempt certification:** a 25% faster ramp.
+- **Watch list:** a 15% slower ramp, and twice the early-exit probability.
+Individual variation still dominates. Totals moved slightly (49,995 cases).
+**Trade-off:** windows are 30 days wide, so days-to-proficiency is coarse (30/60/90). Finer windows would be noisier per graduate.
+
+### D47: BI-04, Report 03 design (2026-11-19)
+**Pages:**
+- **Outcomes overview:** KPIs, the 30/60/90 curve vs tenured agents, and proficiency timing.
+- **Training effectiveness:** a competency × window heatmap, proficiency by band, a competency vs first-month first-time-right scatter, certification and watch-list comparisons, and a findings panel with the actual figures.
+- **Graduate roster:** the drill-through source.
+- **Graduate journey:** the drill-through page, on `dim_graduate[agent_id]`.
+- **Method.**
+**Wording:** the findings are stated as associations, not causes.
+**Relationships:** `dim_graduate` filters `fact_outcome_window`, `fact_payment_case` and `fact_agent_day` (one-to-many, single direction). No relationship joins the training facts to the operations facts, so the model has no ambiguous paths.
+
+### D48: Tooling for an owner who validates rather than builds (2026-11-19)
+- **`python/build_all.py`:** one command for Builds 01–04, MongoDB, the ETL and all checks.
+- **`powerbi/tools/check_report.py`:** checks that every field a visual uses exists in the model, that buttons and drill links lead somewhere, and that visuals don't overlap. It complements Microsoft's JSON schemas (all report files validated).
+- **The model** is parsed with Microsoft's own TMDL serializer (Analysis Services library) in Claude's environment.
+- **DAX itself** can only be evaluated in Power BI Desktop: that is validation checkpoint B.

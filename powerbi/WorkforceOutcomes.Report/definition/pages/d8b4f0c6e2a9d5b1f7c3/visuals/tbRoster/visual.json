@@ -1,0 +1,283 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "tbRoster",
+  "position": {
+    "x": 60,
+    "y": 238,
+    "z": 27,
+    "width": 1800,
+    "height": 798,
+    "tabOrder": 27
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "graduate_name"
+                }
+              },
+              "queryRef": "rpt dim_graduate.graduate_name",
+              "nativeQueryRef": "graduate_name",
+              "displayName": "Graduate (synthetic)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "agent_id"
+                }
+              },
+              "queryRef": "rpt dim_graduate.agent_id",
+              "nativeQueryRef": "agent_id",
+              "displayName": "Agent ID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "cohort_name"
+                }
+              },
+              "queryRef": "rpt dim_graduate.cohort_name",
+              "nativeQueryRef": "cohort_name",
+              "displayName": "Cohort"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "final_competency_score"
+                }
+              },
+              "queryRef": "rpt dim_graduate.final_competency_score",
+              "nativeQueryRef": "final_competency_score",
+              "displayName": "Final competency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "competency_band"
+                }
+              },
+              "queryRef": "rpt dim_graduate.competency_band",
+              "nativeQueryRef": "competency_band",
+              "displayName": "Band"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "attendance_rate_pct"
+                }
+              },
+              "queryRef": "rpt dim_graduate.attendance_rate_pct",
+              "nativeQueryRef": "attendance_rate_pct",
+              "displayName": "Attendance %"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "certified_first_attempt"
+                }
+              },
+              "queryRef": "rpt dim_graduate.certified_first_attempt",
+              "nativeQueryRef": "certified_first_attempt",
+              "displayName": "Certified 1st attempt"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "watchlisted_in_training"
+                }
+              },
+              "queryRef": "rpt dim_graduate.watchlisted_in_training",
+              "nativeQueryRef": "watchlisted_in_training",
+              "displayName": "Watch list"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "readiness_reviews"
+                }
+              },
+              "queryRef": "rpt dim_graduate.readiness_reviews",
+              "nativeQueryRef": "readiness_reviews",
+              "displayName": "Readiness reviews"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "deployment_date"
+                }
+              },
+              "queryRef": "rpt dim_graduate.deployment_date",
+              "nativeQueryRef": "deployment_date",
+              "displayName": "Deployed"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "primary_queue_name"
+                }
+              },
+              "queryRef": "rpt dim_graduate.primary_queue_name",
+              "nativeQueryRef": "primary_queue_name",
+              "displayName": "Queue"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "proficiency_status"
+                }
+              },
+              "queryRef": "rpt dim_graduate.proficiency_status",
+              "nativeQueryRef": "proficiency_status",
+              "displayName": "Proficiency"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt dim_graduate"
+                    }
+                  },
+                  "Property": "exit_reason"
+                }
+              },
+              "queryRef": "rpt dim_graduate.exit_reason",
+              "nativeQueryRef": "exit_reason",
+              "displayName": "Exit"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt dim_graduate"
+                  }
+                },
+                "Property": "final_competency_score"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

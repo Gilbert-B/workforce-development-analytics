@@ -12,11 +12,13 @@ It deletes and reloads ALL rows in WorkforceDevAnalytics (synthetic data
 only), so it refuses to run without --confirm.
 
     python python/full_reset.py --server localhost --confirm
-    python python/full_reset.py --server localhost --confirm --dataset horizon
+    python python/full_reset.py --server localhost --confirm --dataset baseline
 
---dataset picks which synthetic dataset to load (default: baseline):
-  baseline  data/synthetic/          frozen snapshot 2026-11-02 (Report 01's validated numbers)
-  horizon   data/synthetic_horizon/  forward simulation to 2027-06-30 (Build 03 onwards)
+--dataset picks which synthetic dataset to load (default: horizon, the suite dataset):
+  horizon   data/synthetic_horizon/  2027-06-30: the dataset all three reports use (promoted in BI-03)
+  baseline  data/synthetic/          frozen snapshot 2026-11-02 (Report 01's original validated numbers)
+
+To build the WHOLE suite (this + Build 03 MongoDB/ETL + Build 04) use python/build_all.py.
 """
 
 from __future__ import annotations
@@ -33,7 +35,7 @@ DATASETS = {"baseline": b01.REPO_ROOT / "data" / "synthetic",
             "horizon": b01.REPO_ROOT / "data" / "synthetic_horizon"}
 
 
-def full_reset(server: str, dataset: str = "baseline") -> bool:
+def full_reset(server: str, dataset: str = "horizon") -> bool:
     data01 = DATASETS[dataset]
     data02 = data01 / "build02"
     master = b01.connect(server, "master")
@@ -65,8 +67,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Rebuild Build 01 and Build 02 from the committed CSVs.")
     parser.add_argument("--server", default=os.environ.get("WDA_SQL_SERVER"),
                         help=r'e.g. "localhost" (or set WDA_SQL_SERVER)')
-    parser.add_argument("--dataset", choices=sorted(DATASETS), default="baseline",
-                        help="baseline (2026-11-02, default) or horizon (2027-06-30)")
+    parser.add_argument("--dataset", choices=sorted(DATASETS), default="horizon",
+                        help="horizon (2027-06-30, default) or baseline (frozen 2026-11-02)")
     parser.add_argument("--confirm", action="store_true",
                         help="required: deletes and reloads every row in WorkforceDevAnalytics")
     args = parser.parse_args()

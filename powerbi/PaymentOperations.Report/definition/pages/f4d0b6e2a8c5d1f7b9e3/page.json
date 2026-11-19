@@ -1,0 +1,191 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "f4d0b6e2a8c5d1f7b9e3",
+  "displayName": "Agent 360",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F5F7FA'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#E9EEF4'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "chAgMonthly",
+      "target": "kpiAgCases",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgMonthly",
+      "target": "kpiAgSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgMonthly",
+      "target": "kpiAgFtr",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgMonthly",
+      "target": "kpiAgQa",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgMonthly",
+      "target": "kpiAgProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgMonthly",
+      "target": "kpiAgDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgBand",
+      "target": "kpiAgCases",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgBand",
+      "target": "kpiAgSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgBand",
+      "target": "kpiAgFtr",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgBand",
+      "target": "kpiAgQa",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgBand",
+      "target": "kpiAgProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chAgBand",
+      "target": "kpiAgDays",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgCases",
+      "target": "kpiAgCases",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgCases",
+      "target": "kpiAgSla",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgCases",
+      "target": "kpiAgFtr",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgCases",
+      "target": "kpiAgQa",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgCases",
+      "target": "kpiAgProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgCases",
+      "target": "kpiAgDays",
+      "type": "NoFilter"
+    }
+  ],
+  "type": "Drillthrough",
+  "visibility": "HiddenInViewMode",
+  "pageBinding": {
+    "name": "agent360Binding",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "agent360Param",
+        "boundFilter": "agent360Filter",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "rpt dim_agent"
+              }
+            },
+            "Property": "agent_id"
+          }
+        }
+      }
+    ]
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "agent360Filter",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "rpt dim_agent"
+              }
+            },
+            "Property": "agent_id"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      }
+    ]
+  }
+}

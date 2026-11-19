@@ -1,0 +1,194 @@
+table 'rpt dim_agent'
+	lineageTag: 6b64cfb5-e65d-5110-a185-9c6a63d24329
+
+	measure 'Active Agents (Snapshot)' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt dim_agent' ), KEEPFILTERS ( 'rpt dim_agent'[is_active_at_snapshot] = 1 ) ), 0 )
+		formatString: #,0
+		displayFolder: Agents
+		lineageTag: 3eacc22a-11e7-5b2f-8028-403610cc4101
+
+	measure 'Graduate Agents (Snapshot)' = ```
+			COALESCE ( CALCULATE ( COUNTROWS ( 'rpt dim_agent' ), KEEPFILTERS ( 'rpt dim_agent'[is_active_at_snapshot] = 1 ),
+			                       KEEPFILTERS ( 'rpt dim_agent'[agent_type] = "Graduate" ) ), 0 )
+			```
+		formatString: #,0
+		displayFolder: Agents
+		lineageTag: b51acaa3-9356-5c22-a4d6-226b6e77c353
+
+	measure 'Agents Exited' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt dim_agent' ), KEEPFILTERS ( NOT ISBLANK ( 'rpt dim_agent'[exit_date] ) ) ), 0 )
+		formatString: #,0
+		displayFolder: Agents
+		lineageTag: 9b876dd9-ff28-5470-bc03-3b79b6dbd7a0
+
+	measure 'Agent Title' = ```
+			-- Agent 360 header: one agent in context, else a prompt
+			IF ( HASONEVALUE ( 'rpt dim_agent'[agent_id] ),
+			    SELECTEDVALUE ( 'rpt dim_agent'[agent_name] ) & "  ·  " & SELECTEDVALUE ( 'rpt dim_agent'[agent_id] ),
+			    "Drill through from any agent to open their profile" )
+			```
+		displayFolder: Agents
+		lineageTag: 74659501-747c-560a-afc0-f526cf529f00
+
+	measure 'Agent Profile Label' = ```
+			IF ( HASONEVALUE ( 'rpt dim_agent'[agent_id] ),
+			    VAR T = SELECTEDVALUE ( 'rpt dim_agent'[agent_type] )
+			    VAR Started = FORMAT ( SELECTEDVALUE ( 'rpt dim_agent'[start_date] ), "d mmm yyyy" )
+			    VAR ExitDate = SELECTEDVALUE ( 'rpt dim_agent'[exit_date] )
+			    RETURN
+			        T & " agent · " & SELECTEDVALUE ( 'rpt dim_agent'[team_name] ) & " · " & SELECTEDVALUE ( 'rpt dim_agent'[primary_queue_name] )
+			        & " · started " & Started
+			        & IF ( T = "Graduate", " · cohort " & SELECTEDVALUE ( 'rpt dim_agent'[cohort_id] ), "" )
+			        & IF ( ISBLANK ( ExitDate ), "", " · left " & FORMAT ( ExitDate, "d mmm yyyy" ) ),
+			    "" )
+			```
+		displayFolder: Agents
+		lineageTag: 59f27829-fe56-5f2e-b48e-57a6c519a03d
+
+	column agent_id
+		dataType: string
+		lineageTag: c451fdb3-d672-52ab-9df4-dbe546e89482
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: 8d646a88-c62d-54ab-be28-f2fa66450679
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: 140b23c9-6086-525a-8860-90b0979af907
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_type
+		dataType: string
+		lineageTag: 4d6bfbb4-540b-509c-bbdb-7c315e58172f
+		summarizeBy: none
+		sourceColumn: agent_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_name
+		dataType: string
+		lineageTag: 65246270-67d1-5b07-8b7f-883af100ec49
+		summarizeBy: none
+		sourceColumn: agent_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_id
+		dataType: string
+		lineageTag: b5909e82-a13a-5da6-89e2-fe779add73ac
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_name
+		dataType: string
+		lineageTag: 7cbe59bb-8a25-5dd3-a432-b135af3c604c
+		summarizeBy: none
+		sourceColumn: team_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_queue_id
+		dataType: string
+		lineageTag: 636b30e0-e39b-57a5-84e0-461243acbb0a
+		summarizeBy: none
+		sourceColumn: primary_queue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_queue_name
+		dataType: string
+		lineageTag: e27154ed-e184-5f20-ae29-1c20b217c724
+		summarizeBy: none
+		sourceColumn: primary_queue_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: c2813381-9ec4-5b75-be0e-0149ab046cff
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ec455579-f42e-5321-960d-c85910beac90
+		summarizeBy: none
+		sourceColumn: start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column exit_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f30c734a-a290-5581-839f-9e79c45df108
+		summarizeBy: none
+		sourceColumn: exit_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column exit_reason
+		dataType: string
+		lineageTag: e52f040f-737f-5d98-9559-8cfbc04bd5d8
+		summarizeBy: none
+		sourceColumn: exit_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active_at_snapshot
+		dataType: int64
+		formatString: 0
+		lineageTag: 1400a780-67e5-5e4b-a16b-1bdac54fffa9
+		summarizeBy: none
+		sourceColumn: is_active_at_snapshot
+
+		annotation SummarizationSetBy = Automatic
+
+	column deployment_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9b9b49f5-cd9d-5955-b95c-c5213840600f
+		summarizeBy: none
+		sourceColumn: deployment_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column readiness_review_id
+		dataType: string
+		lineageTag: 9c96b8a3-29b1-5092-ab24-092345675596
+		summarizeBy: none
+		sourceColumn: readiness_review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_agent' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_agent = WorkforceDevAnalytics{[Schema="rpt",Item="dim_agent"]}[Data]
+				in
+				    rpt_dim_agent
+
+	annotation PBI_ResultType = Table

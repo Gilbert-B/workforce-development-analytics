@@ -1,0 +1,364 @@
+table 'rpt fact_payment_case'
+	lineageTag: 4c52ac79-d929-5128-b2bf-71a171c6b208
+
+	measure 'Cases Received' = COALESCE ( COUNTROWS ( 'rpt fact_payment_case' ), 0 )
+		formatString: #,0
+		displayFolder: Operations
+		lineageTag: 741ba322-f52d-53d7-a1df-6d81c47edf65
+
+	measure 'Cases Resolved' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt fact_payment_case' ), KEEPFILTERS ( 'rpt fact_payment_case'[is_open] = 0 ) ), 0 )
+		formatString: #,0
+		displayFolder: Operations
+		lineageTag: 3bbac9a7-f939-5279-b115-dad65db937d6
+
+	measure 'Open Cases (Snapshot)' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt fact_payment_case' ), KEEPFILTERS ( 'rpt fact_payment_case'[is_open] = 1 ) ), 0 )
+		formatString: #,0
+		displayFolder: Operations
+		lineageTag: 65c34be2-82a4-57ef-9a04-2848fe73793d
+
+	measure 'Overdue Open Cases (Snapshot)' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt fact_payment_case' ), KEEPFILTERS ( 'rpt fact_payment_case'[is_overdue_open] = 1 ) ), 0 )
+		formatString: #,0
+		displayFolder: Operations
+		lineageTag: 642e58d8-b6fb-5dd0-9934-109efb5d2c68
+
+	measure 'SLA Met %' = ```
+			-- sla_met is blank for open cases; COUNT skips blanks, so the denominator is resolved cases only
+			DIVIDE ( SUM ( 'rpt fact_payment_case'[sla_met] ), COUNT ( 'rpt fact_payment_case'[sla_met] ) )
+			```
+		formatString: 0.0%
+		displayFolder: Operations
+		lineageTag: 4152978c-9a21-5a41-a76d-29e8de16da60
+
+	measure 'SLA Met % (Tenured Benchmark)' = ```
+			-- tenured agents' SLA met % in the same queue / date / priority context
+			CALCULATE ( [SLA Met %],
+			    REMOVEFILTERS ( 'rpt dim_agent' ), REMOVEFILTERS ( 'rpt dim_graduate' ),
+			    REMOVEFILTERS ( 'rpt fact_payment_case'[tenure_band], 'rpt fact_payment_case'[tenure_band_order] ),
+			    'rpt fact_payment_case'[tenure_band] = "Tenured" )
+			```
+		formatString: 0.0%
+		displayFolder: Operations
+		lineageTag: 003d60fd-ee88-54cf-ae95-186b7e766182
+
+	measure 'SLA Gap vs Tenured (pts)' = ([SLA Met %] - [SLA Met % (Tenured Benchmark)]) * 100
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Operations
+		lineageTag: ee7e74dc-52b5-5092-89c9-509a7a5e4f1e
+
+	measure 'First-Time-Right %' = DIVIDE ( SUM ( 'rpt fact_payment_case'[first_time_right] ), [Cases Resolved] )
+		formatString: 0.0%
+		displayFolder: Operations
+		lineageTag: f28f80ef-47e1-5bc4-b6d6-7f0544b2f347
+
+	measure 'First-Time-Right % (Tenured Benchmark)' = ```
+			CALCULATE ( [First-Time-Right %],
+			    REMOVEFILTERS ( 'rpt dim_agent' ), REMOVEFILTERS ( 'rpt dim_graduate' ),
+			    REMOVEFILTERS ( 'rpt fact_payment_case'[tenure_band], 'rpt fact_payment_case'[tenure_band_order] ),
+			    'rpt fact_payment_case'[tenure_band] = "Tenured" )
+			```
+		formatString: 0.0%
+		displayFolder: Operations
+		lineageTag: fd9edec4-c1b0-52bf-9e5c-27df33affd93
+
+	measure 'Reworked Cases' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt fact_payment_case' ), KEEPFILTERS ( 'rpt fact_payment_case'[has_rework] = 1 ) ), 0 )
+		formatString: #,0
+		displayFolder: Operations
+		lineageTag: 9055f1fa-a615-5647-92e0-e5a89655afa5
+
+	measure 'Avg Resolution Hours' = AVERAGE ( 'rpt fact_payment_case'[final_resolution_hours] )
+		formatString: 0.0
+		displayFolder: Operations
+		lineageTag: de71b4ec-f615-5b2a-82b8-9d2abe3614aa
+
+	measure 'Median Resolution Hours' = MEDIAN ( 'rpt fact_payment_case'[final_resolution_hours] )
+		formatString: 0.0
+		displayFolder: Operations
+		lineageTag: d376eb5b-3012-5722-805d-68aebc0ef2e8
+
+	measure 'QA Sample Rate %' = ```
+			-- share of RESOLVED cases picked for QA (both sides dated by received date)
+			DIVIDE ( CALCULATE ( COUNTROWS ( 'rpt fact_payment_case' ), KEEPFILTERS ( 'rpt fact_payment_case'[qa_sampled] = 1 ) ), [Cases Resolved] )
+			```
+		formatString: 0.0%
+		displayFolder: Quality
+		lineageTag: 82db189b-5f33-5a43-92a7-3e92047708a5
+
+	column case_id
+		dataType: string
+		lineageTag: dfb2beea-dbf6-548e-9349-b23953480269
+		summarizeBy: none
+		sourceColumn: case_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_id
+		dataType: string
+		lineageTag: 05c6d6e5-6ec6-5e9f-a5b3-15c9d55e7428
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column queue_id
+		dataType: string
+		lineageTag: 3dab73a2-14f2-525b-9206-d4168fdd9992
+		summarizeBy: none
+		sourceColumn: queue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column case_type_code
+		dataType: string
+		lineageTag: 21e07064-953b-5e50-ac7b-1219cbd747d7
+		summarizeBy: none
+		sourceColumn: case_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority
+		dataType: string
+		lineageTag: 55f05abb-b99e-5489-a087-f2e96fe288fa
+		summarizeBy: none
+		sourceColumn: priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		lineageTag: f427a454-e9bd-5297-9a7e-09a172db75dd
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount_band
+		dataType: string
+		lineageTag: b716fd26-9d60-5604-be5b-b51cd7798ae9
+		summarizeBy: none
+		sourceColumn: amount_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c71ab254-6c49-5ae3-8ebf-41cae968e169
+		summarizeBy: none
+		sourceColumn: received_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f2f8d076-0adc-54a7-9f2a-5bbaf03d4d9b
+		summarizeBy: none
+		sourceColumn: received_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column received_month
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 1063c783-8840-52fa-8712-47632ff1df79
+		summarizeBy: none
+		sourceColumn: received_month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column status
+		dataType: string
+		lineageTag: e391b4e1-d326-5902-8f58-652f3fe2b54b
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolution_code
+		dataType: string
+		lineageTag: 12ad5af9-6be1-5089-bec4-16e4d0be0bc3
+		summarizeBy: none
+		sourceColumn: resolution_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_resolved_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: eaceaae4-b3c5-52bf-a252-95e2cd5db3b1
+		summarizeBy: none
+		sourceColumn: first_resolved_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column final_resolved_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 76d88c8c-d766-5645-86dd-ebb78fd567c2
+		summarizeBy: none
+		sourceColumn: final_resolved_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column final_resolved_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4dc6e116-0327-51b3-bdf8-bc56ee3e044a
+		summarizeBy: none
+		sourceColumn: final_resolved_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column sla_target_hours
+		dataType: int64
+		formatString: 0
+		lineageTag: f824b975-c218-5e0a-b3a6-648303af66b0
+		summarizeBy: none
+		sourceColumn: sla_target_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column due_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6e8b1eaf-acd2-5021-a370-c54ccdfebad9
+		summarizeBy: none
+		sourceColumn: due_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_resolution_hours
+		dataType: double
+		formatString: 0.00
+		lineageTag: 4da57d0d-d0df-55a1-b955-1e9ea9b47d5e
+		summarizeBy: none
+		sourceColumn: first_resolution_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column final_resolution_hours
+		dataType: double
+		formatString: 0.00
+		lineageTag: a49f5a08-1e3e-5ae1-915a-3a0756a4e9e9
+		summarizeBy: none
+		sourceColumn: final_resolution_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column sla_met
+		dataType: int64
+		formatString: 0
+		lineageTag: c91ae3f0-ff78-579f-9ca5-f11f2d070634
+		summarizeBy: none
+		sourceColumn: sla_met
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_open
+		dataType: int64
+		formatString: 0
+		lineageTag: 0015c277-ace5-5be6-82d0-9ea9bf03fd8d
+		summarizeBy: none
+		sourceColumn: is_open
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_overdue_open
+		dataType: int64
+		formatString: 0
+		lineageTag: e9bfd593-719c-53ef-8ea0-b65ae46f6605
+		summarizeBy: none
+		sourceColumn: is_overdue_open
+
+		annotation SummarizationSetBy = Automatic
+
+	column rework_count
+		dataType: int64
+		formatString: 0
+		lineageTag: eef6d28f-5a1e-5fdd-b160-02fdfc5422e6
+		summarizeBy: none
+		sourceColumn: rework_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_rework
+		dataType: int64
+		formatString: 0
+		lineageTag: 394881f6-b330-5b3f-89d6-3e8f9bb90eb5
+		summarizeBy: none
+		sourceColumn: has_rework
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_time_right
+		dataType: int64
+		formatString: 0
+		lineageTag: 496da51b-27d9-562e-bf97-359a63bf3316
+		summarizeBy: none
+		sourceColumn: first_time_right
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_sampled
+		dataType: int64
+		formatString: 0
+		lineageTag: b2ba52f9-a3b7-56c6-9872-5a2e62f49786
+		summarizeBy: none
+		sourceColumn: qa_sampled
+
+		annotation SummarizationSetBy = Automatic
+
+	column qa_passed
+		dataType: int64
+		formatString: 0
+		lineageTag: 87cafd56-5ab0-57f8-9d79-a62043e5b476
+		summarizeBy: none
+		sourceColumn: qa_passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_since_agent_start
+		dataType: int64
+		formatString: 0
+		lineageTag: 8a28749f-6988-5efc-810d-8c22649d0f17
+		summarizeBy: none
+		sourceColumn: days_since_agent_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band
+		dataType: string
+		lineageTag: 744d92e0-d4c7-5177-a825-c274c0539c03
+		summarizeBy: none
+		sourceColumn: tenure_band
+		sortByColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8c9de5a1-f2e5-5b94-8e21-7986b294acd7
+		summarizeBy: none
+		sourceColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_payment_case' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_payment_case = WorkforceDevAnalytics{[Schema="rpt",Item="fact_payment_case"]}[Data]
+				in
+				    rpt_fact_payment_case
+
+	annotation PBI_ResultType = Table

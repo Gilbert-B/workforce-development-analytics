@@ -33,7 +33,7 @@ def conn():
     import full_reset              # imported here so pyodbc is only needed for these tests
     import load_to_sql as b01
     server = os.environ["WDA_SQL_SERVER"]
-    assert full_reset.full_reset(server)          # 007 -> Build 01 -> Build 02, all checks OK
+    assert full_reset.full_reset(server, "baseline")  # 007 -> Build 01 -> Build 02, all checks OK
     c = b01.connect(server, b01.DATABASE)
     yield c
     # Leave the database as Build 01 alone, so Build 01's own SQL tests (which
