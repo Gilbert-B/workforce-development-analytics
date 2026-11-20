@@ -49,7 +49,7 @@ SQL Server  WorkforceDevAnalytics
    validation: 26 + 49 + 26 + 14 checks, plus MongoDB ↔ SQL reconciliation
                                   │  Import
                                   ▼
-Power BI: ONE semantic model (TMDL, 22 tables, 28 relationships, 86 measures)
+Power BI: ONE semantic model (TMDL, 22 tables, 26 relationships, 86 measures)
    ├─ Report 01  workforcedevelopmentanalytics.pbip
    ├─ Report 02  payment-operations.pbip
    └─ Report 03  workforce-outcomes.pbip

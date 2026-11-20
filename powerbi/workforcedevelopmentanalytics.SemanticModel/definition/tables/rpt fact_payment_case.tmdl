@@ -1,7 +1,11 @@
 table 'rpt fact_payment_case'
 	lineageTag: 4c52ac79-d929-5128-b2bf-71a171c6b208
 
-	measure 'Cases Received' = COALESCE ( COUNTROWS ( 'rpt fact_payment_case' ), 0 )
+	measure 'Cases Received' = ```
+			-- blank (not 0) where there are no cases, so months before an agent started or after they left
+			-- don't appear as manufactured zeros on trend charts
+			COUNTROWS ( 'rpt fact_payment_case' )
+			```
 		formatString: #,0
 		displayFolder: Operations
 		lineageTag: 741ba322-f52d-53d7-a1df-6d81c47edf65
@@ -150,7 +154,7 @@ table 'rpt fact_payment_case'
 
 	column received_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: f2f8d076-0adc-54a7-9f2a-5bbaf03d4d9b
 		summarizeBy: none
 		sourceColumn: received_date
@@ -206,7 +210,7 @@ table 'rpt fact_payment_case'
 
 	column final_resolved_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 4dc6e116-0327-51b3-bdf8-bc56ee3e044a
 		summarizeBy: none
 		sourceColumn: final_resolved_date

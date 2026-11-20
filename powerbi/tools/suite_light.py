@@ -248,7 +248,8 @@ class Page:
 def card_visual(table: str, measure: str, size=24, colour_="#0F1B2D", font="bold") -> dict:
     return {"visualType": "card",
             "query": {"queryState": {"Values": {"projections": [proj("Measure", table, measure)]}}},
-            "objects": {"labels": props(fontFamily=FONT[font], fontSize=size, color=colour(colour_)),
+            # labelDisplayUnits 1 = "None": show 49,995, not Power BI's automatic "50K"
+            "objects": {"labels": props(fontFamily=FONT[font], fontSize=size, color=colour(colour_), labelDisplayUnits=1),
                         "categoryLabels": props(show=False)},
             # no title unless the caller gives one (KPI cards do, via chrome())
             "visualContainerObjects": {"title": props(show=False), "subTitle": props(show=False)}}
@@ -298,7 +299,10 @@ def combo_chart(pal: Palette, cat: tuple, columns: list[tuple], lines: list[tupl
                                   "Y": {"projections": [proj("Measure", *m) for m in columns]},
                                   "Y2": {"projections": [proj("Measure", *m) for m in lines]}}},
          "objects": {**_axes(pal, x_title), "dataPoint": dp,
-                     "labels": props(show=True, color=colour(pal.ink), fontSize=9),
+                     # data labels on, except on benchmark lines: one constant line needs no label on every column
+                     "labels": props(show=True, color=colour(pal.ink), fontSize=9)
+                     + [{"properties": {"show": literal(False)}, "selector": {"metadata": f"{m[0]}.{m[1]}"}}
+                        for m in lines if "Benchmark" in m[1]],
                      "lineStyles": props(strokeWidth=3, showMarker=True, markerSize=6)}}
     if sort:
         v["query"]["sortDefinition"] = sort

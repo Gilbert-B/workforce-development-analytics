@@ -73,7 +73,7 @@ table 'rpt fact_outcome_window'
 
 	column window_start
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: ca5eda8c-0443-5332-bd94-ae40dd00480d
 		summarizeBy: none
 		sourceColumn: window_start
@@ -84,7 +84,7 @@ table 'rpt fact_outcome_window'
 
 	column window_end
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 2743750e-c215-50b6-b58e-7d78979d2f67
 		summarizeBy: none
 		sourceColumn: window_end
@@ -193,7 +193,7 @@ table 'rpt fact_outcome_window'
 
 	column sla_met_pct
 		dataType: double
-		formatString: 0.00
+		formatString: 0.0
 		lineageTag: 37a96f80-0807-557d-a797-964d23e2f7e8
 		summarizeBy: none
 		sourceColumn: sla_met_pct
@@ -202,7 +202,7 @@ table 'rpt fact_outcome_window'
 
 	column first_time_right_pct
 		dataType: double
-		formatString: 0.00
+		formatString: 0.0
 		lineageTag: 5c3053b2-f0be-5ce0-a68c-5af8f21ed2c4
 		summarizeBy: none
 		sourceColumn: first_time_right_pct

@@ -21,7 +21,7 @@ table 'rpt fact_agent_day'
 
 	column work_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 95240607-4a5b-570f-8ea3-cd87618b99bc
 		summarizeBy: none
 		sourceColumn: work_date

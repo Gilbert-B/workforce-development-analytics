@@ -412,7 +412,7 @@ Details: `docs/progress.md`, D45–D48.
 - **`build_all.py`:** Build 01 26/26, Build 02 49/49, Build 03 26/26, Build 04 14/14; MongoDB 50,095 = SQL 49,995 + 100 rejected. About 46 s.
 - **`pytest`:** **171 passed**.
 - **Reports:** all three reports' JSON validates against Microsoft's PBIR schemas; `check_report.py --all` is OK.
-- **Model:** loads with Microsoft's TMDL serializer (22 tables, 28 relationships, 86 measures); `check_model_additive.py --base ec62743` is OK.
+- **Model:** loads with Microsoft's TMDL serializer (22 tables, 26 relationships, 86 measures); `check_model_additive.py --base ec62743` is OK.
 - **Reference values:** `docs/validation_checkpoints.md` (from SQL; for Report 02 they match `sql/bi03_measure_reference.sql`).
 
 **Owner result (2026-11-20, Windows):** checkpoint A passed; checkpoint B: all report numbers check out. Reports 02-03 then rebuilt as editable visuals (D50) and approved for merge.
