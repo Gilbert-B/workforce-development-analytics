@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chPriority",
   "position": {
-    "x": 1256,
-    "y": 386,
-    "z": 60,
-    "width": 604,
-    "height": 308,
-    "tabOrder": 60
+    "x": 1258,
+    "y": 438,
+    "z": 25,
+    "width": 600,
+    "height": 247,
+    "tabOrder": 25
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -150,7 +150,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

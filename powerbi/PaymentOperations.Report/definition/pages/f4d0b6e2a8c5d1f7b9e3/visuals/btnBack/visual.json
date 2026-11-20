@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "btnBack",
   "position": {
-    "x": 1752,
-    "y": 112,
-    "z": 18,
-    "width": 120,
+    "x": 1740,
+    "y": 160,
+    "z": 15,
+    "width": 132,
     "height": 40,
-    "tabOrder": 18
+    "tabOrder": 15
   },
   "visual": {
     "visualType": "actionButton",
@@ -34,7 +34,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#0B5CAD'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -95,7 +95,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "84D"
                 }
               }
             }
@@ -118,7 +118,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#CFE0F3'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -127,7 +127,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "40D"
+                  "Value": "75D"
                 }
               }
             }

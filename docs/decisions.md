@@ -628,3 +628,15 @@ Individual variation still dominates. Totals moved slightly (49,995 cases).
 - **`powerbi/tools/check_report.py`:** checks that every field a visual uses exists in the model, that buttons and drill links lead somewhere, and that visuals don't overlap. It complements Microsoft's JSON schemas (all report files validated).
 - **The model** is parsed with Microsoft's own TMDL serializer (Analysis Services library) in Claude's environment.
 - **DAX itself** can only be evaluated in Power BI Desktop: that is validation checkpoint B.
+
+### D49: Reports 02 and 03 redesigned on a designed canvas (2026-11-20)
+**Why:** the owner's Desktop review found two problems:
+- **Plain look:** the reports looked plain next to Report 01.
+- **Clipping:** in the KPI cards, labels and values overlapped or clipped. Power BI pads text boxes and cards inside their boxes, so the three visuals stacked in each tile collided.
+
+**Fix:** the same technique as Report 01. Everything static is drawn once into a background image per page (SVG in `powerbi/design/r0x-*.svg`, PNG in the report's resources). That covers the header band, logo, titles, tile and panel frames with soft shadows, icons, labels, context lines, About/Method text and footers.
+- **Visuals left on top:** only live data remains as visuals: numbers, charts, tables, slicers, tabs, and the snapshot label.
+- **KPI tiles:** each tile now has exactly one visual, the number, with a 50 px band between the label and the context line. The builder refuses a context line that would wrap.
+- **League tables:** the key percentage columns get a red-to-green colour scale.
+
+**Trade-off:** static text and frames can no longer be edited in Desktop. Change them in `suite_light.py` or the builders and re-run. Visual count fell from 404 to 134 across the two reports.

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chItems",
   "position": {
-    "x": 60,
-    "y": 386,
-    "z": 57,
-    "width": 836,
-    "height": 280,
-    "tabOrder": 57
+    "x": 62,
+    "y": 438,
+    "z": 24,
+    "width": 832,
+    "height": 247,
+    "tabOrder": 24
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -135,7 +135,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

@@ -68,6 +68,31 @@
           "name": "WorkforceOutcomesLight.json",
           "path": "WorkforceOutcomesLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "r03-outcomes-overview.png",
+          "path": "r03-outcomes-overview.png",
+          "type": "Image"
+        },
+        {
+          "name": "r03-training-effectiveness.png",
+          "path": "r03-training-effectiveness.png",
+          "type": "Image"
+        },
+        {
+          "name": "r03-graduate-roster.png",
+          "path": "r03-graduate-roster.png",
+          "type": "Image"
+        },
+        {
+          "name": "r03-graduate-journey.png",
+          "path": "r03-graduate-journey.png",
+          "type": "Image"
+        },
+        {
+          "name": "r03-method.png",
+          "path": "r03-method.png",
+          "type": "Image"
         }
       ]
     }

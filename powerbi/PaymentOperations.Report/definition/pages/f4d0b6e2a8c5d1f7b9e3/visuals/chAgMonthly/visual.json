@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chAgMonthly",
   "position": {
-    "x": 60,
-    "y": 468,
-    "z": 55,
-    "width": 880,
-    "height": 246,
-    "tabOrder": 55
+    "x": 62,
+    "y": 538,
+    "z": 24,
+    "width": 876,
+    "height": 234,
+    "tabOrder": 24
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -154,7 +154,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }
@@ -171,7 +171,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#CFE0F3'"
+                      "Value": "'#9DC0E8'"
                     }
                   }
                 }

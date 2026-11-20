@@ -3,11 +3,11 @@
   "name": "slPriority",
   "position": {
     "x": 1612,
-    "y": 120,
-    "z": 24,
+    "y": 116,
+    "z": 17,
     "width": 260,
     "height": 36,
-    "tabOrder": 24
+    "tabOrder": 17
   },
   "visual": {
     "visualType": "slicer",
@@ -110,6 +110,39 @@
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

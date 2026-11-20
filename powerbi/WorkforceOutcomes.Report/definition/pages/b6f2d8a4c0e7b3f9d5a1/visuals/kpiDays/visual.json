@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiDays",
   "position": {
-    "x": 974,
-    "y": 208,
-    "z": 43,
-    "width": 274,
-    "height": 52,
-    "tabOrder": 43
+    "x": 978,
+    "y": 264,
+    "z": 21,
+    "width": 266,
+    "height": 50,
+    "tabOrder": 21
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "22D"
                 }
               }
             },

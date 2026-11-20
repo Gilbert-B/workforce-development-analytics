@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiCritical",
   "position": {
-    "x": 1280,
-    "y": 208,
-    "z": 48,
-    "width": 274,
-    "height": 52,
-    "tabOrder": 48
+    "x": 1284,
+    "y": 264,
+    "z": 22,
+    "width": 266,
+    "height": 50,
+    "tabOrder": 22
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "22D"
                 }
               }
             },

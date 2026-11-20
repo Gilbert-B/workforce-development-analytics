@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "grJourney",
   "position": {
-    "x": 64,
-    "y": 228,
-    "z": 22,
-    "width": 1792,
-    "height": 40,
-    "tabOrder": 22
+    "x": 68,
+    "y": 270,
+    "z": 17,
+    "width": 1784,
+    "height": 42,
+    "tabOrder": 17
   },
   "visual": {
     "visualType": "card",

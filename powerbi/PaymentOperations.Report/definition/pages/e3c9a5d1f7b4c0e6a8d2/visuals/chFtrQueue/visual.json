@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chFtrQueue",
   "position": {
-    "x": 936,
-    "y": 754,
-    "z": 66,
-    "width": 924,
-    "height": 288,
-    "tabOrder": 66
+    "x": 938,
+    "y": 787,
+    "z": 27,
+    "width": 920,
+    "height": 247,
+    "tabOrder": 27
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -154,7 +154,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }
@@ -171,7 +171,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#C98A1B'"
+                      "Value": "'#E9C37E'"
                     }
                   }
                 }

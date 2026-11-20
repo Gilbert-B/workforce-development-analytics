@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbRoster",
   "position": {
-    "x": 60,
-    "y": 238,
-    "z": 27,
-    "width": 1800,
-    "height": 798,
-    "tabOrder": 27
+    "x": 62,
+    "y": 286,
+    "z": 18,
+    "width": 1796,
+    "height": 748,
+    "tabOrder": 18
   },
   "visual": {
     "visualType": "tableEx",
@@ -248,6 +248,13 @@
                   "Value": "9D"
                 }
               }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
             }
           }
         }
@@ -271,7 +278,25 @@
             "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "6D"
+                  "Value": "7D"
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF1F5'"
+                    }
+                  }
                 }
               }
             }

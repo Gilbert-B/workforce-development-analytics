@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chFtr",
   "position": {
-    "x": 673,
-    "y": 386,
-    "z": 60,
-    "width": 573,
-    "height": 300,
-    "tabOrder": 60
+    "x": 675,
+    "y": 438,
+    "z": 25,
+    "width": 569,
+    "height": 247,
+    "tabOrder": 25
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -154,7 +154,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

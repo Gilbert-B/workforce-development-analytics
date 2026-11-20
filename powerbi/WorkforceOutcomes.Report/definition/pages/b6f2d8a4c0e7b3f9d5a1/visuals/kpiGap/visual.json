@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiGap",
   "position": {
-    "x": 1586,
-    "y": 208,
-    "z": 53,
-    "width": 274,
-    "height": 52,
-    "tabOrder": 53
+    "x": 1590,
+    "y": 264,
+    "z": 23,
+    "width": 266,
+    "height": 50,
+    "tabOrder": 23
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "22D"
                 }
               }
             },

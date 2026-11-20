@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chAgBand",
   "position": {
-    "x": 980,
-    "y": 468,
-    "z": 58,
-    "width": 880,
-    "height": 246,
-    "tabOrder": 58
+    "x": 982,
+    "y": 538,
+    "z": 25,
+    "width": 876,
+    "height": 234,
+    "tabOrder": 25
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -154,7 +154,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }
