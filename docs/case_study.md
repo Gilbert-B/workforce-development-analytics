@@ -68,7 +68,24 @@ Usually those answers sit in three disconnected tools. This project joins them.
 These are associations in a simulated organisation, not causal claims. The simulation deliberately builds in a moderate link with large individual variation, as real studies typically find.
 
 ## Screenshots
-See [`screenshots/`](screenshots/). They are taken in Power BI Desktop on the owner's machine.
+*All screenshots were taken in Power BI Desktop, on synthetic data as at 30 Jun 2027.*
+
+**Report 01: Workforce Development & Readiness**
+![Workforce Intelligence overview](screenshots/01_overview.png)
+![Trainee 360](screenshots/01_trainee360.png)
+
+**Report 02: Payment Operations Performance**
+![Operations overview](screenshots/02_overview.png)
+![Graduate ramp-up](screenshots/02_rampup.png)
+![Agent 360](screenshots/02_agent360.png)
+
+**Report 03: Workforce Outcomes & Training Effectiveness**
+![Outcomes overview](screenshots/03_overview.png)
+![Training effectiveness](screenshots/03_effectiveness.png)
+![Graduate journey](screenshots/03_journey.png)
+
+**One shared semantic model**
+![Model](screenshots/model.png)
 
 ## What I'd do next at scale
 - **Materialise the agent-day and outcome tables** during the ETL rather than as views.

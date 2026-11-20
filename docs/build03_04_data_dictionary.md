@@ -37,7 +37,7 @@ These views feed Reports 02 and 03. Source tables are in `sql/008_create_build03
 | `fact_payment_case`, `fact_qa_review`, `fact_qa_check`, `fact_agent_day` | `dim_agent` (`agent_id`) |
 | `fact_payment_case`, `fact_qa_review`, `fact_qa_check` | `dim_ops_queue` (`queue_id`) |
 | `fact_payment_case.received_date`, `fact_qa_review.reviewed_date`, `fact_qa_check.reviewed_date`, `fact_agent_day.work_date` | `dim_date` |
-| `fact_outcome_window`, `fact_payment_case`, `fact_agent_day` | `dim_graduate` (`agent_id`; tenured agents have no `dim_graduate` row) |
+| `fact_outcome_window` | `dim_graduate` (`agent_id`). No links to the case or agent-day tables: tenured agents have no graduate row, so they would add a "(Blank)" member |
 
 **No relationship joins the training facts (Report 01) to the operations facts.** The link between them is `dim_graduate`, built in SQL. Benchmark measures (`… (Tenured Benchmark)`) remove `dim_agent`, `dim_graduate` and tenure-band filters, but keep queue, team, priority and date filters.
 

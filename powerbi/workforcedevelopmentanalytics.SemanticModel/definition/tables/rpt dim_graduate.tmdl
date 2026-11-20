@@ -163,7 +163,7 @@ table 'rpt dim_graduate'
 
 	column approved_review_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: a09dcd9c-0a7b-57fa-8bd6-630aef3df92b
 		summarizeBy: none
 		sourceColumn: approved_review_date
@@ -174,7 +174,7 @@ table 'rpt dim_graduate'
 
 	column deployment_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 9ccad448-3c3c-56a8-8857-a84e6a0f52c6
 		summarizeBy: none
 		sourceColumn: deployment_date
@@ -185,7 +185,7 @@ table 'rpt dim_graduate'
 
 	column start_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: cdb3965a-2407-5a16-a8cb-51efae3c074b
 		summarizeBy: none
 		sourceColumn: start_date
@@ -205,7 +205,7 @@ table 'rpt dim_graduate'
 
 	column exit_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 45bfd147-63af-59d8-9b48-fc8e93ff65da
 		summarizeBy: none
 		sourceColumn: exit_date
@@ -252,7 +252,7 @@ table 'rpt dim_graduate'
 
 	column attendance_rate_pct
 		dataType: double
-		formatString: 0.00
+		formatString: 0.0
 		lineageTag: 69c64f62-a517-5494-aab7-e15e70fd5bbc
 		summarizeBy: none
 		sourceColumn: attendance_rate_pct
@@ -312,7 +312,7 @@ table 'rpt dim_graduate'
 
 	column day_90_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 89bfbdcd-258e-5cdd-908a-0278ae9bc93f
 		summarizeBy: none
 		sourceColumn: day_90_date

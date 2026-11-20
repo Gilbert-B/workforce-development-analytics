@@ -85,7 +85,7 @@ table 'rpt fact_qa_check'
 
 	column reviewed_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 5c333617-5ff3-5e09-9e86-e56956eae5c2
 		summarizeBy: none
 		sourceColumn: reviewed_date
