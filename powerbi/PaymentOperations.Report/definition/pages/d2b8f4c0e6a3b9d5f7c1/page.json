@@ -1,0 +1,210 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "d2b8f4c0e6a3b9d5f7c1",
+  "displayName": "Graduate ramp-up",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F2F5F9'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F2F5F9'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "chSlaBand",
+      "target": "kpiGrads",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSlaBand",
+      "target": "kpiSla30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSlaBand",
+      "target": "kpiSla90",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSlaBand",
+      "target": "kpiBench",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSlaBand",
+      "target": "kpiFtr30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chSlaBand",
+      "target": "kpiProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrBand",
+      "target": "kpiGrads",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrBand",
+      "target": "kpiSla30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrBand",
+      "target": "kpiSla90",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrBand",
+      "target": "kpiBench",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrBand",
+      "target": "kpiFtr30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chFtrBand",
+      "target": "kpiProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chProdBand",
+      "target": "kpiGrads",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chProdBand",
+      "target": "kpiSla30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chProdBand",
+      "target": "kpiSla90",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chProdBand",
+      "target": "kpiBench",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chProdBand",
+      "target": "kpiFtr30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chProdBand",
+      "target": "kpiProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHours",
+      "target": "kpiGrads",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHours",
+      "target": "kpiSla30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHours",
+      "target": "kpiSla90",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHours",
+      "target": "kpiBench",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHours",
+      "target": "kpiFtr30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "chHours",
+      "target": "kpiProd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgents",
+      "target": "kpiGrads",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgents",
+      "target": "kpiSla30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgents",
+      "target": "kpiSla90",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgents",
+      "target": "kpiBench",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgents",
+      "target": "kpiFtr30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "tbAgents",
+      "target": "kpiProd",
+      "type": "NoFilter"
+    }
+  ]
+}

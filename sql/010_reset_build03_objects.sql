@@ -7,7 +7,8 @@
 --------------------------------------------------------------------------- */
 USE WorkforceDevAnalytics;
 GO
-DROP VIEW IF EXISTS rpt.fact_agent_day, rpt.fact_qa_review, rpt.fact_case_event, rpt.fact_payment_case,
+DROP VIEW IF EXISTS rpt.dim_graduate, rpt.fact_outcome_window, rpt.graduate_training_record,
+                    rpt.fact_agent_day, rpt.fact_qa_check, rpt.fact_qa_review, rpt.fact_case_event, rpt.fact_payment_case,
                     rpt.dim_ops_queue, rpt.dim_agent;
 DROP TABLE IF EXISTS core.case_rework, core.qa_error, core.qa_check, core.qa_review,
                      core.case_event, core.case_assignment, core.payment_case,

@@ -1,0 +1,380 @@
+table 'rpt dim_graduate'
+	lineageTag: bb086fcf-b51c-5e32-81eb-81386babb902
+
+	measure 'Graduates Deployed' = COALESCE ( COUNTROWS ( 'rpt dim_graduate' ), 0 )
+		formatString: #,0
+		displayFolder: Outcomes
+		lineageTag: 4f25145e-fbdd-5f51-b42a-5a9c66c3db63
+
+	measure '90-Day Retention %' = ```
+			-- graduates still employed at day 90 / graduates who have reached day 90 (observed periods only)
+			DIVIDE ( SUM ( 'rpt dim_graduate'[retained_90_days] ), COUNT ( 'rpt dim_graduate'[retained_90_days] ) )
+			```
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: 18095221-cc53-5c17-a241-a62a54308dc0
+
+	measure 'Graduates Left Before Day 90' = COALESCE ( CALCULATE ( COUNTROWS ( 'rpt dim_graduate' ), KEEPFILTERS ( 'rpt dim_graduate'[retained_90_days] = 0 ) ), 0 )
+		formatString: #,0
+		displayFolder: Outcomes
+		lineageTag: c1d1624d-8c93-5d88-9a31-ce3c3bb9baf6
+
+	measure 'Proficient by Day 90 %' = ```
+			-- of graduates still employed at day 90: reached the proficiency standard in any window
+			DIVIDE (
+			    CALCULATE ( COUNTROWS ( 'rpt dim_graduate' ), KEEPFILTERS ( 'rpt dim_graduate'[retained_90_days] = 1 ),
+			                KEEPFILTERS ( NOT ISBLANK ( 'rpt dim_graduate'[days_to_proficiency] ) ) ),
+			    CALCULATE ( COUNTROWS ( 'rpt dim_graduate' ), KEEPFILTERS ( 'rpt dim_graduate'[retained_90_days] = 1 ) ) )
+			```
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: 67ff313a-cc16-53c8-aef1-2e5bfb3edbae
+
+	measure 'Proficient by Day 30 %' = ```
+			DIVIDE (
+			    CALCULATE ( COUNTROWS ( 'rpt dim_graduate' ), KEEPFILTERS ( 'rpt dim_graduate'[days_to_proficiency] = 30 ) ),
+			    CALCULATE ( COUNTROWS ( 'rpt dim_graduate' ), KEEPFILTERS ( 'rpt dim_graduate'[proficiency_status] <> "Too early to tell" ) ) )
+			```
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: d3e0690a-c5ac-5027-bd4d-cd46cb24672d
+
+	measure 'Avg Days to Proficiency' = ```
+			-- proficient graduates only; measured in 30-day windows, so 30 / 60 / 90
+			AVERAGE ( 'rpt dim_graduate'[days_to_proficiency] )
+			```
+		formatString: 0
+		displayFolder: Outcomes
+		lineageTag: 0e7c24bd-8205-5f5b-a7ff-95fa670b59e1
+
+	measure 'Avg Final Competency' = AVERAGE ( 'rpt dim_graduate'[final_competency_score] )
+		formatString: 0.0
+		displayFolder: Outcomes
+		lineageTag: 00ba5b63-f78a-51c5-a721-c2575f99ac8b
+
+	measure 'Certified First Attempt %' = ```
+			DIVIDE ( CALCULATE ( COUNTROWS ( 'rpt dim_graduate' ), KEEPFILTERS ( 'rpt dim_graduate'[certified_first_attempt] = "Yes" ) ),
+			         COUNTROWS ( 'rpt dim_graduate' ) )
+			```
+		formatString: 0.0%
+		displayFolder: Outcomes
+		lineageTag: 5f900968-026d-5580-9a11-8d767d27a3b0
+
+	measure 'Graduate Title' = ```
+			IF ( HASONEVALUE ( 'rpt dim_graduate'[agent_id] ),
+			    SELECTEDVALUE ( 'rpt dim_graduate'[graduate_name] ) & "  ·  " & SELECTEDVALUE ( 'rpt dim_graduate'[cohort_name] ),
+			    "Drill through from any graduate to open their journey" )
+			```
+		displayFolder: Outcomes
+		lineageTag: 2c585970-4654-572f-8df8-8081146faf59
+
+	measure 'Graduate Journey Label' = ```
+			IF ( HASONEVALUE ( 'rpt dim_graduate'[agent_id] ),
+			    "Final competency " & FORMAT ( SELECTEDVALUE ( 'rpt dim_graduate'[final_competency_score] ), "0.0" )
+			    & " (" & SELECTEDVALUE ( 'rpt dim_graduate'[competency_band] ) & ")"
+			    & " · certified first attempt: " & SELECTEDVALUE ( 'rpt dim_graduate'[certified_first_attempt] )
+			    & " · watch list: " & SELECTEDVALUE ( 'rpt dim_graduate'[watchlisted_in_training] )
+			    & " · deployed " & FORMAT ( SELECTEDVALUE ( 'rpt dim_graduate'[deployment_date] ), "d mmm yyyy" )
+			    & " · " & SELECTEDVALUE ( 'rpt dim_graduate'[proficiency_status] ),
+			    "" )
+			```
+		displayFolder: Outcomes
+		lineageTag: f877ba54-51f1-5dbe-9c9c-d8641517026e
+
+	column agent_id
+		dataType: string
+		lineageTag: 87c37a44-c077-586f-a982-6814551892f1
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrolment_id
+		dataType: string
+		lineageTag: b4ae8184-a34f-53c1-b769-3ce67d4812aa
+		summarizeBy: none
+		sourceColumn: enrolment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column employee_id
+		dataType: string
+		lineageTag: 4bb9391f-c7d9-5557-bd50-ae464072424b
+		summarizeBy: none
+		sourceColumn: employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column graduate_name
+		dataType: string
+		lineageTag: 48cfc8fa-affc-5ab7-a4e9-8588fa1911b5
+		summarizeBy: none
+		sourceColumn: graduate_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_id
+		dataType: string
+		lineageTag: cc8398e1-b2ec-5c44-ab99-c8163efc4ceb
+		summarizeBy: none
+		sourceColumn: cohort_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_name
+		dataType: string
+		lineageTag: 401861e1-566b-5763-8d1a-ff58ae5a9097
+		summarizeBy: none
+		sourceColumn: cohort_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_id
+		dataType: string
+		lineageTag: c5d9d596-efd9-5e4f-a281-852ed4c87f4f
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_name
+		dataType: string
+		lineageTag: 81329b07-a599-5806-b1a7-af99aa661b3d
+		summarizeBy: none
+		sourceColumn: team_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_queue_id
+		dataType: string
+		lineageTag: 3ce24da7-d6c0-58d5-be69-c61e8d20ec4e
+		summarizeBy: none
+		sourceColumn: primary_queue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_queue_name
+		dataType: string
+		lineageTag: a5b9dd4b-cd12-52d5-bd6a-7588b8b0d083
+		summarizeBy: none
+		sourceColumn: primary_queue_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column approved_review_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a09dcd9c-0a7b-57fa-8bd6-630aef3df92b
+		summarizeBy: none
+		sourceColumn: approved_review_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column deployment_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9ccad448-3c3c-56a8-8857-a84e6a0f52c6
+		summarizeBy: none
+		sourceColumn: deployment_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cdb3965a-2407-5a16-a8cb-51efae3c074b
+		summarizeBy: none
+		sourceColumn: start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column days_approval_to_deployment
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c142153-8c31-5819-b523-5b13c8053acd
+		summarizeBy: none
+		sourceColumn: days_approval_to_deployment
+
+		annotation SummarizationSetBy = Automatic
+
+	column exit_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 45bfd147-63af-59d8-9b48-fc8e93ff65da
+		summarizeBy: none
+		sourceColumn: exit_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column exit_reason
+		dataType: string
+		lineageTag: 514efae0-6962-528a-b7d2-1bd2fe7ed21c
+		summarizeBy: none
+		sourceColumn: exit_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column final_competency_score
+		dataType: double
+		formatString: 0.00
+		lineageTag: 42a2a57c-53db-596a-8d9e-e66f48fcfca1
+		summarizeBy: none
+		sourceColumn: final_competency_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column competency_band
+		dataType: string
+		lineageTag: c2871178-af34-5a7d-86ec-050eafa103b6
+		summarizeBy: none
+		sourceColumn: competency_band
+		sortByColumn: competency_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column competency_band_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5a83345b-2e1c-5695-9aca-b7eac1c0caa6
+		summarizeBy: none
+		sourceColumn: competency_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column attendance_rate_pct
+		dataType: double
+		formatString: 0.00
+		lineageTag: 69c64f62-a517-5494-aab7-e15e70fd5bbc
+		summarizeBy: none
+		sourceColumn: attendance_rate_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column certified_first_attempt
+		dataType: string
+		lineageTag: 756e71c0-fc1c-5f18-bd31-6e32c3811a59
+		summarizeBy: none
+		sourceColumn: certified_first_attempt
+
+		annotation SummarizationSetBy = Automatic
+
+	column watchlist_cases
+		dataType: int64
+		formatString: 0
+		lineageTag: f6a98faa-7045-544c-82ec-4f23a52cf093
+		summarizeBy: none
+		sourceColumn: watchlist_cases
+
+		annotation SummarizationSetBy = Automatic
+
+	column watchlisted_in_training
+		dataType: string
+		lineageTag: 3a4355c6-91b2-5ba0-940c-2b56d3ce0db8
+		summarizeBy: none
+		sourceColumn: watchlisted_in_training
+
+		annotation SummarizationSetBy = Automatic
+
+	column coaching_actions
+		dataType: int64
+		formatString: 0
+		lineageTag: 03e57d72-7e5a-5cf4-a981-a1d6539b5841
+		summarizeBy: none
+		sourceColumn: coaching_actions
+
+		annotation SummarizationSetBy = Automatic
+
+	column readiness_reviews
+		dataType: int64
+		formatString: 0
+		lineageTag: 25b2a92b-e54e-5eaf-9b01-a5c65cb62f2c
+		summarizeBy: none
+		sourceColumn: readiness_reviews
+
+		annotation SummarizationSetBy = Automatic
+
+	column approved_at_first_review
+		dataType: string
+		lineageTag: 24fffc4a-b0be-5684-b50c-6945ebbefd26
+		summarizeBy: none
+		sourceColumn: approved_at_first_review
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_90_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 89bfbdcd-258e-5cdd-908a-0278ae9bc93f
+		summarizeBy: none
+		sourceColumn: day_90_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column retained_90_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 582ac72f-bbc1-5078-9675-45ab57436f98
+		summarizeBy: none
+		sourceColumn: retained_90_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active_at_snapshot
+		dataType: int64
+		formatString: 0
+		lineageTag: 9d88452e-447d-548d-b2e2-02e59de9c791
+		summarizeBy: none
+		sourceColumn: is_active_at_snapshot
+
+		annotation SummarizationSetBy = Automatic
+
+	column proficiency_status
+		dataType: string
+		lineageTag: c07d3e33-4c48-5b34-ac25-1ce60dbd0108
+		summarizeBy: none
+		sourceColumn: proficiency_status
+		sortByColumn: proficiency_status_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column proficiency_status_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9da4f539-9467-5095-b32e-5ca5a185d069
+		summarizeBy: none
+		sourceColumn: proficiency_status_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_to_proficiency
+		dataType: int64
+		formatString: 0
+		lineageTag: 70fb5645-a7d1-5fe5-9020-d0b3b337eacc
+		summarizeBy: none
+		sourceColumn: days_to_proficiency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt dim_graduate' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_dim_graduate = WorkforceDevAnalytics{[Schema="rpt",Item="dim_graduate"]}[Data]
+				in
+				    rpt_dim_graduate
+
+	annotation PBI_ResultType = Table

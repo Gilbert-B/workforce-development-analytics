@@ -101,8 +101,10 @@ def training_profile(inp: Path) -> dict:
     for a in read_csv(inp / "build02" / "certification_attempt.csv"):
         if a["attempt_number"] == "1" and a["result"] == "Passed":
             certs[a["enrolment_id"]].add(a["certification_id"])
+    watched = {w["enrolment_id"] for w in read_csv(inp / "build02" / "watchlist_case.csv")}
     mu, sd = mean(final.values()), pstdev(final.values()) or 1
-    return {eid: {"competency_z": (v - mu) / sd, "first_pass_both": len(certs[eid]) == 2} for eid, v in final.items()}
+    return {eid: {"competency_z": (v - mu) / sd, "first_pass_both": len(certs[eid]) == 2, "watchlisted": eid in watched}
+            for eid, v in final.items()}
 
 
 def build_agents(cfg: dict, inp: Path, horizon: date, seed: int):
@@ -123,12 +125,14 @@ def build_agents(cfg: dict, inp: Path, horizon: date, seed: int):
     agents, deployments = [], []
     for emp_id, r in sorted(by_employee.items()):
         eid = r["enrolment_id"]
+        tp = profile.get(eid, {"competency_z": 0.0, "first_pass_both": False, "watchlisted": False})
         rng = stream(seed, "agent", eid)
         recorded = datetime.fromisoformat(r["recorded_at"]).date()
         start = add_business_days(recorded, int(uni(rng, cfg["agents"]["deploy_lag_business_days"]) + 0.5))
         queue = pick_weighted(rng, qweights)
         exit_day, exit_reason = None, None
-        if rng.random() < cfg["exits"]["graduate_exit_probability"]:
+        p_exit = cfg["exits"]["graduate_exit_probability"] * (cfg["exits"]["watchlist_exit_multiplier"] if tp["watchlisted"] else 1)
+        if rng.random() < p_exit:
             exit_day = start + timedelta(days=int(uni(rng, cfg["exits"]["graduate_exit_window_days"])))
             exit_reason = "Resigned"
         if start > horizon:
@@ -136,11 +140,11 @@ def build_agents(cfg: dict, inp: Path, horizon: date, seed: int):
         if exit_day and exit_day > horizon:
             exit_day, exit_reason = None, None     # a future exit is not yet known
         agent_id = f"AG-G{eid.split('-')[1]}"
-        p, tp = people[emp_id], profile.get(eid, {"competency_z": 0.0, "first_pass_both": False})
+        p = people[emp_id]
         agents.append({"agent_id": agent_id, "employee_id": emp_id, "enrolment_id": eid, "agent_type": "Graduate",
                        "first_name": p["first_name"], "last_name": p["last_name"], "team_id": qteam[queue],
                        "primary_queue_id": queue, "start_date": start, "exit_date": exit_day, "exit_reason": exit_reason,
-                       "_z": tp["competency_z"], "_first_pass": tp["first_pass_both"]})
+                       "_z": tp["competency_z"], "_first_pass": tp["first_pass_both"], "_watch": tp["watchlisted"]})
         deployments.append({"deployment_id": f"DEP-{eid.split('-')[1]}", "enrolment_id": eid, "agent_id": agent_id,
                             "readiness_review_id": r["readiness_review_id"], "approved_review_date": r["review_date"],
                             "deployment_date": start, "team_id": qteam[queue], "queue_id": queue})
@@ -158,7 +162,7 @@ def build_agents(cfg: dict, inp: Path, horizon: date, seed: int):
                        "agent_type": "Tenured", "first_name": FIRST_NAMES[int(rng.random() * len(FIRST_NAMES))],
                        "last_name": LAST_NAMES[int(rng.random() * len(LAST_NAMES))], "team_id": qteam[queue],
                        "primary_queue_id": queue, "start_date": start, "exit_date": exit_day, "exit_reason": exit_reason,
-                       "_z": 0.0, "_first_pass": True})
+                       "_z": 0.0, "_first_pass": True, "_watch": False})
     return agents, deployments
 
 
@@ -168,9 +172,11 @@ def agent_params(cfg, a, seed):
     if a["agent_type"] == "Tenured":
         acc = uni(rng, p["tenured_accuracy"])
         return {"thr0": 1.0, "thr1": uni(rng, p["tenured_throughput"]), "acc0": acc, "acc1": acc, "tau": 1.0}
-    tau = uni(rng, p["ramp_days"]) * (1 - p["certification_ramp_speedup"] if a["_first_pass"] else 1)
-    acc0 = min(0.95, uni(rng, p["graduate_initial_accuracy"]) + p["training_effect"] * a["_z"])
-    acc1 = uni(rng, p["graduate_mature_accuracy"]) + p["training_effect"] * a["_z"] * 0.5
+    z = max(-2.0, min(2.0, a["_z"]))                 # training competency, in SDs (clipped)
+    tau = uni(rng, p["ramp_days"]) * (1 - p["certification_ramp_speedup"] if a["_first_pass"] else 1) \
+        * (1 - p["competency_ramp_effect"] * z) * (p["watchlist_ramp_penalty"] if a["_watch"] else 1)
+    acc0 = min(0.95, uni(rng, p["graduate_initial_accuracy"]) + p["training_effect"] * z)
+    acc1 = uni(rng, p["graduate_mature_accuracy"]) + p["training_effect"] * z * 0.5
     if rng.random() < p["plateau_probability"]:
         acc1 = acc0 + 0.5 * (acc1 - acc0)          # imperfect improvement
     thr1 = uni(rng, p["graduate_throughput_mature"])
@@ -197,6 +203,35 @@ def business_days(d0: date, d1: date) -> list[date]:
 def active_days(a, days, ops_start):
     start = max(a["start_date"], ops_start)
     return [d for d in days if d >= start and (a["exit_date"] is None or d < a["exit_date"])]
+
+
+def hand_over_after_exit(events, assignments, agent, by_queue_day, horizon, seed, key):
+    """An agent who has left can't act on a case. If the case's next action falls on
+    or after the agent's exit date, a teammate on the same queue takes it over: a NEW
+    'assigned' event and assignment are added at 08:00 on the first working day from
+    the exit date (or just before that action, if earlier), and later actions are
+    theirs. Nothing is erased."""
+    if agent["exit_date"] is None:
+        return
+    late = [i for i, e in enumerate(events) if e[2] == agent["agent_id"] and e[1].date() >= agent["exit_date"]]
+    if not late:
+        return
+    i = late[0]
+    day = agent["exit_date"]
+    while day.weekday() >= 5:
+        day += timedelta(days=1)
+    team = [o for o in by_queue_day.get((agent["primary_queue_id"], day), []) if o["agent_id"] != agent["agent_id"]]
+    if not team:
+        return                               # nobody to hand over to; the validation check would flag it
+    successor = team[int(stream(seed, "handover", key).random() * len(team))]
+    at = minute(max(events[i - 1][1] + timedelta(minutes=1),
+                    min(datetime.combine(day, time(8)), events[i][1] - timedelta(minutes=1))))
+    at = max(at, datetime.combine(agent["exit_date"], time(0)))
+    for j in range(i, len(events)):
+        if events[j][2] == agent["agent_id"]:
+            events[j] = (events[j][0], max(events[j][1], at + timedelta(minutes=1)), successor["agent_id"])
+    events.insert(i, ("assigned", at, successor["agent_id"]))
+    assignments.append((successor["agent_id"], at))
 
 
 def simulate_cases(cfg, agents, horizon, seed):
@@ -287,6 +322,8 @@ def simulate_cases(cfg, agents, horizon, seed):
                 events.append(("reopened", reopen, None))
                 fix = reopen + timedelta(hours=cr.lognormvariate(math.log(c["resolution_median_hours"][prio]), 0.5))
                 events.append(("resolved", minute(fix), agent["agent_id"]))
+            hand_over_after_exit(events, assignments, agent, by_queue_day, horizon, seed,
+                                 f"{a['agent_id']}|{d.isoformat()}|{k}")
             cases.append({"received": received, "agent": a["agent_id"], "case_type": ctype, "priority": prio,
                           "channel": c["channels"][int(cr.random() * len(c["channels"]))],
                           "amount_band": c["amount_bands"][int(cr.random() * len(c["amount_bands"]))],

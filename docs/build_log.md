@@ -386,3 +386,33 @@ How to run it: `docs/build03_walkthrough.md`.
 
 **Owner result (2026-11-19, Windows, SQL Server 2022 + MongoDB):** all checks OK.
 
+
+## BI-03 step 1: Report 02 measures (proposal) and data-layer fixes (2026-11-19)
+- **Proposal:** `docs/bi03_measure_proposal.md` (relationships, 15 DAX drafts, decisions B0–B2).
+- **Reference values:** `sql/bi03_measure_reference.sql`, computed from the core tables. They match the `rpt` views exactly (e.g. SLA Met 82.6%, First-Time-Right 97.9%, QA Pass 96.5%, 249 open, 19 overdue).
+- **Data layer:**
+  - `fact_agent_day` rebuilt (minutes → about 1 s; weekend resolutions included);
+  - exited agents hand cases over;
+  - `tenure_band_order` added.
+- **Checks:** Build 03 now has **26 of 26**.
+- **Evidence (Claude's environment):** `pytest` gives **170 passed**; the reconciliation is OK.
+- **Owner result:** *pending.*
+
+## BI-03 / Build 04 / BI-04: three-report suite complete (2026-11-19, branch `bi/03-payment-operations`)
+**Built:**
+- the Report 02 and Report 03 pages;
+- the shared-model extension (generated TMDL);
+- the Build 04 outcome views;
+- `build_all.py`;
+- `check_report.py`.
+
+Details: `docs/progress.md`, D45–D48.
+
+**Evidence (Claude's environment: SQL Server 2025 on Linux, MongoDB 7.0):**
+- **`build_all.py`:** Build 01 26/26, Build 02 49/49, Build 03 26/26, Build 04 14/14; MongoDB 50,095 = SQL 49,995 + 100 rejected. About 46 s.
+- **`pytest`:** **171 passed**.
+- **Reports:** all three reports' JSON validates against Microsoft's PBIR schemas; `check_report.py --all` is OK.
+- **Model:** loads with Microsoft's TMDL serializer (22 tables, 28 relationships, 86 measures); `check_model_additive.py --base ec62743` is OK.
+- **Reference values:** `docs/validation_checkpoints.md` (from SQL; for Report 02 they match `sql/bi03_measure_reference.sql`).
+
+**Owner result (2026-11-20, Windows):** checkpoint A passed; checkpoint B: all report numbers check out. Reports 02-03 then rebuilt as editable visuals (D50) and approved for merge.

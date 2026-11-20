@@ -1,0 +1,305 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "tbWindows",
+  "position": {
+    "x": 48,
+    "y": 728,
+    "z": 24,
+    "width": 1824,
+    "height": 338,
+    "tabOrder": 24
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "window_label"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.window_label",
+              "nativeQueryRef": "window_label",
+              "displayName": "Window"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "window_start"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.window_start",
+              "nativeQueryRef": "window_start",
+              "displayName": "From"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "window_status"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.window_status",
+              "nativeQueryRef": "window_status",
+              "displayName": "Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "cases_received"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.cases_received",
+              "nativeQueryRef": "cases_received",
+              "displayName": "Cases"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "sla_met_pct"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.sla_met_pct",
+              "nativeQueryRef": "sla_met_pct",
+              "displayName": "SLA met %"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "first_time_right_pct"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.first_time_right_pct",
+              "nativeQueryRef": "first_time_right_pct",
+              "displayName": "First-time right %"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "qa_reviews"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.qa_reviews",
+              "nativeQueryRef": "qa_reviews",
+              "displayName": "QA reviews"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "qa_passed"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.qa_passed",
+              "nativeQueryRef": "qa_passed",
+              "displayName": "QA passed"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "agent_days"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.agent_days",
+              "nativeQueryRef": "agent_days",
+              "displayName": "Days worked"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt fact_outcome_window"
+                    }
+                  },
+                  "Property": "is_proficient"
+                }
+              },
+              "queryRef": "rpt fact_outcome_window.is_proficient",
+              "nativeQueryRef": "is_proficient",
+              "displayName": "Proficient (1/0)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "rpt fact_outcome_window"
+                  }
+                },
+                "Property": "window_order"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "7D"
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF1F5'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Window detail'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Left before window end'' and ''Not yet reached'' windows are not measured (blank)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

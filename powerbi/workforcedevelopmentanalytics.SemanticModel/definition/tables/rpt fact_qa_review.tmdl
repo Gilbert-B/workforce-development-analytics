@@ -1,0 +1,162 @@
+table 'rpt fact_qa_review'
+	lineageTag: 24931f43-5231-5693-b535-53bc970e1430
+
+	measure 'QA Reviews' = COALESCE ( COUNTROWS ( 'rpt fact_qa_review' ), 0 )
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 79cb575c-2ec4-5ab6-b3a2-c1cea9dbc46c
+
+	measure 'QA Pass %' = DIVIDE ( SUM ( 'rpt fact_qa_review'[passed] ), COUNTROWS ( 'rpt fact_qa_review' ) )
+		formatString: 0.0%
+		displayFolder: Quality
+		lineageTag: 03e6dd7c-47cf-5a66-9a88-0c6d598ca900
+
+	measure 'QA Pass % (Tenured Benchmark)' = ```
+			CALCULATE ( [QA Pass %],
+			    REMOVEFILTERS ( 'rpt dim_agent' ), REMOVEFILTERS ( 'rpt dim_graduate' ),
+			    REMOVEFILTERS ( 'rpt fact_qa_review'[tenure_band], 'rpt fact_qa_review'[tenure_band_order] ),
+			    'rpt fact_qa_review'[tenure_band] = "Tenured" )
+			```
+		formatString: 0.0%
+		displayFolder: Quality
+		lineageTag: 0629bb6b-dd6e-56cb-9278-460337a8b128
+
+	measure 'Avg QA Score' = AVERAGE ( 'rpt fact_qa_review'[score] )
+		formatString: 0.0
+		displayFolder: Quality
+		lineageTag: 20998742-6652-5e26-b264-799e1e6e35d5
+
+	measure 'QA Critical Error %' = DIVIDE ( SUM ( 'rpt fact_qa_review'[has_critical_error] ), COUNTROWS ( 'rpt fact_qa_review' ) )
+		formatString: 0.0%
+		displayFolder: Quality
+		lineageTag: 7985aafa-274e-5184-ab52-0867d356ef3a
+
+	column case_id
+		dataType: string
+		lineageTag: b0b577e3-79a5-5a63-a16a-2e66978ec539
+		summarizeBy: none
+		sourceColumn: case_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_id
+		dataType: string
+		lineageTag: 580b37af-f115-5c9c-bad5-29f17a493cb4
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column queue_id
+		dataType: string
+		lineageTag: ef57bb26-56bf-5972-84c8-5a39ae2e70e3
+		summarizeBy: none
+		sourceColumn: queue_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column case_type_code
+		dataType: string
+		lineageTag: d32cf4a6-1b75-5a9a-80ab-7cae0684403a
+		summarizeBy: none
+		sourceColumn: case_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band
+		dataType: string
+		lineageTag: b9c393e0-6908-58c2-8dc9-345480dbe0df
+		summarizeBy: none
+		sourceColumn: tenure_band
+		sortByColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_band_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 325c041b-8473-55cf-bb48-0d2f66c2ee0a
+		summarizeBy: none
+		sourceColumn: tenure_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column reviewed_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c05b63fe-fa9a-5c84-8ef3-d205f3033af3
+		summarizeBy: none
+		sourceColumn: reviewed_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column reviewed_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0497990c-52ea-5163-83f7-97bbcb2ea9c1
+		summarizeBy: none
+		sourceColumn: reviewed_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column reviewed_month
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 3bcd0c4c-85fa-5fe9-b225-d1c31d2212d3
+		summarizeBy: none
+		sourceColumn: reviewed_month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column score
+		dataType: int64
+		formatString: 0
+		lineageTag: 2d6facf0-59ed-5173-80e6-e31fed4f6b76
+		summarizeBy: none
+		sourceColumn: score
+
+		annotation SummarizationSetBy = Automatic
+
+	column passed
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e60fd9a-d7e0-55d3-8fec-251d395716bd
+		summarizeBy: none
+		sourceColumn: passed
+
+		annotation SummarizationSetBy = Automatic
+
+	column error_count
+		dataType: int64
+		formatString: 0
+		lineageTag: bebd90ff-8395-57ba-a856-2c5b99e81669
+		summarizeBy: none
+		sourceColumn: error_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_critical_error
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f74befd-1f80-58dc-bb5c-71b6dfa9e0a6
+		summarizeBy: none
+		sourceColumn: has_critical_error
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt fact_qa_review' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost"),
+				    WorkforceDevAnalytics = Source{[Name="WorkforceDevAnalytics"]}[Data],
+				    rpt_fact_qa_review = WorkforceDevAnalytics{[Schema="rpt",Item="fact_qa_review"]}[Data]
+				in
+				    rpt_fact_qa_review
+
+	annotation PBI_ResultType = Table
