@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chHours",
   "position": {
-    "x": 62,
-    "y": 787,
-    "z": 27,
-    "width": 569,
-    "height": 247,
-    "tabOrder": 27
+    "x": 48,
+    "y": 713,
+    "z": 37,
+    "width": 597,
+    "height": 333,
+    "tabOrder": 37
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -192,6 +192,48 @@
           },
           "selector": {
             "metadata": "rpt fact_payment_case.Median Resolution Hours"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Median resolution hours'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Received to final resolution, by tenure band'"
+                }
+              }
+            }
           }
         }
       ]

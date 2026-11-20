@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chHeat",
   "position": {
-    "x": 938,
-    "y": 438,
-    "z": 25,
-    "width": 920,
-    "height": 247,
-    "tabOrder": 25
+    "x": 924,
+    "y": 364,
+    "z": 35,
+    "width": 948,
+    "height": 333,
+    "tabOrder": 35
   },
   "visual": {
     "visualType": "pivotTable",
@@ -277,6 +277,48 @@
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'QA pass rate: queue × tenure band'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Green = higher pass rate · small cells are noisy'"
                 }
               }
             }

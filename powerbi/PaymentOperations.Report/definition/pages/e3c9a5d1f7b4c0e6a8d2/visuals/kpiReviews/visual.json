@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiReviews",
   "position": {
-    "x": 60,
-    "y": 264,
-    "z": 18,
-    "width": 266,
-    "height": 50,
-    "tabOrder": 18
+    "x": 48,
+    "y": 212,
+    "z": 22,
+    "width": 290,
+    "height": 136,
+    "tabOrder": 22
   },
   "visual": {
     "visualType": "card",
@@ -80,13 +80,40 @@
       ]
     },
     "visualContainerObjects": {
-      "background": [
+      "title": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'QA reviews'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'A sample of resolved cases'"
                 }
               }
             }

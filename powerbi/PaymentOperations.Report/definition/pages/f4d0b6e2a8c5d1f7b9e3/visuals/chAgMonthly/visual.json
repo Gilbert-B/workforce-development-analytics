@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chAgMonthly",
   "position": {
-    "x": 62,
-    "y": 538,
-    "z": 24,
-    "width": 876,
-    "height": 234,
-    "tabOrder": 24
+    "x": 48,
+    "y": 484,
+    "z": 34,
+    "width": 904,
+    "height": 300,
+    "tabOrder": 34
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -253,6 +253,28 @@
               "expr": {
                 "Literal": {
                   "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Monthly cases and SLA met'"
                 }
               }
             }

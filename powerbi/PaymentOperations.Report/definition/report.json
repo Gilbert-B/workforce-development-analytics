@@ -70,28 +70,98 @@
           "type": "CustomTheme"
         },
         {
-          "name": "r02-operations-overview.png",
-          "path": "r02-operations-overview.png",
+          "name": "band.svg",
+          "path": "band.svg",
           "type": "Image"
         },
         {
-          "name": "r02-graduate-ramp-up.png",
-          "path": "r02-graduate-ramp-up.png",
+          "name": "icon-alert-d1553f.svg",
+          "path": "icon-alert-d1553f.svg",
           "type": "Image"
         },
         {
-          "name": "r02-quality.png",
-          "path": "r02-quality.png",
+          "name": "icon-calendar-8a96a8.svg",
+          "path": "icon-calendar-8a96a8.svg",
           "type": "Image"
         },
         {
-          "name": "r02-agent-360.png",
-          "path": "r02-agent-360.png",
+          "name": "icon-cap-0b5cad.svg",
+          "path": "icon-cap-0b5cad.svg",
           "type": "Image"
         },
         {
-          "name": "r02-about.png",
-          "path": "r02-about.png",
+          "name": "icon-clock-1f9e8f.svg",
+          "path": "icon-clock-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-clock-c98a1b.svg",
+          "path": "icon-clock-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-doc-0b5cad.svg",
+          "path": "icon-doc-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-doc-c98a1b.svg",
+          "path": "icon-doc-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-gauge-0b5cad.svg",
+          "path": "icon-gauge-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-inbox-0b5cad.svg",
+          "path": "icon-inbox-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-inbox-ffffff.svg",
+          "path": "icon-inbox-ffffff.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-rework-c98a1b.svg",
+          "path": "icon-rework-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-shield-0b5cad.svg",
+          "path": "icon-shield-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-shield-1f9e8f.svg",
+          "path": "icon-shield-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-star-1f9e8f.svg",
+          "path": "icon-star-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-star-2e3a4b.svg",
+          "path": "icon-star-2e3a4b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-0b5cad.svg",
+          "path": "icon-target-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-1f9e8f.svg",
+          "path": "icon-target-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-c98a1b.svg",
+          "path": "icon-target-c98a1b.svg",
           "type": "Image"
         }
       ]

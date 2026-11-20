@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbAgCases",
   "position": {
-    "x": 62,
-    "y": 874,
-    "z": 26,
-    "width": 1796,
-    "height": 180,
-    "tabOrder": 26
+    "x": 48,
+    "y": 800,
+    "z": 36,
+    "width": 1824,
+    "height": 266,
+    "tabOrder": 36
   },
   "visual": {
     "visualType": "tableEx",
@@ -237,6 +237,48 @@
                       "Value": "'#EEF1F5'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Cases (most recent first)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'First and final resolution are both kept; rework adds history'"
                 }
               }
             }

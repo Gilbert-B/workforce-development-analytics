@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chProfBand",
   "position": {
-    "x": 675,
-    "y": 286,
-    "z": 19,
-    "width": 569,
-    "height": 323,
-    "tabOrder": 19
+    "x": 661,
+    "y": 212,
+    "z": 23,
+    "width": 597,
+    "height": 409,
+    "tabOrder": 23
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -225,6 +225,48 @@
           },
           "selector": {
             "metadata": "rpt dim_graduate.Proficient by Day 90 %"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Proficiency by competency band'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Share of graduates meeting the standard by day 30 and by day 90'"
+                }
+              }
+            }
           }
         }
       ]

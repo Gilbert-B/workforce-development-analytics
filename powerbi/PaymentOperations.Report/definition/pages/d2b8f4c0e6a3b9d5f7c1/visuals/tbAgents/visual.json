@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbAgents",
   "position": {
-    "x": 675,
-    "y": 787,
-    "z": 28,
-    "width": 1183,
-    "height": 247,
-    "tabOrder": 28
+    "x": 661,
+    "y": 713,
+    "z": 38,
+    "width": 1211,
+    "height": 333,
+    "tabOrder": 38
   },
   "visual": {
     "visualType": "tableEx",
@@ -355,6 +355,48 @@
                       "Value": "'#EEF1F5'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Agent league table'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Right-click an agent → Drill through → Agent 360'"
                 }
               }
             }

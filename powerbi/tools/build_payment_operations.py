@@ -22,7 +22,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from suite_light import (BODY_Y, BOTTOM, GAP, KPI_H, KPI_Y, SPAN, X0, Page, Palette, bar_chart, column_chart,
-                         combo_chart, drillthrough, eq, footer, heatmap, line_chart, sort_by, table, text_card,
+                         combo_chart, drillthrough, chrome, eq, footer, heatmap, line_chart, sort_by, table, text_card, theme,
                          write_report)
 
 REPO = Path(__file__).resolve().parents[2]
@@ -33,6 +33,7 @@ THEME = PBI / "themes" / "PaymentOperationsLight.json"
 PAL = Palette(canvas="#F2F5F9", surface="#FFFFFF", ink="#0F1B2D", muted="#5B6B80", border="#DCE3EC",
               accent="#0B5CAD", accent_soft="#CFE0F3", hero_from="#071A33", hero_to="#0B5CAD", hero_text="#BFD5F0")
 TENURED = "#2E3A4B"           # benchmark colour (tenured agents)
+DATA_COLOURS = ["#0B5CAD", "#1F9E8F", "#C98A1B", "#D1553F", "#6E56CF", "#3FA7D6", "#8A96A8", "#2E3A4B"]
 
 OVERVIEW, RAMP, QUALITY, AGENT, ABOUT = ("c1a7e3b9d5f2a8c4e6b0", "d2b8f4c0e6a3b9d5f7c1", "e3c9a5d1f7b4c0e6a8d2",
                                          "f4d0b6e2a8c5d1f7b9e3", "a5e1c7f3b9d6e2a8c0f4")
@@ -197,9 +198,11 @@ def quality() -> Page:
 def agent_360() -> Page:
     pg = Page(PAL, AGENT, "Agent 360")
     header(pg, "Agent 360", None, back=True)
-    pg.surface(X0, KPI_Y, SPAN, 104)
-    pg.add("agTitle", X0 + 20, KPI_Y + 8, SPAN - 40, 50, text_card(AG, "Agent Title", 18, PAL.ink, "bold"))
-    pg.add("agProfile", X0 + 20, KPI_Y + 58, SPAN - 40, 42, text_card(AG, "Agent Profile Label", 10, PAL.muted))
+    # name and profile line straight on the canvas (no card container), one above the other
+    pg.add("agTitle", X0, KPI_Y - 4, SPAN, 58, text_card(AG, "Agent Title", 20, PAL.ink, "bold"),
+           container_objects=chrome(background=False))
+    pg.add("agProfile", X0, KPI_Y + 54, SPAN, 42, text_card(AG, "Agent Profile Label", 11, PAL.muted),
+           container_objects=chrome(background=False))
     y = KPI_Y + 104 + GAP
     pg.kpi_row([
         ("kpiAgCases", "Cases received", PC, "Cases Received", "Credited to this agent", PAL.accent, None, "inbox"),
@@ -262,15 +265,14 @@ def about() -> Page:
     for i, (title, lines) in enumerate(blocks):
         x = X0 + (i % 2) * (half + GAP)
         y = KPI_Y + (i // 2) * (h + GAP)
-        pg.panel(f"about{i}", x, y, half, h, title)
-        pg.bullets(x + 34, y + 92, half - 70, lines)
+        pg.text_panel(f"about{i}", x, y, half, h, title, lines)
     return pg
 
 
 def main() -> None:
     pages = [(overview(), None), (ramp_up(), None), (quality(), None),
              (agent_360(), drillthrough(AG, "agent_id", "agent360")), (about(), None)]
-    write_report(REPORT, THEME, pages, "payment-operations.pbip", "r02")
+    write_report(REPORT, THEME, theme(PAL, "Payment Operations Light", DATA_COLOURS), pages, "payment-operations.pbip")
     print(f"Report 02 written ({len(pages)} pages) on the shared model")
 
 

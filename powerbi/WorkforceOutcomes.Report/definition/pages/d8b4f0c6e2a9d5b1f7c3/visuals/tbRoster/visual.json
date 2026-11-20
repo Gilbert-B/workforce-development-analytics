@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbRoster",
   "position": {
-    "x": 62,
-    "y": 286,
-    "z": 18,
-    "width": 1796,
-    "height": 748,
-    "tabOrder": 18
+    "x": 48,
+    "y": 212,
+    "z": 22,
+    "width": 1824,
+    "height": 834,
+    "tabOrder": 22
   },
   "visual": {
     "visualType": "tableEx",
@@ -297,6 +297,48 @@
                       "Value": "'#EEF1F5'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Every deployed graduate: training record → outcome'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Right-click a graduate → Drill through → Graduate journey · click a column header to sort'"
                 }
               }
             }

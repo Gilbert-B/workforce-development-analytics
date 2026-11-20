@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chCert",
   "position": {
-    "x": 62,
-    "y": 711,
-    "z": 21,
-    "width": 569,
-    "height": 323,
-    "tabOrder": 21
+    "x": 48,
+    "y": 637,
+    "z": 25,
+    "width": 597,
+    "height": 409,
+    "tabOrder": 25
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -275,6 +275,48 @@
                 }
               }
             ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Certified at the first attempt?'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'First-time right by window: both certifications passed first time?'"
+                }
+              }
+            }
           }
         }
       ]

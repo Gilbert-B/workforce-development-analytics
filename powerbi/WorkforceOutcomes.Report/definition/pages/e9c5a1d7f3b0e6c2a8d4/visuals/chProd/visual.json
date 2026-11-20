@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chProd",
   "position": {
-    "x": 982,
-    "y": 406,
-    "z": 19,
-    "width": 876,
-    "height": 294,
-    "tabOrder": 19
+    "x": 968,
+    "y": 332,
+    "z": 23,
+    "width": 904,
+    "height": 380,
+    "tabOrder": 23
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -192,6 +192,48 @@
           },
           "selector": {
             "metadata": "rpt fact_outcome_window.Window Resolved per Agent-Day"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Resolved cases per day worked'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Productivity in each 30-day window'"
+                }
+              }
+            }
           }
         }
       ]

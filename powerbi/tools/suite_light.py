@@ -1,33 +1,32 @@
 """Page building blocks for the two LIGHT reports of the suite (Report 02 and Report 03).
 
-DESIGN: the same "designed canvas" technique as Report 01, in a light style.
-Everything static (header band, logo, titles, tile and panel frames with soft
-shadows, icons, labels, footers) is drawn ONCE into a page background image
-(SVG -> PNG). Power BI visuals sit on top and show only live data: numbers,
-charts, tables, slicers, tabs. Static text can therefore never overlap or clip
-a value, and every number card gets generous room.
+DESIGN PRINCIPLE: everything stays an editable Power BI object.
+  * Styling lives in the report THEME (generated here from the report's Palette):
+    every card, chart and table gets a white rounded "card" container with a
+    soft shadow, and title / subtitle fonts, from the theme. A visual added later
+    in Desktop picks up the same look automatically.
+  * Each visual carries only its CONTENT: its fields and its title / subtitle
+    text (Format pane > General > Title). Power BI lays the title, subtitle and
+    value out itself, so nothing can overlap or clip.
+  * KPI tile = ONE card visual: title = label, subtitle = context line.
+  * Header = a band image (decoration only, no text), text boxes for eyebrow and
+    title, button tabs, slicers with their own titles. Icons are small SVG image
+    visuals: swap or delete them like any other visual.
 
-    y    0-232  header band: logo, eyebrow, title, snapshot pill, tabs, slicers
-    y  212-340  KPI tiles (float over the band's lower edge)
-    y  356+     panels
-SVGs are written to powerbi/design/, PNGs to the report's RegisteredResources
-(rendered with Playwright; see render_backgrounds()).
+    y    0-232  header band          y  212-348  KPI cards          y  364+  charts
 """
 
 from __future__ import annotations
 
-import html
 import json
 import shutil
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from pbir_lib import (FONT, S_PAGE, S_PAGES, button, category_filter, colour, container, field, literal, page_link,
-                      props, proj, textbox, value_selector, write_json)
+from pbir_lib import (FONT, S_PAGE, S_PAGES, button, category_filter, colour, container, field, image, literal,
+                      page_link, props, proj, textbox, value_selector, write_json)
 
 PBI = Path(__file__).resolve().parents[1]
-DESIGN = PBI / "design"
 SHARED_MODEL = "../workforcedevelopmentanalytics.SemanticModel"    # Report 01's model: shared, not copied
 REPORT01 = PBI / "workforcedevelopmentanalytics.Report"
 
@@ -37,15 +36,13 @@ GAP = 16
 HERO_H = 232
 KPI_Y, KPI_H = 212, 136
 BODY_Y = 364
-BOTTOM = H - 34                 # panels end here; the footer line sits below
+BOTTOM = H - 34                 # charts end here; the footer text box sits below
 
-ICONS = {  # 24x24 stroke icons (shared look with Report 01)
+ICONS = {  # 24x24 stroke icons (same family as Report 01)
     "users": '<path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M2 21c.8-4 3.6-6 7-6s6.2 2 7 6"/><path d="M16 3.5a4 4 0 0 1 0 7.5M22 21c-.5-3-2.3-5-5-5.6"/>',
     "cap": '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',
     "star": '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
-    "check": '<rect x="3" y="4" width="18" height="17" rx="3"/><path d="m8 13 3 3 5-6"/>',
     "doc": '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>',
-    "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     "shield": '<path d="M12 3 4 6v6c0 4.5 3.4 8.2 8 9 4.6-.8 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
     "clock": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
     "alert": '<path d="M12 3 2.5 20h19z"/><path d="M12 10v4.5M12 17.2v.3"/>',
@@ -56,6 +53,8 @@ ICONS = {  # 24x24 stroke icons (shared look with Report 01)
     "gauge": '<path d="M4 18a9 9 0 1 1 16 0"/><path d="m12 13 4-5"/>',
     "calendar": '<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>',
 }
+CARD_TYPES = ["card", "lineClusteredColumnComboChart", "clusteredColumnChart", "clusteredBarChart", "lineChart",
+              "tableEx", "pivotTable", "scatterChart", "columnChart", "barChart", "multiRowCard"]
 
 
 @dataclass(frozen=True)
@@ -69,7 +68,7 @@ class Palette:
     accent_soft: str
     hero_from: str = "#0A1F3D"         # header band gradient
     hero_to: str = "#0B5CAD"
-    hero_text: str = "#C9DBF2"         # eyebrow / labels on the band
+    hero_text: str = "#C9DBF2"         # eyebrow / slicer titles on the band
     good: str = "#1F9E8F"
     warn: str = "#C98A1B"
     bad: str = "#D1553F"
@@ -80,55 +79,61 @@ def text(size, colour_, weight="Segoe UI") -> dict:
     return {"fontFamily": weight, "fontSize": f"{size}pt", "color": colour_}
 
 
-# ---------------------------------------------------------------- SVG helpers (background)
-def esc(t: str) -> str:
-    return html.escape(t, quote=False)
+def icon_svg(name: str, stroke: str) -> str:
+    return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" '
+            f'stroke="{stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</svg>')
 
 
-def wrap(t: str, max_px: float, size: float) -> list[str]:
-    """Split text into lines that fit max_px (approximate Segoe UI width: 0.55 x font size per char)."""
-    per_line = max(8, int(max_px / (size * 0.55)))
-    words, lines, cur = t.split(), [], ""
-    for w_ in words:
-        if len(cur) + len(w_) + 1 > per_line and cur:
-            lines.append(cur)
-            cur = w_
-        else:
-            cur = f"{cur} {w_}".strip()
-    if cur:
-        lines.append(cur)
-    return lines
+def band_svg(pal: Palette) -> str:
+    """Header band decoration only (gradient, rings, dots): no text, so nothing in it ever needs editing."""
+    return "".join([
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{HERO_H}" viewBox="0 0 {W} {HERO_H}">',
+        f'<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2=".35"><stop offset="0" stop-color="{pal.hero_from}"/>'
+        f'<stop offset="1" stop-color="{pal.hero_to}"/></linearGradient>'
+        '<pattern id="d" width="22" height="22" patternUnits="userSpaceOnUse">'
+        '<circle cx="2" cy="2" r="1.1" fill="#FFFFFF" fill-opacity=".07"/></pattern></defs>',
+        f'<rect width="{W}" height="{HERO_H}" fill="url(#g)"/><rect width="{W}" height="{HERO_H}" fill="url(#d)"/>',
+        *[f'<circle cx="1760" cy="-30" r="{r}" fill="none" stroke="#FFFFFF" stroke-opacity="{o}" stroke-width="1.5"/>'
+          for r, o in ((150, .10), (240, .07), (330, .05), (420, .035))],
+        "</svg>"])
 
 
-def svg_text(x, y, t, size=13, fill="#5B6B80", weight=400, spacing=0.0, opacity=1.0, anchor="start") -> str:
-    return (f'<text x="{x}" y="{y}" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="{size}" '
-            f'font-weight="{weight}" fill="{fill}" fill-opacity="{opacity}" letter-spacing="{spacing}" '
-            f'text-anchor="{anchor}">{esc(t)}</text>')
+def chrome(title: str | None = None, subtitle: str | None = None, *, background: bool = True) -> dict:
+    """Per-visual container settings: ONLY the text. Fonts, colours, border and shadow come from the theme."""
+    out = {}
+    if title is not None:
+        out["title"] = props(show=True, text=title)
+    if subtitle is not None:
+        out["subTitle"] = props(show=True, text=subtitle)
+    if not background:
+        out["background"] = props(show=False)
+        out["border"] = props(show=False)
+        out["dropShadow"] = props(show=False)
+    return out
 
 
-def svg_icon(name: str, x, y, size, stroke, width=2.0) -> str:
-    s = size / 24
-    return (f'<g transform="translate({x},{y}) scale({s})" fill="none" stroke="{stroke}" stroke-width="{width}" '
-            f'stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</g>')
-
-
-def svg_card(x, y, w, h, fill="#FFFFFF", r=16) -> str:
-    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{r}" fill="{fill}" filter="url(#shadow)"/>'
+class Panel(tuple):
+    """A chart rectangle that remembers the title and subtitle the chart should show."""
+    title: str
+    subtitle: str
 
 
 class Page:
-    """One page: Power BI visuals (live data) + SVG decoration (background image)."""
+    """One report page: a list of Power BI visuals plus the SVG assets they use."""
 
     def __init__(self, pal: Palette, page_id: str, display: str):
         self.pal, self.id, self.display = pal, page_id, display
         self.visuals: list[dict] = []
-        self.svg: list[str] = []
+        self.assets: dict[str, str] = {}   # resource file name -> SVG text
         self.z = 10
         self.kpis: list[str] = []          # card visuals that chart clicks must not filter
         self.charts: list[str] = []
-        self.background = ""                # PNG file name, set by write_report
 
-    def add(self, name: str, x, y, w, h, visual: dict, filters: list[dict] | None = None, hidden=False) -> dict:
+    def add(self, name: str, x, y, w, h, visual: dict, filters: list[dict] | None = None, hidden=False,
+            container_objects: dict | None = None) -> dict:
+        if container_objects:
+            vco = visual.setdefault("visualContainerObjects", {})
+            vco.update(container_objects)
         v = container(name, x, y, w, h, self.z, visual, hidden=hidden)
         if filters:
             v["filterConfig"] = {"filters": filters}
@@ -136,71 +141,62 @@ class Page:
         self.z += 1
         return v
 
+    def icon(self, name: str, x, y, size, stroke: str) -> None:
+        fname = f"icon-{name}-{stroke.lstrip('#').lower()}.svg"
+        self.assets[fname] = icon_svg(name, stroke)
+        self.add(f"icon_{name}_{x}_{y}", x, y, size, size, image(fname))
+
     # ------------------------------------------------------------ header band
     def header(self, eyebrow: str, title: str, tabs: list[tuple[str, str]], active: str | None,
-               snapshot: tuple[str, str], back=False, logo="trend") -> None:
+               snapshot: tuple[str, str], back=False, logo="trend", band_file: str = "band.svg") -> None:
         p = self.pal
-        self.svg += [
-            f'<rect x="0" y="0" width="{W}" height="{HERO_H}" fill="url(#hero)"/>',
-            f'<rect x="0" y="0" width="{W}" height="{HERO_H}" fill="url(#dots)"/>',
-            *[f'<circle cx="1760" cy="-30" r="{r}" fill="none" stroke="#FFFFFF" stroke-opacity="{o}" stroke-width="1.5"/>'
-              for r, o in ((150, .10), (240, .07), (330, .05), (420, .035))],
-            f'<rect x="{X0}" y="34" width="52" height="52" rx="14" fill="#FFFFFF" fill-opacity=".14" '
-            f'stroke="#FFFFFF" stroke-opacity=".25"/>',
-            svg_icon(logo, X0 + 13, 47, 26, "#FFFFFF", 2.2),
-            svg_text(X0 + 72, 52, eyebrow, 12.5, p.hero_text, 600, 1.4),
-            svg_text(X0 + 72, 90, title, 32, "#FFFFFF", 700),
-            f'<rect x="1452" y="34" width="420" height="40" rx="20" fill="#FFFFFF" fill-opacity=".10" '
-            f'stroke="#FFFFFF" stroke-opacity=".22"/>',
-        ]
-        self.add("hdrSnapshot", 1462, 34, 400, 40, card_visual(*snapshot, size=10, colour_="#FFFFFF", font="regular"))
+        self.assets[band_file] = band_svg(p)
+        self.add("hdrBand", 0, 0, W, HERO_H, image(band_file))
+        self.icon(logo, X0 + 12, 46, 28, "#FFFFFF")
+        self.add("hdrEyebrow", X0 + 60, 30, 1000, 32, textbox([[(eyebrow, text(9.5, p.hero_text, "Segoe UI Semibold"))]]))
+        self.add("hdrTitle", X0 + 60, 54, 1000, 60, textbox([[(title, text(24, "#FFFFFF", "Segoe UI Bold"))]]))
+        self.add("hdrSnapshot", 1452, 30, 420, 46, card_visual(*snapshot, size=10, colour_="#FFFFFF", font="regular"),
+                 container_objects={"background": props(show=True, color=colour("#FFFFFF"), transparency=88),
+                                    "border": props(show=True, color=colour("#FFFFFF"), radius=22, width=1),
+                                    "dropShadow": props(show=False)})
         x = X0
         for page_id, label in tabs:
             is_active = page_id == active
             w = 34 + 9 * len(label)
-            self.add(f"tab_{page_id}", x, 160, w, 40, button(
+            self.add(f"tab_{page_id}", x, 162, w, 40, button(
                 label, link=None if is_active else page_link(page_id), fg=p.accent if is_active else "#E3ECF8",
                 fill="#FFFFFF" if is_active else None, fill_alpha=100 if is_active else 0,
                 hover_fill="#FFFFFF", hover_alpha=85, size=10,
                 tooltip=None if is_active else f"Go to {label}"))
             x += w + 8
         if back:
-            self.add("btnBack", XR - 132, 160, 132, 40, button(
+            self.add("btnBack", XR - 132, 162, 132, 40, button(
                 "\u2190  Back", link={"type": "Back"}, fg="#FFFFFF", fill="#FFFFFF", fill_alpha=16,
                 hover_fill="#FFFFFF", hover_alpha=75, size=10, tooltip="Back to the page you came from"))
 
     def slicer(self, name: str, x: int, w: int, table: str, column: str, label: str, sync: str) -> None:
+        """Dropdown slicer on the band; its own title is the label (editable in the Format pane)."""
         p = self.pal
-        self.svg.append(svg_text(x + 2, 108, label.upper(), 10.5, p.hero_text, 600, 1.2))
-        self.add(name, x, 116, w, 36, {
+        self.add(name, x, 92, w, 64, {
             "visualType": "slicer",
             "query": {"queryState": {"Values": {"projections": [proj("Column", table, column, label)]}}},
             "objects": {"data": props(mode="Dropdown"),
                         "header": props(show=False),
                         "selection": props(selectAllCheckboxEnabled=True, singleSelect=False),
                         "items": props(fontColor=colour(p.ink), background=colour(p.surface), textSize=10)},
-            "visualContainerObjects": {"background": props(show=True, color=colour("#FFFFFF"), transparency=0)},
-            "syncGroup": {"groupName": sync, "fieldChanges": True, "filterChanges": True}})
+            "syncGroup": {"groupName": sync, "fieldChanges": True, "filterChanges": True}},
+            container_objects={"title": props(show=True, text=label, fontColor=colour(p.hero_text), fontSize=8,
+                                              fontFamily=FONT["semibold"]),
+                               "background": props(show=False), "border": props(show=False),
+                               "dropShadow": props(show=False), "padding": props(top=0, bottom=0, left=0, right=0)})
 
-    # ------------------------------------------------------------ tiles and panels
+    # ------------------------------------------------------------ KPI cards
     def kpi(self, prefix: str, x, y, w, h, label: str, table: str, measure: str, context: str, accent: str,
             filters: list[dict] | None = None, icon: str = "target") -> None:
-        p = self.pal
-        self.svg += [svg_card(x, y, w, h),
-                     f'<rect x="{x}" y="{y}" width="{w}" height="4" rx="2" fill="{accent}"/>',
-                     f'<circle cx="{x + 38}" cy="{y + 38}" r="20" fill="{accent}" fill-opacity=".12"/>',
-                     svg_icon(icon, x + 27, y + 27, 22, accent, 2)]
-        lines = wrap(label.upper(), w - 82, 11)[:2]
-        top = y + 36 if len(lines) == 1 else y + 29
-        self.svg += [svg_text(x + 68, top + i * 15, ln, 11, p.muted, 600, 0.8) for i, ln in enumerate(lines)]
-        ctx = wrap(context, w - 36, 11)
-        if len(ctx) > 1:
-            raise ValueError(f"KPI context too long for one line ({prefix}): {context!r}")
-        self.svg.append(svg_text(x + 20, y + h - 16, context, 11, p.neutral))
-        # the ONLY visual in the tile: the number, in its own band between the label and the context line,
-        # tall enough that Power BI's card padding never clips it
-        self.add(prefix, x + 12, y + 52, w - 24, h - 52 - 34, card_visual(table, measure, size=22, colour_=p.ink),
-                 filters)
+        """ONE card visual: title = label, subtitle = context, value = the measure. Plus a swappable icon."""
+        self.add(prefix, x, y, w, h, card_visual(table, measure, size=22, colour_=self.pal.ink), filters,
+                 container_objects=chrome(label, context))
+        self.icon(icon, x + w - 42, y + h - 40, 24, accent)      # bottom-right corner: never under the title
         self.kpis.append(prefix)
 
     def kpi_row(self, tiles: list[tuple], y=KPI_Y, h=KPI_H) -> None:
@@ -211,37 +207,34 @@ class Page:
             self.kpi(t[0], X0 + i * (w + GAP), y, w, h, *t[1:6],
                      filters=t[6] if len(t) > 6 else None, icon=t[7] if len(t) > 7 else "target")
 
-    def panel(self, name: str, x, y, w, h, title: str, subtitle: str = "") -> tuple[int, int, int, int]:
-        """White panel (drawn in the background) with a title; returns the chart rectangle."""
-        p = self.pal
-        self.svg += [svg_card(x, y, w, h),
-                     f'<rect x="{x + 20}" y="{y + 22}" width="4" height="20" rx="2" fill="{p.accent}"/>',
-                     svg_text(x + 34, y + 38, title, 16, p.ink, 600)]
-        if subtitle:
-            sub = wrap(subtitle, w - 56, 12.5)[0]
-            self.svg.append(svg_text(x + 34, y + 60, sub, 12.5, p.muted))
-        top = 74 if subtitle else 54
-        return x + 14, y + top, w - 28, h - top - 12
-
-    def surface(self, x, y, w, h) -> None:
-        self.svg.append(svg_card(x, y, w, h))
-
-    def bullets(self, x, y, w, items: list[str], size=15.0, gap=12, colour_: str | None = None,
-                bullet: str | None = None) -> int:
-        """Wrapped bullet list drawn in the background; returns the y below the last line."""
-        line_h = size * 1.45
-        for item in items:
-            lines = wrap(item, w - 22, size)
-            self.svg.append(f'<circle cx="{x + 5}" cy="{y - size * 0.33:.1f}" r="3" fill="{bullet or self.pal.accent}"/>')
-            for ln in lines:
-                self.svg.append(svg_text(x + 20, round(y, 1), ln, size, colour_ or self.pal.ink))
-                y += line_h
-            y += gap
-        return int(y)
+    # ------------------------------------------------------------ charts and text panels
+    def panel(self, name: str, x, y, w, h, title: str, subtitle: str = "") -> Panel:
+        """The rectangle a chart will fill; the chart shows `title` / `subtitle` in its own header."""
+        r = Panel((x, y, w, h))
+        r.title, r.subtitle = title, subtitle
+        return r
 
     def chart(self, name: str, rect, visual: dict, filters: list[dict] | None = None) -> None:
-        self.add(name, *rect, visual, filters)
+        co = chrome(rect.title, rect.subtitle or None) if isinstance(rect, Panel) else None
+        self.add(name, *rect, visual, filters, container_objects=co)
         self.charts.append(name)
+
+    def text_panel(self, name: str, x, y, w, h, title: str, items: list[str], size=11, note: str | None = None) -> None:
+        """A white text card (heading + bullet paragraphs): an ordinary, editable text box."""
+        p = self.pal
+        paras = [[(title, text(13, p.ink, "Segoe UI Semibold"))], [("", text(6, p.ink))]]
+        for item in items:
+            paras.append([("\u2022  " + item, text(size, p.ink))])
+            paras.append([("", text(4, p.ink))])
+        if note:
+            paras.append([(note, text(size - 1, p.muted, "Segoe UI Semibold"))])
+        self.add(name, x, y, w, h, textbox(paras),
+                 container_objects={"background": props(show=True, color=colour(p.surface), transparency=0),
+                                    "border": props(show=True, color=colour(p.border), radius=14, width=1),
+                                    "dropShadow": props(show=True, color=colour(p.ink), transparency=92,
+                                                        position="Outer", preset="Custom", shadowBlur=12,
+                                                        shadowDistance=3, shadowSpread=0, angle=90),
+                                    "padding": props(top=18, bottom=14, left=22, right=22)})
 
     def note(self, name: str, x, y, w, h, runs: list[list[tuple[str, dict]]]) -> None:
         self.add(name, x, y, w, h, textbox(runs))
@@ -250,24 +243,6 @@ class Page:
         """Chart clicks cross-filter other charts, but never the headline KPI numbers."""
         return [{"source": c, "target": k, "type": "NoFilter"} for c in self.charts for k in self.kpis]
 
-    def background_svg(self) -> str:
-        p = self.pal
-        return "".join([
-            f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
-            "<defs>",
-            f'<linearGradient id="hero" x1="0" y1="0" x2="1" y2=".35"><stop offset="0" stop-color="{p.hero_from}"/>'
-            f'<stop offset="1" stop-color="{p.hero_to}"/></linearGradient>',
-            '<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">'
-            '<circle cx="2" cy="2" r="1.1" fill="#FFFFFF" fill-opacity=".07"/></pattern>',
-            f'<radialGradient id="glow" cx="92%" cy="100%" r="55%"><stop offset="0" stop-color="{p.accent}" '
-            f'stop-opacity=".07"/><stop offset="1" stop-color="{p.accent}" stop-opacity="0"/></radialGradient>',
-            '<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">'
-            f'<feDropShadow dx="0" dy="4" stdDeviation="9" flood-color="{p.ink}" flood-opacity=".08"/></filter>',
-            "</defs>",
-            f'<rect width="{W}" height="{H}" fill="{p.canvas}"/>',
-            f'<rect width="{W}" height="{H}" fill="url(#glow)"/>',
-            *self.svg, "</svg>"])
-
 
 # ---------------------------------------------------------------- visuals
 def card_visual(table: str, measure: str, size=24, colour_="#0F1B2D", font="bold") -> dict:
@@ -275,7 +250,8 @@ def card_visual(table: str, measure: str, size=24, colour_="#0F1B2D", font="bold
             "query": {"queryState": {"Values": {"projections": [proj("Measure", table, measure)]}}},
             "objects": {"labels": props(fontFamily=FONT[font], fontSize=size, color=colour(colour_)),
                         "categoryLabels": props(show=False)},
-            "visualContainerObjects": {"background": props(show=False)}}
+            # no title unless the caller gives one (KPI cards do, via chrome())
+            "visualContainerObjects": {"title": props(show=False), "subTitle": props(show=False)}}
 
 
 def _axes(pal: Palette, x_title: str | None = None, y_title: str | None = None, categorical=True) -> dict:
@@ -409,20 +385,68 @@ def eq(name: str, table: str, column: str, value: str) -> dict:
 
 
 def footer(pg: Page, message: str) -> None:
-    pg.svg.append(svg_text(X0 + 4, H - 12, message, 11.5, pg.pal.neutral))
+    pg.note("footer", X0, H - 30, 1600, 28, [[(message, text(8, pg.pal.neutral))]])
+
+
+# ---------------------------------------------------------------- theme
+def theme(pal: Palette, name: str, data_colours: list[str]) -> dict:
+    """The report theme: ALL shared styling. Card-like visuals get a white rounded container with a soft
+    shadow and consistent title / subtitle fonts; everything else (text boxes, buttons, images) stays bare."""
+    solid = lambda c: {"solid": {"color": c}}                                   # noqa: E731
+    card_chrome = {
+        "background": [{"show": True, "color": solid(pal.surface), "transparency": 0}],
+        "border": [{"show": True, "color": solid(pal.border), "radius": 14, "width": 1}],
+        "dropShadow": [{"show": True, "color": solid(pal.ink), "transparency": 92, "position": "Outer",
+                        "preset": "Custom", "shadowBlur": 12, "shadowDistance": 3, "shadowSpread": 0, "angle": 90}],
+        "padding": [{"top": 12, "bottom": 10, "left": 16, "right": 16}],
+        "title": [{"show": True, "fontColor": solid(pal.ink), "fontSize": 12, "fontFamily": FONT["semibold"],
+                   "alignment": "left", "titleWrap": True}],
+        "subTitle": [{"show": True, "fontColor": solid(pal.muted), "fontSize": 9, "fontFamily": FONT["regular"],
+                      "alignment": "left", "titleWrap": True}],
+        "visualHeader": [{"show": False}],
+    }
+    styles = {
+        "*": {"*": {
+            "background": [{"show": False}], "border": [{"show": False}], "dropShadow": [{"show": False}],
+            "title": [{"show": False}], "visualHeader": [{"show": False}],
+            "legend": [{"show": True, "position": "Top", "labelColor": solid(pal.muted), "fontSize": 9}],
+            "categoryAxis": [{"labelColor": solid(pal.muted), "titleColor": solid(pal.muted), "gridlineShow": False}],
+            "valueAxis": [{"labelColor": solid(pal.neutral), "titleColor": solid(pal.neutral),
+                           "gridlineColor": solid("#EEF1F5"), "gridlineStyle": "dotted"}],
+            "labels": [{"color": solid(pal.ink), "fontSize": 9}]}},
+        "page": {"*": {"background": [{"color": solid(pal.canvas), "transparency": 0}],
+                       "outspace": [{"color": solid(pal.canvas), "transparency": 0}]}},
+        "card": {"*": {**card_chrome,
+                       "title": [{**card_chrome["title"][0], "fontColor": solid(pal.muted), "fontSize": 9}],
+                       "subTitle": [{**card_chrome["subTitle"][0], "fontColor": solid(pal.neutral), "fontSize": 8}],
+                       "labels": [{"color": solid(pal.ink), "fontSize": 22, "fontFamily": FONT["bold"]}],
+                       "categoryLabels": [{"show": False}]}},
+        "tableEx": {"*": {**card_chrome,
+                          "columnHeaders": [{"fontColor": solid(pal.muted), "backColor": solid(pal.surface),
+                                             "fontFamily": FONT["semibold"], "fontSize": 9, "outline": "Bottom only"}],
+                          "values": [{"fontColorPrimary": solid(pal.ink), "backColorPrimary": solid(pal.surface),
+                                      "fontColorSecondary": solid(pal.ink), "backColorSecondary": solid("#F7F8FB"),
+                                      "fontSize": 10}],
+                          "grid": [{"gridHorizontalColor": solid("#EEF1F5"), "rowPadding": 6}]}},
+    }
+    for t in CARD_TYPES:
+        styles.setdefault(t, {"*": dict(card_chrome)})
+    return {"name": name, "dataColors": data_colours, "foreground": pal.ink, "foregroundNeutralSecondary": pal.muted,
+            "foregroundNeutralTertiary": pal.neutral, "background": pal.surface, "backgroundLight": pal.canvas,
+            "backgroundNeutral": pal.border, "tableAccent": pal.accent, "good": pal.good, "neutral": pal.warn,
+            "bad": pal.bad, "maximum": pal.good, "center": "#F2E3C4", "minimum": pal.bad,
+            "textClasses": {"title": {"fontFace": "Segoe UI Semibold", "fontSize": 12, "color": pal.ink},
+                            "header": {"fontFace": "Segoe UI Semibold", "fontSize": 12, "color": pal.ink},
+                            "label": {"fontFace": "Segoe UI", "fontSize": 10, "color": pal.muted},
+                            "callout": {"fontFace": "Segoe UI Bold", "fontSize": 22, "color": pal.ink}},
+            "visualStyles": styles}
 
 
 # ---------------------------------------------------------------- writing a report
 def page_json(pg: Page, extra: dict | None = None) -> dict:
-    # NB: the "image" property holds an object that is ALSO called "image" (how Desktop writes it)
-    img = {"image": {"image": {
-        "name": literal(pg.background),
-        "url": {"expr": {"ResourcePackageItem": {"PackageName": "RegisteredResources", "PackageType": 1,
-                                                 "ItemName": pg.background}}},
-        "scaling": literal("Fit")}}}
     page = {"$schema": S_PAGE, "name": pg.id, "displayName": pg.display, "displayOption": "FitToPage",
             "height": H, "width": W,
-            "objects": {"background": [{"properties": {**img, "transparency": literal(0)}}],
+            "objects": {"background": [{"properties": {"color": colour(pg.pal.canvas), "transparency": literal(0)}}],
                         "outspace": [{"properties": {"color": colour(pg.pal.canvas), "transparency": literal(0)}}]}}
     inter = pg.interactions()
     if inter:
@@ -441,18 +465,12 @@ def drillthrough(table_: str, column: str, binding: str) -> dict:
                                           "howCreated": "Drillthrough"}]}}
 
 
-def render_backgrounds(jobs: list[tuple[Path, Path]]) -> None:
-    """SVG -> PNG with Playwright's Chromium (Node). The PNGs are committed, so only the builder needs this."""
-    script = Path(__file__).with_name("render_svg.js")
-    spec = json.dumps([{"svg": str(s), "png": str(p)} for s, p in jobs])
-    subprocess.run(["node", str(script), spec], check=True)
-
-
-def write_report(report: Path, theme: Path, pages: list[tuple[Page, dict | None]], pbip_name: str,
-                 design_prefix: str) -> None:
+def write_report(report: Path, theme_path: Path, theme_json: dict, pages: list[tuple[Page, dict | None]],
+                 pbip_name: str) -> None:
     """Write a complete PBIR report folder (+ .pbip) that uses the SHARED model. Rebuilds pages from scratch."""
     definition = report / "definition"
     resources = report / "StaticResources" / "RegisteredResources"
+    theme_path.write_text(json.dumps(theme_json, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     (report.parent / pbip_name).write_text(json.dumps(
         {"version": "1.0", "artifacts": [{"report": {"path": report.name}}],
          "settings": {"enableAutoRecovery": True}}, indent=2) + "\n", encoding="utf-8", newline="\n")
@@ -463,28 +481,24 @@ def write_report(report: Path, theme: Path, pages: list[tuple[Page, dict | None]
     if resources.exists():
         shutil.rmtree(resources)
     resources.mkdir(parents=True)
-    shutil.copyfile(theme, resources / theme.name)
-    DESIGN.mkdir(parents=True, exist_ok=True)
-    jobs = []
+    shutil.copyfile(theme_path, resources / theme_path.name)
+    assets: dict[str, str] = {}
     for pg, _ in pages:
-        slug = pg.display.lower().replace(" ", "-")
-        pg.background = f"{design_prefix}-{slug}.png"
-        svg_path = DESIGN / f"{design_prefix}-{slug}.svg"
-        svg_path.write_text(pg.background_svg(), encoding="utf-8", newline="\n")
-        jobs.append((svg_path, resources / pg.background))
-    render_backgrounds(jobs)
+        assets.update(pg.assets)
+    for fname, svg in sorted(assets.items()):
+        (resources / fname).write_text(svg, encoding="utf-8", newline="\n")
     r01 = json.loads((REPORT01 / "definition" / "report.json").read_text(encoding="utf-8"))
     base = r01["themeCollection"]["baseTheme"]
     write_json(definition / "report.json", {
         "$schema": r01["$schema"],
         "themeCollection": {"baseTheme": base,
-                            "customTheme": {"name": theme.name, "reportVersionAtImport": base["reportVersionAtImport"],
+                            "customTheme": {"name": theme_path.name, "reportVersionAtImport": base["reportVersionAtImport"],
                                             "type": "RegisteredResources"}},
         "objects": r01["objects"],
         "resourcePackages": [p for p in r01["resourcePackages"] if p["name"] == "SharedResources"]
         + [{"name": "RegisteredResources", "type": "RegisteredResources",
-            "items": [{"name": theme.name, "path": theme.name, "type": "CustomTheme"}]
-            + [{"name": pg.background, "path": pg.background, "type": "Image"} for pg, _ in pages]}],
+            "items": [{"name": theme_path.name, "path": theme_path.name, "type": "CustomTheme"}]
+            + [{"name": f, "path": f, "type": "Image"} for f in sorted(assets)]}],
         "settings": r01["settings"]})
     shutil.copytree(REPORT01 / "StaticResources" / "SharedResources", report / "StaticResources" / "SharedResources",
                     dirs_exist_ok=True)
@@ -498,4 +512,4 @@ def write_report(report: Path, theme: Path, pages: list[tuple[Page, dict | None]
     write_json(pages_dir / "pages.json", {"$schema": S_PAGES, "pageOrder": [pg.id for pg, _ in pages],
                                           "activePageName": pages[0][0].id})
     for pg, _ in pages:
-        print(f"  {pg.display:<26} {len(pg.visuals):>3} visuals  background {pg.background}")
+        print(f"  {pg.display:<26} {len(pg.visuals):>3} visuals")

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chHeat",
   "position": {
-    "x": 62,
-    "y": 286,
-    "z": 18,
-    "width": 569,
-    "height": 323,
-    "tabOrder": 18
+    "x": 48,
+    "y": 212,
+    "z": 22,
+    "width": 597,
+    "height": 409,
+    "tabOrder": 22
   },
   "visual": {
     "visualType": "pivotTable",
@@ -277,6 +277,48 @@
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'SLA met by final training competency'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Graduates split into thirds by final competency score'"
                 }
               }
             }

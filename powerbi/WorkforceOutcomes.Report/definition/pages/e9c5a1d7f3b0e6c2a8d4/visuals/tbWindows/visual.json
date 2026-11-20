@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbWindows",
   "position": {
-    "x": 62,
-    "y": 802,
-    "z": 20,
-    "width": 1796,
-    "height": 252,
-    "tabOrder": 20
+    "x": 48,
+    "y": 728,
+    "z": 24,
+    "width": 1824,
+    "height": 338,
+    "tabOrder": 24
   },
   "visual": {
     "visualType": "tableEx",
@@ -252,6 +252,48 @@
                       "Value": "'#EEF1F5'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Window detail'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Left before window end'' and ''Not yet reached'' windows are not measured (blank)'"
                 }
               }
             }

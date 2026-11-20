@@ -3,11 +3,11 @@
   "name": "btnBack",
   "position": {
     "x": 1740,
-    "y": 160,
-    "z": 15,
+    "y": 162,
+    "z": 19,
     "width": 132,
     "height": 40,
-    "tabOrder": 15
+    "tabOrder": 19
   },
   "visual": {
     "visualType": "actionButton",

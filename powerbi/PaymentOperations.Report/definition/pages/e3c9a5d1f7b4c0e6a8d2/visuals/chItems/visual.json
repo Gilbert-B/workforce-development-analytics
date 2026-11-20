@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chItems",
   "position": {
-    "x": 62,
-    "y": 438,
-    "z": 24,
-    "width": 832,
-    "height": 247,
-    "tabOrder": 24
+    "x": 48,
+    "y": 364,
+    "z": 34,
+    "width": 860,
+    "height": 333,
+    "tabOrder": 34
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -192,6 +192,48 @@
           },
           "selector": {
             "metadata": "rpt fact_qa_check.Checklist Item Fail %"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Which checklist items fail most'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Share of reviewed cases failing each item'"
+                }
+              }
+            }
           }
         }
       ]

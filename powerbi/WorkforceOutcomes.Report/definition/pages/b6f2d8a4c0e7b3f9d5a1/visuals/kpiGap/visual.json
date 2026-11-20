@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiGap",
   "position": {
-    "x": 1590,
-    "y": 264,
-    "z": 23,
-    "width": 266,
-    "height": 50,
-    "tabOrder": 23
+    "x": 1578,
+    "y": 212,
+    "z": 32,
+    "width": 290,
+    "height": 136,
+    "tabOrder": 32
   },
   "visual": {
     "visualType": "card",
@@ -80,13 +80,40 @@
       ]
     },
     "visualContainerObjects": {
-      "background": [
+      "title": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Gap to tenured · days 61-90'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'SLA met, percentage points'"
                 }
               }
             }

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chScatter",
   "position": {
-    "x": 1288,
-    "y": 286,
-    "z": 20,
-    "width": 570,
-    "height": 323,
-    "tabOrder": 20
+    "x": 1274,
+    "y": 212,
+    "z": 24,
+    "width": 598,
+    "height": 409,
+    "tabOrder": 24
   },
   "visual": {
     "visualType": "scatterChart",
@@ -110,6 +110,48 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Competency vs first-month first-time right'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'One dot per graduate · days 1-30'"
                 }
               }
             }
