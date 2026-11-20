@@ -415,4 +415,4 @@ Details: `docs/progress.md`, D45–D48.
 - **Model:** loads with Microsoft's TMDL serializer (22 tables, 28 relationships, 86 measures); `check_model_additive.py --base ec62743` is OK.
 - **Reference values:** `docs/validation_checkpoints.md` (from SQL; for Report 02 they match `sql/bi03_measure_reference.sql`).
 
-**Owner result:** *pending* (checkpoints A and B).
+**Owner result (2026-11-20, Windows):** checkpoint A passed; checkpoint B: all report numbers check out. Reports 02-03 then rebuilt as editable visuals (D50) and approved for merge.
