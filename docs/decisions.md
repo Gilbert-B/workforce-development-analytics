@@ -621,7 +621,7 @@ Individual variation still dominates. Totals moved slightly (49,995 cases).
 - **Graduate journey:** the drill-through page, on `dim_graduate[agent_id]`.
 - **Method.**
 **Wording:** the findings are stated as associations, not causes.
-**Relationships:** `dim_graduate` filters `fact_outcome_window`, `fact_payment_case` and `fact_agent_day` (one-to-many, single direction). No relationship joins the training facts to the operations facts, so the model has no ambiguous paths.
+**Relationships:** `dim_graduate` filters `fact_outcome_window` (one-to-many, single direction). It does not filter the case or agent-day tables: tenured agents have no graduate row and would add a "(Blank)" member (removed 2026-11-20). No relationship joins the training facts to the operations facts, so the model has no ambiguous paths.
 
 ### D48: Tooling for an owner who validates rather than builds (2026-11-19)
 - **`python/build_all.py`:** one command for Builds 01–04, MongoDB, the ETL and all checks.

@@ -8,7 +8,7 @@
 | Build 01–02: training data, SQL, checks | merged; horizon dataset (2027-06-30) is now the suite default |
 | Build 03: MongoDB cases → Python ETL → SQL Server | merged (PR #11). Since then: faster `fact_agent_day`, handover when an agent leaves, two new checks (26/26) |
 | Build 04: 30/60/90-day outcomes, training record, retention, proficiency | built (`sql/011`), 14/14 checks |
-| Shared semantic model | +8 tables, +14 relationships, +44 measures, generated from the SQL; additive-only check passes; parsed by Microsoft's TMDL library |
+| Shared semantic model | +8 tables, +12 relationships, +44 measures, generated from the SQL; additive-only check passes; parsed by Microsoft's TMDL library |
 | Report 01: Workforce Development & Readiness | unchanged apart from two header captions; now shows the 2027-06-30 numbers |
 | Report 02: Payment Operations Performance | 5 pages (overview, ramp-up, quality, Agent 360 drill-through, about); schema- and model-checked |
 | Report 03: Workforce Outcomes & Training Effectiveness | 5 pages (overview, effectiveness, roster, Graduate journey drill-through, method); schema- and model-checked |

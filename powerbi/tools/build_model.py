@@ -58,10 +58,10 @@ RELATIONSHIPS = [
     ("fact_qa_review", "reviewed_date", "dim_date", "date"),
     ("fact_qa_check", "reviewed_date", "dim_date", "date"),
     ("fact_agent_day", "work_date", "dim_date", "date"),
-    # Build 04: training attributes filter the outcome windows and the case-level facts
+    # Build 04: training attributes filter the outcome windows. (No dim_graduate -> case / agent-day links:
+    # tenured agents have no graduate row, so those links would add a "(Blank)" member to every
+    # graduate slicer and chart, and no Report 03 visual needs them.)
     ("fact_outcome_window", "agent_id", "dim_graduate", "agent_id"),
-    ("fact_payment_case", "agent_id", "dim_graduate", "agent_id"),
-    ("fact_agent_day", "agent_id", "dim_graduate", "agent_id"),
 ]
 
 PC, QA, QC, AG, AD, GR, OW = ("'rpt fact_payment_case'", "'rpt fact_qa_review'", "'rpt fact_qa_check'",
@@ -74,7 +74,10 @@ BENCH = (f"REMOVEFILTERS ( 'rpt dim_agent' ), REMOVEFILTERS ( 'rpt dim_graduate'
 # home view -> [(name, DAX, formatString, displayFolder)]
 MEASURES = {
     "fact_payment_case": [
-        ("Cases Received", f"COALESCE ( COUNTROWS ( {PC} ), 0 )", "#,0", "Operations"),
+        ("Cases Received",
+         f"-- blank (not 0) where there are no cases, so months before an agent started or after they left\n"
+         f"-- don't appear as manufactured zeros on trend charts\n"
+         f"COUNTROWS ( {PC} )", "#,0", "Operations"),
         ("Cases Resolved", f"COALESCE ( CALCULATE ( COUNTROWS ( {PC} ), KEEPFILTERS ( {PC}[is_open] = 0 ) ), 0 )",
          "#,0", "Operations"),
         ("Open Cases (Snapshot)", f"COALESCE ( CALCULATE ( COUNTROWS ( {PC} ), KEEPFILTERS ( {PC}[is_open] = 1 ) ), 0 )",
@@ -207,7 +210,7 @@ SQL_TYPES = {  # SQL Server type -> (TMDL dataType, formatString, date-only?)
     "int": ("int64", "0", False), "bigint": ("int64", "0", False), "smallint": ("int64", "0", False),
     "tinyint": ("int64", "0", False),
     "bit": ("boolean", None, False),
-    "date": ("dateTime", "Long Date", True), "datetime2": ("dateTime", "General Date", False),
+    "date": ("dateTime", "dd mmm yyyy", True), "datetime2": ("dateTime", "General Date", False),
     "datetime": ("dateTime", "General Date", False),
     "decimal": ("double", "0.00", False), "numeric": ("double", "0.00", False), "float": ("double", "0.00", False),
 }
@@ -251,6 +254,8 @@ def table_tmdl(view: str, columns, spec: dict) -> str:
         dtype, fmt, date_only = SQL_TYPES[sql_type]
         if col.endswith("_month"):
             fmt = "mmm yyyy"                         # month-start dates: axis shows "Aug 2026"
+        elif col.endswith("_pct"):
+            fmt = "0.0"                              # percentages stored as 0-100: show 75.9
         out.append(f"\tcolumn {q(col)}")
         out.append(f"\t\tdataType: {dtype}")
         if col in spec.get("hidden", []):
@@ -281,7 +286,7 @@ def write_relationships() -> None:
     path = MODEL / "relationships.tmdl"
     text = path.read_text(encoding="utf-8")
     owned = {f"'rpt {v}'" for v in OWNED}
-    blocks = [b for b in re.split(r"\n(?=relationship )", text.strip()) if b.strip()]
+    blocks = [b.strip() for b in re.split(r"\n(?=relationship )", text.strip()) if b.strip()]
     keep = [b for b in blocks if not any(o + "." in b for o in owned)]
     new = []
     for m_tab, m_col, o_tab, o_col in RELATIONSHIPS:

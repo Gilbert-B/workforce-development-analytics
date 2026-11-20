@@ -125,7 +125,7 @@ table 'rpt dim_agent'
 
 	column start_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: ec455579-f42e-5321-960d-c85910beac90
 		summarizeBy: none
 		sourceColumn: start_date
@@ -136,7 +136,7 @@ table 'rpt dim_agent'
 
 	column exit_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: f30c734a-a290-5581-839f-9e79c45df108
 		summarizeBy: none
 		sourceColumn: exit_date
@@ -164,7 +164,7 @@ table 'rpt dim_agent'
 
 	column deployment_date
 		dataType: dateTime
-		formatString: Long Date
+		formatString: dd mmm yyyy
 		lineageTag: 9b9b49f5-cd9d-5955-b95c-c5213840600f
 		summarizeBy: none
 		sourceColumn: deployment_date
