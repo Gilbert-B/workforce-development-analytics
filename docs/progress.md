@@ -17,10 +17,10 @@
 | Docs | README, case study, decisions D44–D48, data dictionary (Builds 03–04), validation checkpoints |
 
 ## Outstanding
-1. **Owner checkpoint A** (Windows pipeline) and **checkpoint B** (all three reports in Power BI Desktop). Neither has been run yet; see `validation_checkpoints.md`.
-2. **Screenshots** (checkpoint B4), then embed them in the README and the case study.
+1. ~~Owner checkpoints A and B~~: passed (2026-11-20).
+2. ~~Screenshots~~: done (9, in `docs/screenshots/`, embedded in the README and case study).
 3. **Fixes** from the owner's Desktop run, if any, such as a DAX or visual-formatting issue that only Desktop can reveal.
-4. **Merge** `bi/03-payment-operations` into `main` once the checkpoints pass.
+4. ~~Merge~~: done (PR #12); the polish fixes are on `bi/03-polish`.
 5. **Website:** publish `docs/case_study.md` on the portfolio site, with the screenshots.
 
 ## Key decisions this round
