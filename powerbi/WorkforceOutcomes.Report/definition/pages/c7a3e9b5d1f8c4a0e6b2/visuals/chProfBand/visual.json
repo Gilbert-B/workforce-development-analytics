@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chProfBand",
   "position": {
-    "x": 673,
-    "y": 238,
-    "z": 30,
-    "width": 573,
-    "height": 332,
-    "tabOrder": 30
+    "x": 675,
+    "y": 286,
+    "z": 19,
+    "width": 569,
+    "height": 323,
+    "tabOrder": 19
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -150,7 +150,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

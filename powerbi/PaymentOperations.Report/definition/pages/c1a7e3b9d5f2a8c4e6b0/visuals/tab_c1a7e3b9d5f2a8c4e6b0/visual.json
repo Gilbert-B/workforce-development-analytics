@@ -3,11 +3,11 @@
   "name": "tab_c1a7e3b9d5f2a8c4e6b0",
   "position": {
     "x": 48,
-    "y": 112,
-    "z": 14,
-    "width": 197,
+    "y": 160,
+    "z": 11,
+    "width": 205,
     "height": 40,
-    "tabOrder": 14
+    "tabOrder": 11
   },
   "visual": {
     "visualType": "actionButton",
@@ -34,7 +34,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#0B5CAD'"
                     }
                   }
                 }
@@ -86,7 +86,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#0B5CAD'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -118,7 +118,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#CFE0F3'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -127,7 +127,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "40D"
+                  "Value": "85D"
                 }
               }
             }

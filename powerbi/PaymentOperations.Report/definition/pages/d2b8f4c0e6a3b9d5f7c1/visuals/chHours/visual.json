@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chHours",
   "position": {
-    "x": 60,
-    "y": 754,
-    "z": 66,
-    "width": 573,
-    "height": 288,
-    "tabOrder": 66
+    "x": 62,
+    "y": 787,
+    "z": 27,
+    "width": 569,
+    "height": 247,
+    "tabOrder": 27
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -135,7 +135,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

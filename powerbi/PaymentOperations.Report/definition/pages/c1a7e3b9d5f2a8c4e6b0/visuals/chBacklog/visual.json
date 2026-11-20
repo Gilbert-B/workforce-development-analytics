@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chBacklog",
   "position": {
-    "x": 1256,
-    "y": 782,
-    "z": 66,
-    "width": 604,
-    "height": 260,
-    "tabOrder": 66
+    "x": 1258,
+    "y": 787,
+    "z": 27,
+    "width": 600,
+    "height": 247,
+    "tabOrder": 27
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -150,7 +150,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

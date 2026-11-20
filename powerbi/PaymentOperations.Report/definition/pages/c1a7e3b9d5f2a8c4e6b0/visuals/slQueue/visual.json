@@ -3,11 +3,11 @@
   "name": "slQueue",
   "position": {
     "x": 1346,
-    "y": 120,
-    "z": 22,
+    "y": 116,
+    "z": 16,
     "width": 250,
     "height": 36,
-    "tabOrder": 22
+    "tabOrder": 16
   },
   "visual": {
     "visualType": "slicer",
@@ -110,6 +110,39 @@
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }

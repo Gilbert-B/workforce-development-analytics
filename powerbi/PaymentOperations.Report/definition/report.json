@@ -68,6 +68,31 @@
           "name": "PaymentOperationsLight.json",
           "path": "PaymentOperationsLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "r02-operations-overview.png",
+          "path": "r02-operations-overview.png",
+          "type": "Image"
+        },
+        {
+          "name": "r02-graduate-ramp-up.png",
+          "path": "r02-graduate-ramp-up.png",
+          "type": "Image"
+        },
+        {
+          "name": "r02-quality.png",
+          "path": "r02-quality.png",
+          "type": "Image"
+        },
+        {
+          "name": "r02-agent-360.png",
+          "path": "r02-agent-360.png",
+          "type": "Image"
+        },
+        {
+          "name": "r02-about.png",
+          "path": "r02-about.png",
+          "type": "Image"
         }
       ]
     }

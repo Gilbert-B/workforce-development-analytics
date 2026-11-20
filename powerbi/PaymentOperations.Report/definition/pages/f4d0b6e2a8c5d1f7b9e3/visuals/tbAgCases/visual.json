@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbAgCases",
   "position": {
-    "x": 60,
-    "y": 802,
-    "z": 61,
-    "width": 1800,
-    "height": 248,
-    "tabOrder": 61
+    "x": 62,
+    "y": 874,
+    "z": 26,
+    "width": 1796,
+    "height": 180,
+    "tabOrder": 26
   },
   "visual": {
     "visualType": "tableEx",
@@ -188,6 +188,13 @@
                   "Value": "9D"
                 }
               }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
             }
           }
         }
@@ -211,7 +218,25 @@
             "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "6D"
+                  "Value": "7D"
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EEF1F5'"
+                    }
+                  }
                 }
               }
             }

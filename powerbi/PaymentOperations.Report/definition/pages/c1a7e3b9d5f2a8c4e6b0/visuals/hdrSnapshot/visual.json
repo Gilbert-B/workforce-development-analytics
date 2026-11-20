@@ -3,11 +3,11 @@
   "name": "hdrSnapshot",
   "position": {
     "x": 1462,
-    "y": 38,
-    "z": 13,
+    "y": 34,
+    "z": 10,
     "width": 400,
     "height": 40,
-    "tabOrder": 13
+    "tabOrder": 10
   },
   "visual": {
     "visualType": "card",
@@ -56,7 +56,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6B80'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }

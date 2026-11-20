@@ -9,12 +9,28 @@
     "background": [
       {
         "properties": {
-          "color": {
-            "solid": {
-              "color": {
+          "image": {
+            "image": {
+              "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'#F6F5FA'"
+                    "Value": "'r03-outcomes-overview.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "r03-outcomes-overview.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Fit'"
                   }
                 }
               }
@@ -38,7 +54,7 @@
               "color": {
                 "expr": {
                   "Literal": {
-                    "Value": "'#E9EEF4'"
+                    "Value": "'#F4F3F9'"
                   }
                 }
               }

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiPass",
   "position": {
-    "x": 668,
-    "y": 208,
-    "z": 38,
-    "width": 274,
-    "height": 52,
-    "tabOrder": 38
+    "x": 672,
+    "y": 264,
+    "z": 20,
+    "width": 266,
+    "height": 50,
+    "tabOrder": 20
   },
   "visual": {
     "visualType": "card",
@@ -47,7 +47,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "22D"
                 }
               }
             },

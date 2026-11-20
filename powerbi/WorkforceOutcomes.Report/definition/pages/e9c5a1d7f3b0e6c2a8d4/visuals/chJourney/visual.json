@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chJourney",
   "position": {
-    "x": 60,
-    "y": 350,
-    "z": 25,
-    "width": 880,
-    "height": 308,
-    "tabOrder": 25
+    "x": 62,
+    "y": 406,
+    "z": 18,
+    "width": 876,
+    "height": 294,
+    "tabOrder": 18
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -169,7 +169,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

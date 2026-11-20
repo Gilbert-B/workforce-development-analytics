@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chCert",
   "position": {
-    "x": 60,
-    "y": 658,
-    "z": 36,
-    "width": 573,
-    "height": 384,
-    "tabOrder": 36
+    "x": 62,
+    "y": 711,
+    "z": 21,
+    "width": 569,
+    "height": 323,
+    "tabOrder": 21
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -154,7 +154,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

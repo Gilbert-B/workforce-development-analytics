@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chProdBand",
   "position": {
-    "x": 1286,
-    "y": 386,
-    "z": 63,
-    "width": 574,
-    "height": 280,
-    "tabOrder": 63
+    "x": 1288,
+    "y": 438,
+    "z": 26,
+    "width": 570,
+    "height": 247,
+    "tabOrder": 26
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -135,7 +135,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

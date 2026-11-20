@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chQaTrend",
   "position": {
-    "x": 60,
-    "y": 754,
-    "z": 63,
-    "width": 836,
-    "height": 288,
-    "tabOrder": 63
+    "x": 62,
+    "y": 787,
+    "z": 26,
+    "width": 832,
+    "height": 247,
+    "tabOrder": 26
   },
   "visual": {
     "visualType": "lineChart",
@@ -150,7 +150,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E6EBF1'"
+                      "Value": "'#EEF1F5'"
                     }
                   }
                 }

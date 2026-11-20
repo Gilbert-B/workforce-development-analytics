@@ -20,17 +20,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pbir_lib import proj, shape
-from suite_light import (GAP, SPAN, X0, H, Page, Palette, column_chart, combo_chart, drillthrough, eq, footer, heatmap,
-                         sort_by, table, text, text_card, write_report)
+from pbir_lib import proj
+from suite_light import (svg_text, BODY_Y, BOTTOM, GAP, KPI_Y, SPAN, X0, Page, Palette, column_chart, combo_chart, drillthrough,
+                         eq, footer, heatmap, sort_by, table, text_card, write_report)
 
 REPO = Path(__file__).resolve().parents[2]
 PBI = REPO / "powerbi"
 REPORT = PBI / "WorkforceOutcomes.Report"
 THEME = PBI / "themes" / "WorkforceOutcomesLight.json"
 
-PAL = Palette(canvas="#F6F5FA", surface="#FFFFFF", ink="#17132B", muted="#5E5A73", border="#E0DCEB",
-              accent="#5B3FA8", accent_soft="#E3DCF5")
+PAL = Palette(canvas="#F4F3F9", surface="#FFFFFF", ink="#17132B", muted="#5E5A73", border="#E0DCEB",
+              accent="#5B3FA8", accent_soft="#E3DCF5", hero_from="#1A1238", hero_to="#5B3FA8", hero_text="#D5CBF2")
 TENURED = "#2E3A4B"
 
 OVERVIEW, EFFECT, ROSTER, JOURNEY, METHOD = ("b6f2d8a4c0e7b3f9d5a1", "c7a3e9b5d1f8c4a0e6b2", "d8b4f0c6e2a9d5b1f7c3",
@@ -50,6 +50,13 @@ def m(table_: str, name: str, label: str | None = None) -> tuple:
     return (table_, name, label or name)
 
 
+TWO_ROWS = (BOTTOM - BODY_Y - GAP) // 2
+
+
+def header(pg: Page, title: str, active: str | None, back=False) -> None:
+    pg.header(EYEBROW + (" \u00b7 DRILL-THROUGH" if back else ""), title, TABS, active, SNAPSHOT, back=back, logo="trend")
+
+
 def slicers(pg: Page) -> None:
     pg.slicer("slCohort", 1100, 230, GR, "cohort_name", "Academy cohort", "OutCohort")
     pg.slicer("slTeam", 1346, 250, GR, "team_name", "Team", "OutTeam")
@@ -59,18 +66,18 @@ def slicers(pg: Page) -> None:
 # ------------------------------------------------------------------ 1. overview
 def overview() -> Page:
     pg = Page(PAL, OVERVIEW, "Outcomes overview")
-    pg.header(EYEBROW, "From academy to operations: the first 90 days", TABS, OVERVIEW, SNAPSHOT)
+    header(pg, "From academy to operations: the first 90 days", OVERVIEW)
     slicers(pg)
     pg.kpi_row([
-        ("kpiDeployed", "GRADUATES DEPLOYED", GR, "Graduates Deployed", "Approved for readiness, then deployed", PAL.accent),
-        ("kpiRetention", "90-DAY RETENTION", GR, "90-Day Retention %", "Still employed at day 90", PAL.good),
-        ("kpiProficient", "PROFICIENT BY DAY 90", GR, "Proficient by Day 90 %", "Of graduates retained to day 90", PAL.good),
-        ("kpiDays", "AVG DAYS TO PROFICIENCY", GR, "Avg Days to Proficiency", "Proficient graduates, 30-day windows", PAL.accent),
-        ("kpiSla", "SLA MET · DAYS 61-90", OW, "Window SLA Met %", "Graduates' third month in role", PAL.accent, DAYS_61_90),
-        ("kpiGap", "GAP TO TENURED · DAYS 61-90", OW, "Window SLA Gap vs Tenured (pts)", "SLA met, percentage points",
-         PAL.warn, DAYS_61_90),
+        ("kpiDeployed", "Graduates deployed", GR, "Graduates Deployed", "Approved for readiness, then deployed", PAL.accent, None, "cap"),
+        ("kpiRetention", "90-day retention", GR, "90-Day Retention %", "Still employed at day 90", PAL.good, None, "users"),
+        ("kpiProficient", "Proficient by day 90", GR, "Proficient by Day 90 %", "Of graduates retained to day 90", PAL.good, None, "target"),
+        ("kpiDays", "Avg days to proficiency", GR, "Avg Days to Proficiency", "Proficient graduates (30-day steps)", PAL.accent, None, "calendar"),
+        ("kpiSla", "SLA met \u00b7 days 61-90", OW, "Window SLA Met %", "Graduates' third month in role", PAL.accent, DAYS_61_90, "clock"),
+        ("kpiGap", "Gap to tenured \u00b7 days 61-90", OW, "Window SLA Gap vs Tenured (pts)", "SLA met, percentage points",
+         PAL.warn, DAYS_61_90, "trend"),
     ])
-    y1, h1 = 324, 372
+    y1, h1 = BODY_Y, TWO_ROWS
     w3 = (SPAN - 2 * GAP) // 3
     pg.chart("chSla", pg.panel("sla", X0, y1, w3, h1, "SLA met: 30 / 60 / 90 days",
                                "Complete windows only · line = tenured agents"),
@@ -83,10 +90,11 @@ def overview() -> Page:
                          [m(PC, "First-Time-Right % (Tenured Benchmark)", "Tenured benchmark")],
                          col_colours=[PAL.good], line_colours=[TENURED], sort=WINDOW_SORT))
     pg.chart("chStatus", pg.panel("status", X0 + 2 * (w3 + GAP), y1, SPAN - 2 * (w3 + GAP), h1, "When graduates reach proficiency",
-                                  "Standard: SLA met ≥ 80% and first-time right ≥ 97% in a 30-day window"),
+                                  "Standard: SLA met \u2265 80% and first-time right \u2265 97%"),
              column_chart(PAL, (GR, "proficiency_status", "Proficiency"), [m(GR, "Graduates Deployed", "Graduates")],
                           colours=[PAL.accent], kind="clusteredBarChart", sort=sort_by(GR, "proficiency_status_order")))
-    y2, h2 = y1 + h1 + GAP, H - (y1 + h1 + GAP) - 28
+    y2 = y1 + h1 + GAP
+    h2 = BOTTOM - y2
     wl = 1180
     pg.chart("chCohorts", pg.panel("cohortChart", X0 + wl + GAP, y2, SPAN - wl - GAP, h2, "Retention and proficiency by cohort",
                                    "Share of each cohort's graduates"),
@@ -102,7 +110,8 @@ def overview() -> Page:
                     ("Measure", GR, "Proficient by Day 30 %", "Proficient by day 30"),
                     ("Measure", GR, "Proficient by Day 90 %", "Proficient by day 90"),
                     ("Measure", GR, "Avg Days to Proficiency", "Avg days to proficiency")],
-                   sort=sort_by(GR, "cohort_name")))
+                   sort=sort_by(GR, "cohort_name"),
+                   scales=[(GR, "90-Day Retention %"), (GR, "Proficient by Day 90 %")]))
     footer(pg, "All data is synthetic. A window counts only if it ended by the snapshot and the graduate was still "
                "employed; otherwise it is shown as not measured, never as zero.")
     return pg
@@ -111,9 +120,10 @@ def overview() -> Page:
 # ------------------------------------------------------------------ 2. training effectiveness
 def effectiveness() -> Page:
     pg = Page(PAL, EFFECT, "Training effectiveness")
-    pg.header(EYEBROW, "Does training predict early performance?", TABS, EFFECT, SNAPSHOT)
+    header(pg, "Does training predict early performance?", EFFECT)
     slicers(pg)
-    y1, h1 = 176, 404
+    y1 = KPI_Y
+    h1 = (BOTTOM - KPI_Y - GAP) // 2
     w3 = (SPAN - 2 * GAP) // 3
     pg.chart("chHeat", pg.panel("heat", X0, y1, w3, h1, "SLA met by final training competency",
                                 "Graduates split into thirds by final competency score"),
@@ -128,31 +138,30 @@ def effectiveness() -> Page:
                                    "Competency vs first-month first-time right", "One dot per graduate · days 1-30"),
              scatter((GR, "agent_id", "Graduate"), m(GR, "Avg Final Competency", "Final competency"),
                      m(OW, "Window First-Time-Right %", "First-time right, days 1-30")), DAYS_1_30)
-    y2, h2 = y1 + h1 + GAP, H - (y1 + h1 + GAP) - 28
+    y2 = y1 + h1 + GAP
+    h2 = BOTTOM - y2
     pg.chart("chCert", pg.panel("cert", X0, y2, w3, h2, "Certified at the first attempt?",
-                                "First-time right by window, both mandatory certifications passed first time"),
+                                "First-time right by window: both certifications passed first time?"),
              column_chart(PAL, WINDOW, [m(OW, "Window First-Time-Right %", "First-time right")],
                           series=(GR, "certified_first_attempt", "Certified first attempt"),
                           series_colours=[("Yes", PAL.accent), ("No", "#C9BEEA")], sort=WINDOW_SORT))
     pg.chart("chWatch", pg.panel("watch", X0 + w3 + GAP, y2, w3, h2, "Watch list in training and retention",
-                                 "90-day retention by whether the trainee was ever on the watch list"),
+                                 "90-day retention: was the trainee ever on the watch list?"),
              column_chart(PAL, (GR, "watchlisted_in_training", "On the training watch list"),
                           [m(GR, "90-Day Retention %", "90-day retention")], colours=[PAL.good],
                           sort=sort_by(GR, "watchlisted_in_training")))
     x = X0 + 2 * (w3 + GAP)
     pg.panel("findings", x, y2, SPAN - 2 * (w3 + GAP), h2, "What the data says")
-    pg.note("findingsText", x + 12, y2 + 46, SPAN - 2 * (w3 + GAP) - 24, h2 - 56, [
-        [("•  Training results predict early performance, but only moderately: 24% of the top third by final "
-          "competency met the standard in their first 30 days, against 8% of the bottom third. By day 90 most of "
-          "the bottom third had caught up (72%).", text(10, PAL.ink))],
-        [("•  Passing both certifications at the first attempt goes with a faster start: 16% proficient by day 30, "
-          "against 9%.", text(10, PAL.ink))],
-        [("•  Trainees who were on the watch list were more likely to leave: 90.5% still employed at day 90, "
-          "against 96.6%.", text(10, PAL.ink))],
-        [("•  Individual variation is large: a training score is a reason to support someone, not a verdict.",
-          text(10, PAL.ink))],
-        [("Associations, not causes: the academy did not run an experiment. Figures: all graduates, no filters.",
-          text(9, PAL.muted, "Segoe UI Semibold"))]])
+    end = pg.bullets(x + 34, y2 + 88, SPAN - 2 * (w3 + GAP) - 64, [
+        "Training predicts early performance, but only moderately: 24% of the top third by final competency met "
+        "the standard in their first 30 days, against 8% of the bottom third.",
+        "By day 90 most of the bottom third had caught up (72% proficient).",
+        "Passing both certifications first time goes with a faster start: 16% proficient by day 30, against 9%.",
+        "Trainees who were on the watch list were more likely to leave: 90.5% still employed at day 90, against 96.6%.",
+        "Individual variation is large: a training score is a reason to support someone, not a verdict."],
+        size=13.5, gap=8)
+    pg.svg.append(svg_text(x + 34, end + 6, "Associations, not causes. Figures: all graduates, no filters.", 12,
+                           PAL.muted, 600))
     footer(pg, "Complete 30-day windows only. Small groups (e.g. one cohort's bottom third) are noisy; read differences "
                "of a few points with care.")
     return pg
@@ -171,10 +180,10 @@ def scatter(details: tuple, x: tuple, y: tuple) -> dict:
 # ------------------------------------------------------------------ 3. roster
 def roster() -> Page:
     pg = Page(PAL, ROSTER, "Graduate roster")
-    pg.header(EYEBROW, "Graduate roster", TABS, ROSTER, SNAPSHOT)
+    header(pg, "Graduate roster", ROSTER)
     slicers(pg)
-    rect = pg.panel("roster", X0, 176, SPAN, H - 176 - 34, "Every deployed graduate: training record → outcome",
-                    "Right-click a graduate → Drill through → Graduate journey · click a column header to sort")
+    rect = pg.panel("roster", X0, KPI_Y, SPAN, BOTTOM - KPI_Y, "Every deployed graduate: training record → outcome",
+                    "Right-click a graduate \u2192 Drill through \u2192 Graduate journey \u00b7 click a column header to sort")
     pg.chart("tbRoster", rect, table([
         ("Column", GR, "graduate_name", "Graduate (synthetic)"), ("Column", GR, "agent_id", "Agent ID"),
         ("Column", GR, "cohort_name", "Cohort"), ("Column", GR, "final_competency_score", "Final competency"),
@@ -192,11 +201,11 @@ def roster() -> Page:
 # ------------------------------------------------------------------ 4. journey (drill-through)
 def journey() -> Page:
     pg = Page(PAL, JOURNEY, "Graduate journey")
-    pg.header(EYEBROW + " · DRILL-THROUGH", "Graduate journey", TABS, None, SNAPSHOT, back=True)
-    pg.add("grTitleSurface", X0, 176, SPAN, 96, shape(PAL.surface, 0, PAL.border, 0))
-    pg.add("grTitle", X0 + 16, 180, SPAN - 32, 46, text_card(GR, "Graduate Title", 18, PAL.ink, "bold"))
-    pg.add("grJourney", X0 + 16, 228, SPAN - 32, 40, text_card(GR, "Graduate Journey Label", 10, PAL.muted))
-    y1, h1 = 288, 380
+    header(pg, "Graduate journey", None, back=True)
+    pg.surface(X0, KPI_Y, SPAN, 104)
+    pg.add("grTitle", X0 + 20, KPI_Y + 8, SPAN - 40, 50, text_card(GR, "Graduate Title", 18, PAL.ink, "bold"))
+    pg.add("grJourney", X0 + 20, KPI_Y + 58, SPAN - 40, 42, text_card(GR, "Graduate Journey Label", 10, PAL.muted))
+    y1, h1 = KPI_Y + 104 + GAP, 380
     half = (SPAN - GAP) // 2
     pg.chart("chJourney", pg.panel("journeySla", X0, y1, half, h1, "SLA met and first-time right by window",
                                    "This graduate vs the tenured benchmark"),
@@ -208,7 +217,7 @@ def journey() -> Page:
              column_chart(PAL, WINDOW, [m(OW, "Window Resolved per Agent-Day", "Per day")], colours=[PAL.accent],
                           sort=WINDOW_SORT))
     y2 = y1 + h1 + GAP
-    pg.chart("tbWindows", pg.panel("windows", X0, y2, SPAN, H - y2 - 20, "Window detail",
+    pg.chart("tbWindows", pg.panel("windows", X0, y2, SPAN, BOTTOM + 20 - y2, "Window detail",
                                    "'Left before window end' and 'Not yet reached' windows are not measured (blank)"),
              table([("Column", OW, "window_label", "Window"), ("Column", OW, "window_start", "From"),
                     ("Column", OW, "window_status", "Status"), ("Column", OW, "cases_received", "Cases"),
@@ -222,7 +231,7 @@ def journey() -> Page:
 # ------------------------------------------------------------------ 5. method
 def method() -> Page:
     pg = Page(PAL, METHOD, "Method")
-    pg.header(EYEBROW, "Method and definitions", TABS, METHOD, SNAPSHOT)
+    header(pg, "Method and definitions", METHOD)
     half = (SPAN - GAP) // 2
     blocks = [
         ("The question", [
@@ -247,18 +256,19 @@ def method() -> Page:
             "Associations, not causes. Groups are small (about 36 graduates per competency third).",
             "Benchmarks are tenured agents across the whole period, filtered by the same team/queue only on Report 02."]),
     ]
+    h = (BOTTOM - KPI_Y - GAP) // 2
     for i, (title, lines) in enumerate(blocks):
         x = X0 + (i % 2) * (half + GAP)
-        y = 184 + (i // 2) * 430
-        pg.panel(f"method{i}", x, y, half, 410, title)
-        pg.note(f"methodText{i}", x + 12, y + 50, half - 24, 350, [[("•  " + line, text(11, PAL.ink))] for line in lines])
+        y = KPI_Y + (i // 2) * (h + GAP)
+        pg.panel(f"method{i}", x, y, half, h, title)
+        pg.bullets(x + 34, y + 92, half - 70, lines, size=14.5, gap=10)
     return pg
 
 
 def main() -> None:
     pages = [(overview(), None), (effectiveness(), None), (roster(), None),
              (journey(), drillthrough(GR, "agent_id", "journey")), (method(), None)]
-    write_report(REPORT, THEME, pages, "workforce-outcomes.pbip")
+    write_report(REPORT, THEME, pages, "workforce-outcomes.pbip", "r03")
     print(f"Report 03 written ({len(pages)} pages) on the shared model")
 
 

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chHeat",
   "position": {
-    "x": 936,
-    "y": 386,
-    "z": 60,
-    "width": 924,
-    "height": 280,
-    "tabOrder": 60
+    "x": 938,
+    "y": 438,
+    "z": 25,
+    "width": 920,
+    "height": 247,
+    "tabOrder": 25
   },
   "visual": {
     "visualType": "pivotTable",
