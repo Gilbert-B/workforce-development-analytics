@@ -68,6 +68,101 @@
           "name": "PaymentOperationsLight.json",
           "path": "PaymentOperationsLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "band.svg",
+          "path": "band.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-alert-d1553f.svg",
+          "path": "icon-alert-d1553f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-calendar-8a96a8.svg",
+          "path": "icon-calendar-8a96a8.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-cap-0b5cad.svg",
+          "path": "icon-cap-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-clock-1f9e8f.svg",
+          "path": "icon-clock-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-clock-c98a1b.svg",
+          "path": "icon-clock-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-doc-0b5cad.svg",
+          "path": "icon-doc-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-doc-c98a1b.svg",
+          "path": "icon-doc-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-gauge-0b5cad.svg",
+          "path": "icon-gauge-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-inbox-0b5cad.svg",
+          "path": "icon-inbox-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-inbox-ffffff.svg",
+          "path": "icon-inbox-ffffff.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-rework-c98a1b.svg",
+          "path": "icon-rework-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-shield-0b5cad.svg",
+          "path": "icon-shield-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-shield-1f9e8f.svg",
+          "path": "icon-shield-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-star-1f9e8f.svg",
+          "path": "icon-star-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-star-2e3a4b.svg",
+          "path": "icon-star-2e3a4b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-0b5cad.svg",
+          "path": "icon-target-0b5cad.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-1f9e8f.svg",
+          "path": "icon-target-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-c98a1b.svg",
+          "path": "icon-target-c98a1b.svg",
+          "type": "Image"
         }
       ]
     }

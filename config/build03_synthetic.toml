@@ -28,6 +28,7 @@ queues = [
 
 [exits]
 graduate_exit_probability = 0.08  # leave within the first 180 days of deployment
+watchlist_exit_multiplier = 2.0   # trainees who were on the watch list are twice as likely to leave
 graduate_exit_window_days = [20, 180]
 tenured_annual_exit_probability = 0.05
 
@@ -46,8 +47,12 @@ graduate_mature_accuracy = [0.95, 0.98]
 tenured_accuracy = [0.955, 0.985]
 plateau_probability = 0.15        # some graduates only get half-way to their mature level
 daily_accuracy_noise = 0.01
-training_effect = 0.006           # +0.6 accuracy points per SD of final training competency
-certification_ramp_speedup = 0.20 # first-attempt pass on both certifications: 20% faster ramp
+# Training -> operations link (Build 04 / D46): a MODERATE, realistic effect. Training
+# scores predict early job performance imperfectly; individual variation still dominates.
+training_effect = 0.02            # +2 accuracy points per SD of final training competency (halved once mature)
+competency_ramp_effect = 0.12     # each SD of competency shortens (or lengthens) the ramp by 12%
+certification_ramp_speedup = 0.25 # first-attempt pass on both certifications: 25% faster ramp
+watchlist_ramp_penalty = 1.15     # placed on the training watch list: 15% slower ramp
 new_agent_slowdown = 1.4          # resolution time multiplier on day 0, easing to 1.0 with the ramp
 
 [cases]

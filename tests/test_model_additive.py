@@ -130,7 +130,7 @@ def test_format_changes_are_warnings_only():
 
 def test_real_model_parses_fully():
     m = chk.parse_model(chk.files_in_tree())
-    assert len(m.tables) == 14 and len(m.relationships) == 14
+    assert len(m.tables) >= 14 and len(m.relationships) >= 14        # the model only grows (D41)
     assert len(m.measures) >= 42
     assert all(info["expression"] for info in m.measures.values())
 

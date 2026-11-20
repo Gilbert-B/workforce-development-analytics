@@ -1,0 +1,123 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "Fluent2-CY26SU10",
+      "reportVersionAtImport": {
+        "visual": "2.14.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "WorkforceOutcomesLight.json",
+      "reportVersionAtImport": {
+        "visual": "2.14.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "Fluent2-CY26SU10",
+          "path": "BaseThemes/Fluent2-CY26SU10.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "WorkforceOutcomesLight.json",
+          "path": "WorkforceOutcomesLight.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "band.svg",
+          "path": "band.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-calendar-5b3fa8.svg",
+          "path": "icon-calendar-5b3fa8.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-cap-5b3fa8.svg",
+          "path": "icon-cap-5b3fa8.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-clock-5b3fa8.svg",
+          "path": "icon-clock-5b3fa8.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-target-1f9e8f.svg",
+          "path": "icon-target-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-trend-c98a1b.svg",
+          "path": "icon-trend-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-trend-ffffff.svg",
+          "path": "icon-trend-ffffff.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-users-1f9e8f.svg",
+          "path": "icon-users-1f9e8f.svg",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}
