@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chFtrQueue",
   "position": {
-    "x": 938,
-    "y": 787,
-    "z": 27,
-    "width": 920,
-    "height": 247,
-    "tabOrder": 27
+    "x": 924,
+    "y": 713,
+    "z": 37,
+    "width": 948,
+    "height": 333,
+    "tabOrder": 37
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -253,6 +253,48 @@
               "expr": {
                 "Literal": {
                   "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'First-time right and rework by queue'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rework adds to the case history; it never overwrites the first resolution'"
                 }
               }
             }

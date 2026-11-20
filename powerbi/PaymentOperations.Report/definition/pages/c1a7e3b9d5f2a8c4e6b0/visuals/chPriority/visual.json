@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chPriority",
   "position": {
-    "x": 1258,
-    "y": 438,
-    "z": 25,
-    "width": 600,
-    "height": 247,
-    "tabOrder": 25
+    "x": 1244,
+    "y": 364,
+    "z": 35,
+    "width": 628,
+    "height": 333,
+    "tabOrder": 35
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -225,6 +225,48 @@
           },
           "selector": {
             "metadata": "rpt fact_payment_case.SLA Met % (Tenured Benchmark)"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'SLA met by priority'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Targets: P1 4 h (2 h screening), P2 24 h, P3 72 h'"
+                }
+              }
+            }
           }
         }
       ]

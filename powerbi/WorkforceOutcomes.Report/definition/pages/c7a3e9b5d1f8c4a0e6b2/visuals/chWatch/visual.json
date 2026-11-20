@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chWatch",
   "position": {
-    "x": 675,
-    "y": 711,
-    "z": 22,
-    "width": 569,
-    "height": 323,
-    "tabOrder": 22
+    "x": 661,
+    "y": 637,
+    "z": 26,
+    "width": 597,
+    "height": 409,
+    "tabOrder": 26
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -192,6 +192,48 @@
           },
           "selector": {
             "metadata": "rpt dim_graduate.90-Day Retention %"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Watch list in training and retention'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'90-day retention: was the trainee ever on the watch list?'"
+                }
+              }
+            }
           }
         }
       ]

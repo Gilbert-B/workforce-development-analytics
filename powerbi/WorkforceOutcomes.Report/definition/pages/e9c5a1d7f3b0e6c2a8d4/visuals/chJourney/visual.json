@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chJourney",
   "position": {
-    "x": 62,
-    "y": 406,
-    "z": 18,
-    "width": 876,
-    "height": 294,
-    "tabOrder": 18
+    "x": 48,
+    "y": 332,
+    "z": 22,
+    "width": 904,
+    "height": 380,
+    "tabOrder": 22
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -286,6 +286,48 @@
               "expr": {
                 "Literal": {
                   "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'SLA met and first-time right by window'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'This graduate vs the tenured benchmark'"
                 }
               }
             }

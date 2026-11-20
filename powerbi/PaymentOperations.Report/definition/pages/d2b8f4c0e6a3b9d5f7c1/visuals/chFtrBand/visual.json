@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chFtrBand",
   "position": {
-    "x": 675,
-    "y": 438,
-    "z": 25,
-    "width": 569,
-    "height": 247,
-    "tabOrder": 25
+    "x": 661,
+    "y": 364,
+    "z": 35,
+    "width": 597,
+    "height": 333,
+    "tabOrder": 35
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -253,6 +253,48 @@
               "expr": {
                 "Literal": {
                   "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'First-time right by tenure band'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'No QA failure or customer reopen · line = tenured'"
                 }
               }
             }

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chProdBand",
   "position": {
-    "x": 1288,
-    "y": 438,
-    "z": 26,
-    "width": 570,
-    "height": 247,
-    "tabOrder": 26
+    "x": 1274,
+    "y": 364,
+    "z": 36,
+    "width": 598,
+    "height": 333,
+    "tabOrder": 36
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -192,6 +192,48 @@
           },
           "selector": {
             "metadata": "rpt fact_agent_day.Resolved per Agent-Day"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Resolved cases per agent-day'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Productivity rises as new agents ramp up'"
+                }
+              }
+            }
           }
         }
       ]

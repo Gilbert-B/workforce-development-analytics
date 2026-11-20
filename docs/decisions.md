@@ -640,3 +640,19 @@ Individual variation still dominates. Totals moved slightly (49,995 cases).
 - **League tables:** the key percentage columns get a red-to-green colour scale.
 
 **Trade-off:** static text and frames can no longer be edited in Desktop. Change them in `suite_light.py` or the builders and re-run. Visual count fell from 404 to 134 across the two reports.
+
+### D50: Reports 02 and 03 rebuilt as fully editable visuals (replaces D49) (2026-11-20)
+**Why:** D49 fixed the clipping by drawing labels and frames into background images, but then a label can't be changed in Desktop. The owner's goal is a report that is as reusable as possible.
+**How:**
+- **Styling lives in the theme.** It is generated from each report's palette by `suite_light.theme()`. Cards, charts and tables get a white rounded container with a soft shadow, and consistent title and subtitle fonts. A visual added later in Desktop looks the same automatically.
+- **Each visual carries only its content.**
+  - **Charts:** the title and subtitle are the visual's own (Format → General → Title).
+  - **KPI tiles:** each is one card visual, with title = label and subtitle = context line. Power BI lays out the title, subtitle and value itself, so they can't overlap.
+- **Header:**
+  - a decorative band image, with **no text**;
+  - text boxes for the eyebrow and title;
+  - button tabs;
+  - slicers whose own title is the label.
+- **Icons** are small SVG image visuals that can be swapped or deleted.
+- **No page background images.**
+**To change a label:** select the visual → Format → General → Title / Subtitle. To restyle every card, edit the theme (or `theme()` and re-run the builder).

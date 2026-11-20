@@ -3,11 +3,11 @@
   "name": "slTeam",
   "position": {
     "x": 1100,
-    "y": 116,
-    "z": 15,
+    "y": 92,
+    "z": 19,
     "width": 230,
-    "height": 36,
-    "tabOrder": 15
+    "height": 64,
+    "tabOrder": 19
   },
   "visual": {
     "visualType": "slicer",
@@ -117,8 +117,13 @@
         }
       ]
     },
+    "syncGroup": {
+      "groupName": "OpsTeam",
+      "fieldChanges": true,
+      "filterChanges": true
+    },
     "visualContainerObjects": {
-      "background": [
+      "title": [
         {
           "properties": {
             "show": {
@@ -128,18 +133,105 @@
                 }
               }
             },
-            "color": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Team'"
+                }
+              }
+            },
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#BFD5F0'"
                     }
                   }
                 }
               }
             },
-            "transparency": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'', wf_segoe-ui_semibold, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
               "expr": {
                 "Literal": {
                   "Value": "0D"
@@ -149,11 +241,6 @@
           }
         }
       ]
-    },
-    "syncGroup": {
-      "groupName": "OpsTeam",
-      "fieldChanges": true,
-      "filterChanges": true
     }
   }
 }

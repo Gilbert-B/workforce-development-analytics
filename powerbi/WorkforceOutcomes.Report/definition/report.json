@@ -70,28 +70,43 @@
           "type": "CustomTheme"
         },
         {
-          "name": "r03-outcomes-overview.png",
-          "path": "r03-outcomes-overview.png",
+          "name": "band.svg",
+          "path": "band.svg",
           "type": "Image"
         },
         {
-          "name": "r03-training-effectiveness.png",
-          "path": "r03-training-effectiveness.png",
+          "name": "icon-calendar-5b3fa8.svg",
+          "path": "icon-calendar-5b3fa8.svg",
           "type": "Image"
         },
         {
-          "name": "r03-graduate-roster.png",
-          "path": "r03-graduate-roster.png",
+          "name": "icon-cap-5b3fa8.svg",
+          "path": "icon-cap-5b3fa8.svg",
           "type": "Image"
         },
         {
-          "name": "r03-graduate-journey.png",
-          "path": "r03-graduate-journey.png",
+          "name": "icon-clock-5b3fa8.svg",
+          "path": "icon-clock-5b3fa8.svg",
           "type": "Image"
         },
         {
-          "name": "r03-method.png",
-          "path": "r03-method.png",
+          "name": "icon-target-1f9e8f.svg",
+          "path": "icon-target-1f9e8f.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-trend-c98a1b.svg",
+          "path": "icon-trend-c98a1b.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-trend-ffffff.svg",
+          "path": "icon-trend-ffffff.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-users-1f9e8f.svg",
+          "path": "icon-users-1f9e8f.svg",
           "type": "Image"
         }
       ]

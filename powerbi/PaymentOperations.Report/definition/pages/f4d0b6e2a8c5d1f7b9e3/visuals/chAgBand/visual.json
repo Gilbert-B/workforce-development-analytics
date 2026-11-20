@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chAgBand",
   "position": {
-    "x": 982,
-    "y": 538,
-    "z": 25,
-    "width": 876,
-    "height": 234,
-    "tabOrder": 25
+    "x": 968,
+    "y": 484,
+    "z": 35,
+    "width": 904,
+    "height": 300,
+    "tabOrder": 35
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -253,6 +253,28 @@
               "expr": {
                 "Literal": {
                   "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'This agent''s ramp vs the tenured benchmark'"
                 }
               }
             }

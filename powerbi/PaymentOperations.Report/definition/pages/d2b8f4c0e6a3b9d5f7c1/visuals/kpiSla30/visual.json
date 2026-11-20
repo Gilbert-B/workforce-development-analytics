@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "kpiSla30",
   "position": {
-    "x": 366,
-    "y": 264,
-    "z": 19,
-    "width": 266,
-    "height": 50,
-    "tabOrder": 19
+    "x": 354,
+    "y": 212,
+    "z": 24,
+    "width": 290,
+    "height": 136,
+    "tabOrder": 24
   },
   "visual": {
     "visualType": "card",
@@ -80,13 +80,40 @@
       ]
     },
     "visualContainerObjects": {
-      "background": [
+      "title": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'SLA met · first 30 days'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Graduates in their first month'"
                 }
               }
             }

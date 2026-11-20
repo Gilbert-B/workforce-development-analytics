@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "tbQueues",
   "position": {
-    "x": 62,
-    "y": 787,
-    "z": 26,
-    "width": 1152,
-    "height": 247,
-    "tabOrder": 26
+    "x": 48,
+    "y": 713,
+    "z": 36,
+    "width": 1180,
+    "height": 333,
+    "tabOrder": 36
   },
   "visual": {
     "visualType": "tableEx",
@@ -414,6 +414,48 @@
                       "Value": "'#EEF1F5'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Queue league table'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Click a queue to filter the page · colour: red = lower, green = higher'"
                 }
               }
             }

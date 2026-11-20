@@ -21,8 +21,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from pbir_lib import proj
-from suite_light import (svg_text, BODY_Y, BOTTOM, GAP, KPI_Y, SPAN, X0, Page, Palette, column_chart, combo_chart, drillthrough,
-                         eq, footer, heatmap, sort_by, table, text_card, write_report)
+from suite_light import (BODY_Y, BOTTOM, GAP, KPI_Y, SPAN, X0, Page, Palette, column_chart, combo_chart, drillthrough,
+                         chrome, eq, footer, heatmap, sort_by, table, text_card, theme, write_report)
 
 REPO = Path(__file__).resolve().parents[2]
 PBI = REPO / "powerbi"
@@ -32,6 +32,7 @@ THEME = PBI / "themes" / "WorkforceOutcomesLight.json"
 PAL = Palette(canvas="#F4F3F9", surface="#FFFFFF", ink="#17132B", muted="#5E5A73", border="#E0DCEB",
               accent="#5B3FA8", accent_soft="#E3DCF5", hero_from="#1A1238", hero_to="#5B3FA8", hero_text="#D5CBF2")
 TENURED = "#2E3A4B"
+DATA_COLOURS = ["#5B3FA8", "#1F9E8F", "#C98A1B", "#D1553F", "#0B5CAD", "#9C7FE0", "#8A96A8", "#2E3A4B"]
 
 OVERVIEW, EFFECT, ROSTER, JOURNEY, METHOD = ("b6f2d8a4c0e7b3f9d5a1", "c7a3e9b5d1f8c4a0e6b2", "d8b4f0c6e2a9d5b1f7c3",
                                              "e9c5a1d7f3b0e6c2a8d4", "f0d6b2e8a4c1f7d3b9e5")
@@ -151,17 +152,14 @@ def effectiveness() -> Page:
                           [m(GR, "90-Day Retention %", "90-day retention")], colours=[PAL.good],
                           sort=sort_by(GR, "watchlisted_in_training")))
     x = X0 + 2 * (w3 + GAP)
-    pg.panel("findings", x, y2, SPAN - 2 * (w3 + GAP), h2, "What the data says")
-    end = pg.bullets(x + 34, y2 + 88, SPAN - 2 * (w3 + GAP) - 64, [
+    pg.text_panel("findings", x, y2, SPAN - 2 * (w3 + GAP), h2, "What the data says", [
         "Training predicts early performance, but only moderately: 24% of the top third by final competency met "
         "the standard in their first 30 days, against 8% of the bottom third.",
         "By day 90 most of the bottom third had caught up (72% proficient).",
         "Passing both certifications first time goes with a faster start: 16% proficient by day 30, against 9%.",
         "Trainees who were on the watch list were more likely to leave: 90.5% still employed at day 90, against 96.6%.",
         "Individual variation is large: a training score is a reason to support someone, not a verdict."],
-        size=13.5, gap=8)
-    pg.svg.append(svg_text(x + 34, end + 6, "Associations, not causes. Figures: all graduates, no filters.", 12,
-                           PAL.muted, 600))
+        size=10, note="Associations, not causes. Figures: all graduates, no filters.")
     footer(pg, "Complete 30-day windows only. Small groups (e.g. one cohort's bottom third) are noisy; read differences "
                "of a few points with care.")
     return pg
@@ -202,9 +200,11 @@ def roster() -> Page:
 def journey() -> Page:
     pg = Page(PAL, JOURNEY, "Graduate journey")
     header(pg, "Graduate journey", None, back=True)
-    pg.surface(X0, KPI_Y, SPAN, 104)
-    pg.add("grTitle", X0 + 20, KPI_Y + 8, SPAN - 40, 50, text_card(GR, "Graduate Title", 18, PAL.ink, "bold"))
-    pg.add("grJourney", X0 + 20, KPI_Y + 58, SPAN - 40, 42, text_card(GR, "Graduate Journey Label", 10, PAL.muted))
+    # name and profile line straight on the canvas (no card container), one above the other
+    pg.add("grTitle", X0, KPI_Y - 4, SPAN, 58, text_card(GR, "Graduate Title", 20, PAL.ink, "bold"),
+           container_objects=chrome(background=False))
+    pg.add("grJourney", X0, KPI_Y + 54, SPAN, 42, text_card(GR, "Graduate Journey Label", 11, PAL.muted),
+           container_objects=chrome(background=False))
     y1, h1 = KPI_Y + 104 + GAP, 380
     half = (SPAN - GAP) // 2
     pg.chart("chJourney", pg.panel("journeySla", X0, y1, half, h1, "SLA met and first-time right by window",
@@ -260,15 +260,14 @@ def method() -> Page:
     for i, (title, lines) in enumerate(blocks):
         x = X0 + (i % 2) * (half + GAP)
         y = KPI_Y + (i // 2) * (h + GAP)
-        pg.panel(f"method{i}", x, y, half, h, title)
-        pg.bullets(x + 34, y + 92, half - 70, lines, size=14.5, gap=10)
+        pg.text_panel(f"method{i}", x, y, half, h, title, lines)
     return pg
 
 
 def main() -> None:
     pages = [(overview(), None), (effectiveness(), None), (roster(), None),
              (journey(), drillthrough(GR, "agent_id", "journey")), (method(), None)]
-    write_report(REPORT, THEME, pages, "workforce-outcomes.pbip", "r03")
+    write_report(REPORT, THEME, theme(PAL, "Workforce Outcomes Light", DATA_COLOURS), pages, "workforce-outcomes.pbip")
     print(f"Report 03 written ({len(pages)} pages) on the shared model")
 
 

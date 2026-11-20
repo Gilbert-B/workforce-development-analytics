@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "chBacklog",
   "position": {
-    "x": 1258,
-    "y": 787,
-    "z": 27,
-    "width": 600,
-    "height": 247,
-    "tabOrder": 27
+    "x": 1244,
+    "y": 713,
+    "z": 37,
+    "width": 628,
+    "height": 333,
+    "tabOrder": 37
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -225,6 +225,48 @@
           },
           "selector": {
             "metadata": "rpt fact_payment_case.Overdue Open Cases (Snapshot)"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Open backlog at the snapshot'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Open cases by queue; overdue = past the SLA target'"
+                }
+              }
+            }
           }
         }
       ]
